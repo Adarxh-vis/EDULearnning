@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Certificate - EduLearn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a6bff;
+            --secondary: #6a11cb;
+            --dark: #2d3748;
+            --light: #f7fafc;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #f56565;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .user-actions a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .user-actions a:hover {
+            color: var(--primary);
+        }
+        
+        .certificate-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background-color: white;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.15);
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .certificate-seal {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+        
+        .certificate-seal i {
+            transform: rotate(15deg);
+        }
+        
+        .certificate-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .certificate-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .certificate-header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 10" xmlns="http://www.w3.org/2000/svg"><path d="M0,5 Q25,10 50,5 T100,5" fill="none" stroke="white" stroke-width="0.5"/></svg>') repeat-x;
+            background-size: 100px 10px;
+        }
+        
+        .certificate-body {
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .certificate-logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .certificate-logo i {
+            margin-right: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        .certificate-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+        }
+        
+        .certificate-subtitle {
+            font-size: 1rem;
+            color: #718096;
+            margin-bottom: 2rem;
+        }
+        
+        .certificate-name {
+            font-size: 2.8rem;
+            font-weight: bold;
+            margin: 2rem 0;
+            color: var(--dark);
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .certificate-course {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .certificate-course::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+        
+        .certificate-description {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+            color: #4a5568;
+        }
+        
+        .certificate-details {
+            display: flex;
+            justify-content: space-around;
+            margin: 2rem auto;
+            max-width: 700px;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            text-align: left;
+        }
+        
+        .detail-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+        
+        .detail-value {
+            color: #4a5568;
+            padding-left: 1rem;
+            border-left: 3px solid var(--primary);
+        }
+        
+        .certificate-signatures {
+            display: flex;
+            justify-content: space-around;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .signature {
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .signature-image {
+            height: 80px;
+            margin-bottom: 1rem;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+        }
+        
+        .signature-name {
+            font-weight: bold;
+            margin-top: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .signature-title {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+        
+        .certificate-date {
+            margin-top: 2rem;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        
+        .certificate-actions {
+            margin: 2rem auto;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            max-width: 900px;
+        }
+        
+        .certificate-actions button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-download {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-linkedin {
+            background-color: #0a66c2;
+            color: white;
+        }
+        
+        .btn-print {
+            background-color: var(--dark);
+            color: white;
+        }
+        
+        .btn-download:hover, .btn-linkedin:hover, .btn-print:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .certificate-id {
+            font-size: 0.9rem;
+            color: #a0aec0;
+            margin-top: 1rem;
+            font-family: monospace;
+        }
+        
+        .watermark {
+            position: absolute;
+            opacity: 0.05;
+            font-size: 20rem;
+            font-weight: bold;
+            color: var(--primary);
+            z-index: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            user-select: none;
+        }
+        
+        .certificate-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+        
+        .certificate-footer {
+            padding: 1rem;
+            background-color: #f8fafc;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #718096;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .certificate-qr {
+            margin: 1rem auto;
+            width: 120px;
+            height: 120px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 0.8rem;
+        }
+        
+        .certificate-ribbon {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+        }
+        
+        .certificate-ribbon::before,
+        .certificate-ribbon::after {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            display: block;
+            border: 5px solid #2980b9;
+            border-top-color: transparent;
+            border-right-color: transparent;
+        }
+        
+        .certificate-ribbon::before {
+            top: 0;
+            left: 0;
+        }
+        
+        .certificate-ribbon::after {
+            bottom: 0;
+            right: 0;
+        }
+        
+        .certificate-ribbon span {
+            position: absolute;
+            top: 30px;
+            right: -30px;
+            transform: rotate(45deg);
+            width: 200px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            padding: 5px 0;
+            font-size: 0.8rem;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .certificate-container, .certificate-container * {
+                visibility: visible;
+            }
+            .certificate-container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+            }
+            .certificate-actions {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .certificate-name {
+                font-size: 2rem;
+            }
+            .certificate-course {
+                font-size: 1.5rem;
+            }
+            .certificate-signatures {
+                flex-direction: column;
+                align-items: center;
+            }
+            .certificate-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            .certificate-actions button {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo"><i class="fas fa-graduation-cap"></i>EduLearn</div>
+        <div class="user-actions">
+            <a href="#"><i class="fas fa-book-open"></i> My Learning</a>
+            <a href="#"><i class="fas fa-user"></i> My Profile</a>
+        </div>
+    </header>
+    
+    <div class="certificate-container">
+        <div class="certificate-seal">
+            <i class="fas fa-certificate"></i>
+        </div>
+        
+        <div class="certificate-badge">
+            <i class="fas fa-certificate"></i> Verified Certificate
+        </div>
+        
+        <div class="certificate-ribbon">
+            <span>OFFICIAL DOCUMENT</span>
+        </div>
+        
+        <div class="certificate-header">
+            <h1>CERTIFICATE OF COMPLETION</h1>
+            <p>This certificate is awarded for outstanding achievement</p>
+        </div>
+        
+        <div class="certificate-body">
+            <div class="watermark">EduLearn</div>
+            
+            <div class="certificate-logo">
+                <i class="fas fa-graduation-cap"></i>EduLearn
+            </div>
+            <div class="certificate-title">This certificate is proudly presented to</div>
+            <div class="certificate-name" id="studentName">John Doe</div>
+            <div class="certificate-subtitle">for successfully completing the course</div>
+            <div class="certificate-course" id="courseTitle">Introduction to Python Programming</div>
+            
+            <div class="certificate-description">
+                This certifies that the above named individual has completed all course requirements 
+                and demonstrated proficiency in the subject matter through assessments and practical 
+                assignments. The course was completed with dedication and excellence.
+            </div>
+            
+            <div class="certificate-details">
+                <div class="detail-group">
+                    <span class="detail-label">Student ID:</span>
+                    <span class="detail-value" id="studentId">STU-2023-001</span>
+                </div>
+                <div class="detail-group">
+                    <span class="detail-label">Enrollment Date:</span>
+                    <span class="detail-value" id="enrollmentDate">June 1, 2023</span>
+                </div>
+                <div class="detail-group">
+                    <span class="detail-label">Completion Date:</span>
+                    <span class="detail-value" id="completionDate">July 15, 2023</span>
+                </div>
+                <div class="detail-group">
+                    <span class="detail-label">Grade Achieved:</span>
+                    <span class="detail-value" id="courseGrade">A+ (98%)</span>
+                </div>
+                <div class="detail-group">
+                    <span class="detail-label">Course Duration:</span>
+                    <span class="detail-value" id="courseDuration">6 weeks (45 hours)</span>
+                </div>
+                <div class="detail-group">
+                    <span class="detail-label">Credits Earned:</span>
+                    <span class="detail-value" id="courseCredits">3.0 CEUs</span>
+                </div>
+            </div>
+            
+            <div class="certificate-qr">
+                <i class="fas fa-qrcode fa-3x"></i>
+            </div>
+            
+            <div class="certificate-signatures">
+                <div class="signature">
+                    <div class="signature-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 40\"><path fill=\"none\" stroke=\"%234a6bff\" stroke-width=\"2\" d=\"M10,20 Q25,5 40,20 T70,20\"/></svg>')"></div>
+                    <div class="signature-name">Dr. Sarah Johnson</div>
+                    <div class="signature-title">Course Instructor</div>
+                </div>
+                <div class="signature">
+                    <div class="signature-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 40\"><path fill=\"none\" stroke=\"%234a6bff\" stroke-width=\"2\" d=\"M10,30 C20,10 50,10 90,30\"/></svg>')"></div>
+                    <div class="signature-name">Michael Brown</div>
+                    <div class="signature-title">CEO, EduLearn</div>
+                </div>
+                <div class="signature">
+                    <div class="signature-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 40\"><path fill=\"none\" stroke=\"%234a6bff\" stroke-width=\"2\" d=\"M10,25 C25,5 75,35 90,15\"/></svg>')"></div>
+                    <div class="signature-name">Alexandra Chen</div>
+                    <div class="signature-title">Academic Director</div>
+                </div>
+            </div>
+            
+            <div class="certificate-date">
+                Date of Issue: <span id="issueDate">July 15, 2023</span>
+            </div>
+            
+            <div class="certificate-id">
+                Certificate ID: <span id="certificateId">ED2023-PY101-JD-8472</span>
+                <div style="margin-top: 0.5rem;">Verify at: https://edulearn.example.com/verify</div>
+            </div>
+        </div>
+        
+        <div class="certificate-footer">
+            This certificate is issued electronically and does not require a physical signature.
+            <div style="margin-top: 0.5rem;">© 2023 EduLearn. All rights reserved.</div>
+        </div>
+    </div>
+    
+    <div class="certificate-actions">
+        <button class="btn-download" onclick="downloadCertificate()">
+            <i class="fas fa-download"></i> Download PDF
+        </button>
+        <button class="btn-linkedin" onclick="shareOnLinkedIn()">
+            <i class="fab fa-linkedin"></i> Share on LinkedIn
+        </button>
+        <button class="btn-print" onclick="printCertificate()">
+            <i class="fas fa-print"></i> Print Certificate
+        </button>
+    </div>
+
+    <script type="module" src="js/api.js">
+        // This would normally come from your backend/database
+        document.addEventListener('DOMContentLoaded', function() {
+            // In a real application, you would fetch this data from your backend
+            // after user authentication. For demo purposes, we'll use localStorage
+            // to simulate user data from login
+            
+            // Try to get user data from localStorage (simulating login data)
+            const userData = JSON.parse(localStorage.getItem('certificateUserData')) || {};
+            const courseData = JSON.parse(localStorage.getItem('certificateCourseData')) || {};
+            
+            // Get URL parameters or use default values
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Set student information
+            document.getElementById('studentName').textContent = 
+                urlParams.get('name') || userData.fullName || 'John Doe';
+            document.getElementById('studentId').textContent = 
+                urlParams.get('studentId') || userData.studentId || 'STU-2023-001';
+            
+            // Set course information
+            document.getElementById('courseTitle').textContent = 
+                urlParams.get('course') || courseData.title || 'Introduction to Python Programming';
+            document.getElementById('courseGrade').textContent = 
+                urlParams.get('grade') || courseData.grade || 'A (95%)';
+            document.getElementById('courseDuration').textContent = 
+                urlParams.get('duration') || courseData.duration || '6 weeks (45 hours)';
+            document.getElementById('courseCredits').textContent = 
+                urlParams.get('credits') || courseData.credits || '3.0 CEUs';
+            
+            // Set dates - in a real app, these would come from the backend
+            const enrollmentDate = urlParams.get('enrollmentDate') || 
+                courseData.enrollmentDate || '2023-06-01';
+            const completionDate = urlParams.get('completionDate') || 
+                courseData.completionDate || new Date().toISOString().split('T')[0];
+            const issueDate = urlParams.get('issueDate') || new Date().toISOString().split('T')[0];
+            
+            document.getElementById('enrollmentDate').textContent = formatDate(enrollmentDate);
+            document.getElementById('completionDate').textContent = formatDate(completionDate);
+            document.getElementById('issueDate').textContent = formatDate(issueDate);
+            
+            // Generate certificate ID if not provided
+            const certId = urlParams.get('certId') || generateCertificateId(
+                document.getElementById('studentName').textContent,
+                document.getElementById('courseTitle').textContent,
+                document.getElementById('studentId').textContent
+            );
+            document.getElementById('certificateId').textContent = certId;
+            
+            // Update QR code with certificate URL
+            updateQRCode(certId);
+        });
+        
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', options);
+        }
+        
+        function generateCertificateId(name, course, studentId) {
+            // More professional ID generation
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+            const courseCode = course.replace(/[^A-Z]/gi, '').substring(0, 4).toUpperCase();
+            const randomNum = Math.floor(1000 + Math.random() * 9000);
+            const year = new Date().getFullYear();
+            const shortId = studentId.split('-').pop();
+            
+            return `EDU${year}-${courseCode}-${initials}${shortId}-${randomNum}`;
+        }
+        
+        function updateQRCode(certId) {
+            // In a real app, this would generate an actual QR code
+            const qrElement = document.querySelector('.certificate-qr');
+            qrElement.innerHTML = `<i class="fas fa-qrcode fa-3x"></i><div style="margin-top: 5px; font-size: 0.7rem;">ID: ${certId}</div>`;
+        }
+        
+        function downloadCertificate() {
+            // In a real app, this would generate a PDF
+            const certName = document.getElementById('studentName').textContent.replace(/\s+/g, '_');
+            const courseName = document.getElementById('courseTitle').textContent.replace(/\s+/g, '_');
+            const fileName = `EduLearn_Certificate_${certName}_${courseName}.pdf`;
+            
+            alert(`Generating and downloading PDF: ${fileName}`);
+            // window.location.href = `/api/certificates/download?certId=${document.getElementById('certificateId').textContent}`;
+        }
+        
+        function shareOnLinkedIn() {
+            // In a real app, this would open LinkedIn share dialog
+            const certUrl = window.location.href;
+            const studentName = document.getElementById('studentName').textContent;
+            const courseName = document.getElementById('courseTitle').textContent;
+            const shareText = `${studentName} just earned a certificate for "${courseName}" from EduLearn!`;
+            
+            alert(`Sharing to LinkedIn: ${shareText}\n${certUrl}`);
+            // window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(certUrl)}&title=${encodeURIComponent('EduLearn Certificate')}&summary=${encodeURIComponent(shareText)}`, '_blank');
+        }
+        
+        function printCertificate() {
+            window.print();
+        }
+        
+        // Simulate login data - in a real app this would come from your authentication system
+        function simulateLoginData() {
+            const userData = {
+                fullName: 'Alexandra Johnson',
+                studentId: 'STU-2023-042',
+                email: 'alex.johnson@example.com',
+                profilePic: '/path/to/profile.jpg'
+            };
+            
+            const courseData = {
+                title: 'Advanced Data Science with Python',
+                grade: 'A+ (98%)',
+                duration: '8 weeks (60 hours)',
+                credits: '4.5 CEUs',
+                enrollmentDate: '2023-05-15',
+                completionDate: '2023-07-10'
+            };
+            
+            localStorage.setItem('certificateUserData', JSON.stringify(userData));
+            localStorage.setItem('certificateCourseData', JSON.stringify(courseData));
+            
+            // Reload to show the updated data
+            window.location.reload();
+        }
+        
+        // Uncomment to test with simulated login data
+        // simulateLoginData();
+    </script>
+</body>
+</html>

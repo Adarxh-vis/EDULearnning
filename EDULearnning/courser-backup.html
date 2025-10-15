@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Player - EduLearn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a00e0;
+            --primary-light: #8e2de2;
+            --accent: #ff6b6b;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --gray: #636e72;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #d63031;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 2rem;
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            max-width: 500px;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 0, 224, 0.1);
+        }
+        
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .user-actions a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+        
+        .user-actions a:hover {
+            color: var(--primary);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* Main Course Player */
+        .course-player-container {
+            display: flex;
+            min-height: calc(100vh - 72px);
+        }
+        
+        .video-container {
+            flex-grow: 1;
+            background-color: #000;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: #000;
+        }
+        
+        .video-wrapper {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .video-controls {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+        
+        .control-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .control-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .control-button.play-pause {
+            background-color: var(--primary);
+        }
+        
+        .progress-container {
+            flex-grow: 1;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            border-radius: 3px;
+            width: 0%;
+            position: relative;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .progress-container:hover .progress-bar::after {
+            opacity: 1;
+        }
+        
+        .time-display {
+            color: white;
+            font-size: 0.9rem;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: 120px;
+        }
+        
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .volume-progress {
+            height: 100%;
+            background-color: white;
+            border-radius: 2px;
+            width: 80%;
+        }
+        
+        .settings-button {
+            position: relative;
+        }
+        
+        .settings-menu {
+            position: absolute;
+            bottom: 60px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+            padding: 0.5rem 0;
+            width: 200px;
+            display: none;
+            z-index: 10;
+        }
+        
+        .settings-menu.show {
+            display: block;
+        }
+        
+        .settings-item {
+            color: white;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .settings-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Course Sidebar */
+        .course-sidebar {
+            width: 380px;
+            background-color: white;
+            border-left: 1px solid #eee;
+            overflow-y: auto;
+            max-height: calc(100vh - 72px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .course-info {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 10;
+        }
+        
+        .course-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .course-instructor {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .instructor-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .progress-container-horizontal {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .course-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 190px;
+            background-color: white;
+            z-index: 10;
+        }
+        
+        .course-tab {
+            padding: 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            position: relative;
+            flex: 1;
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .course-tab:hover {
+            color: var(--primary);
+        }
+        
+        .course-tab.active {
+            color: var(--primary);
+        }
+        
+        .course-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .course-content {
+            padding: 1rem;
+            flex-grow: 1;
+        }
+        
+        .module {
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .module-header {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .module-header:hover {
+            background-color: #f1f3f5;
+        }
+        
+        .module-header i {
+            transition: transform 0.3s ease;
+        }
+        
+        .module-header.collapsed i {
+            transform: rotate(-90deg);
+        }
+        
+        .module-title {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .module-progress {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .module-content {
+            background-color: white;
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        
+        .module-content.collapsed {
+            max-height: 0;
+        }
+        
+        .lesson {
+            padding: 1rem 1rem 1rem 2rem;
+            border-left: 3px solid #eee;
+            margin-left: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .lesson:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .lesson.active {
+            border-left-color: var(--primary);
+            background-color: rgba(74, 0, 224, 0.05);
+        }
+        
+        .lesson.completed .lesson-title {
+            color: var(--success);
+        }
+        
+        .lesson-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+        }
+        
+        .lesson.active .lesson-icon {
+            color: var(--primary);
+        }
+        
+        .lesson.completed .lesson-icon {
+            color: var(--success);
+        }
+        
+        .lesson-title {
+            flex-grow: 1;
+        }
+        
+        .lesson-duration {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        /* Assessment Item Styles */
+        .assessment-item {
+            padding: 1rem 1rem 1rem 2rem;
+            border-left: 3px solid var(--warning);
+            margin-left: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: var(--transition);
+            background-color: rgba(253, 203, 110, 0.05);
+            position: relative;
+        }
+        
+        .assessment-item:hover {
+            background-color: rgba(253, 203, 110, 0.15);
+        }
+        
+        .assessment-item.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .assessment-item.passed {
+            border-left-color: var(--success);
+            background-color: rgba(0, 184, 148, 0.05);
+        }
+        
+        .assessment-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--warning);
+        }
+        
+        .assessment-item.passed .assessment-icon {
+            color: var(--success);
+        }
+        
+        .assessment-item.locked .assessment-icon {
+            color: var(--gray);
+        }
+        
+        .assessment-title {
+            flex-grow: 1;
+            font-weight: 500;
+        }
+        
+        .assessment-badge {
+            background-color: var(--warning);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .assessment-item.passed .assessment-badge {
+            background-color: var(--success);
+        }
+        
+        .assessment-item.locked .assessment-badge {
+            background-color: var(--gray);
+        }
+        
+        .assessment-score {
+            font-size: 0.8rem;
+            color: var(--gray);
+            font-weight: 600;
+        }
+        
+        .assessment-item.passed .assessment-score {
+            color: var(--success);
+        }
+        
+        /* Requirements Notice */
+        .requirements-notice {
+            background-color: rgba(255, 107, 107, 0.1);
+            border-left: 3px solid var(--accent);
+            padding: 1rem;
+            margin: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .requirements-notice h5 {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .requirements-notice ul {
+            margin: 0.5rem 0 0 1.5rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .requirements-notice li {
+            margin-bottom: 0.3rem;
+        }
+        
+        .certificate-notice {
+            background-color: rgba(0, 184, 148, 0.1);
+            border-left: 3px solid var(--success);
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            position: relative;
+        }
+        
+        .certificate-notice h4 {
+            color: var(--success);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .certificate-notice p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+        
+        .certificate-button {
+            background: linear-gradient(to right, var(--success), #00d2a0);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+        }
+        
+        .certificate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 184, 148, 0.3);
+        }
+        
+        .certificate-button i {
+            font-size: 1rem;
+        }
+        
+        /* Floating action buttons */
+        .floating-actions {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 50;
+        }
+        
+        .floating-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(to bottom right, var(--primary), var(--primary-light));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(74, 0, 224, 0.3);
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+        
+        .floating-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(74, 0, 224, 0.4);
+        }
+        
+        .floating-button.secondary {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Side Navigation */
+        .side-navigation {
+            width: 80px;
+            background-color: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            position: sticky;
+            top: 72px;
+            height: calc(100vh - 72px);
+            z-index: 5;
+        }
+        
+        .nav-item {
+            width: 100%;
+            padding: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+        
+        .nav-item:hover {
+            color: var(--primary);
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+            background-color: rgba(74, 0, 224, 0.05);
+            border-right: 3px solid var(--primary);
+        }
+        
+        .nav-item i {
+            font-size: 1.2rem;
+        }
+        
+        /* Certificate Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: modalFadeIn 0.3s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        .modal-button {
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .modal-button.primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+        
+        .modal-button.secondary {
+            background-color: white;
+            color: var(--dark);
+            border: 1px solid #ddd;
+        }
+        
+        .modal-button.primary:hover {
+            background-color: #3a00b3;
+        }
+        
+        .modal-button.secondary:hover {
+            background-color: #f8f9fa;
+        }
+        
+        /* Certificate Design */
+        .certificate-design {
+            width: 100%;
+            min-height: 400px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border: 2px solid var(--primary);
+            position: relative;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .certificate-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .certificate-recipient {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .certificate-course {
+            font-size: 20px;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+        
+        .certificate-date {
+            font-size: 16px;
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+        
+        .certificate-seal {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            border: 3px solid white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .certificate-seal i {
+            font-size: 30px;
+        }
+        
+        .certificate-details {
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .certificate-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .certificate-name {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .certificate-date-issued {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .certificate-description {
+            color: var(--gray);
+            margin-bottom: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* Completion Animation */
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary);
+            opacity: 0;
+            z-index: 1001;
+            animation: confetti 3s ease-in-out forwards;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .course-sidebar {
+                width: 320px;
+            }
+            
+            .side-navigation {
+                width: 60px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .course-player-container {
+                flex-direction: column;
+            }
+            
+            .video-container {
+                height: auto;
+                aspect-ratio: 16/9;
+            }
+            
+            .course-sidebar {
+                width: 100%;
+                max-height: none;
+            }
+            
+            .course-tabs {
+                top: 0;
+            }
+            
+            .side-navigation {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .logo {
+                order: 1;
+            }
+            
+            .user-actions {
+                order: 2;
+                margin-left: auto;
+            }
+            
+            .search-bar {
+                order: 3;
+                margin: 1rem 0 0 0;
+                width: 100%;
+            }
+            
+            .video-controls {
+                padding: 0.5rem;
+            }
+            
+            .time-display {
+                display: none;
+            }
+            
+            .volume-control {
+                width: auto;
+            }
+            
+            .volume-slider {
+                display: none;
+            }
+            
+            .certificate-design {
+                padding: 15px;
+            }
+            
+            .certificate-title {
+                font-size: 22px;
+            }
+            
+            .certificate-recipient {
+                font-size: 20px;
+            }
+            
+            .certificate-course {
+                font-size: 18px;
+            }
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Achievement Badge */
+        .achievement-badge {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 1002;
+            display: none;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .achievement-badge.show {
+            display: block;
+            animation: modalFadeIn 0.5s ease;
+        }
+        
+        .achievement-badge i {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+        
+        .achievement-badge h3 {
+            margin-bottom: 1rem;
+            color: var(--success);
+        }
+        
+        .achievement-badge p {
+            margin-bottom: 1.5rem;
+            color: var(--gray);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">EduLearn</div>
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search within course...">
+        </div>
+        <div class="user-actions">
+            <a href="studentCertificates.html" id="myCertificates"><i class="fas fa-certificate"></i> My Certificates</a>
+            <a href="#" id="notifications"><i class="far fa-bell"></i> Notifications</a>
+            <div class="user-avatar" id="userAvatar">JS</div>
+        </div>
+    </header>
+    
+    <div class="course-player-container">
+        <!-- Side Navigation -->
+        <nav class="side-navigation">
+            <a href="#" class="nav-item active" data-section="course-content">
+                <i class="fas fa-play-circle"></i>
+                <span>Course</span>
+            </a>
+            <a href="#" class="nav-item" data-section="notes">
+                <i class="far fa-clipboard"></i>
+                <span>Notes</span>
+            </a>
+            <a href="#" class="nav-item" data-section="discussion">
+                <i class="far fa-comments"></i>
+                <span>Discuss</span>
+            </a>
+            <a href="#" class="nav-item" data-section="resources">
+                <i class="far fa-file-alt"></i>
+                <span>Resources</span>
+            </a>
+            <a href="#" class="nav-item" data-section="certificate">
+                <i class="fas fa-certificate"></i>
+                <span>Certificate</span>
+            </a>
+        </nav>
+        
+        <div class="video-container">
+            <div class="video-wrapper">
+                <iframe class="video-player" id="videoPlayer" 
+                    src="" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <div class="video-controls">
+                <button class="control-button rewind-button" title="Rewind 10s">
+                    <i class="fas fa-backward"></i>
+                </button>
+                <button class="control-button play-pause" title="Play/Pause">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="control-button forward-button" title="Forward 10s">
+                    <i class="fas fa-forward"></i>
+                </button>
+                <div class="progress-container" title="Progress bar">
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="time-display">00:00 / 00:00</div>
+                <div class="volume-control">
+                    <button class="control-button mute-button" title="Mute/Unmute">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="volume-slider">
+                        <div class="volume-progress"></div>
+                    </div>
+                </div>
+                <button class="control-button settings-button" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="control-button fullscreen-button" title="Fullscreen">
+                    <i class="fas fa-expand"></i>
+                </button>
+                
+                <div class="settings-menu">
+                    <div class="settings-item speed-control">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Playback Speed</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="settings-item subtitles-control">
+                        <i class="fas fa-closed-captioning"></i>
+                        <span>Subtitles</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="settings-item quality-control">
+                        <i class="fas fa-video"></i>
+                        <span>Quality</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="course-sidebar">
+            <div class="course-info">
+                <div class="course-title" id="courseTitle">Loading course...</div>
+                <div class="course-instructor" id="courseInstructor">
+                    <div class="instructor-avatar" id="instructorInitials">--</div>
+                    <span id="instructorName">Instructor</span>
+                </div>
+                <div class="progress-container-horizontal">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">
+                    <span>0% completed</span>
+                    <span>0/0 lessons</span>
+                </div>
+            </div>
+            
+            <div class="course-tabs">
+                <div class="course-tab active" data-tab="curriculum">
+                    <i class="fas fa-list-ul"></i> Curriculum
+                </div>
+                <div class="course-tab" data-tab="notes">
+                    <i class="far fa-clipboard"></i> Notes
+                </div>
+                <div class="course-tab" data-tab="discussion">
+                    <i class="far fa-comments"></i> Discussion
+                </div>
+                <div class="course-tab" data-tab="resources">
+                    <i class="far fa-file-alt"></i> Resources
+                </div>
+            </div>
+            
+            <div class="course-content" id="courseContent">
+                <!-- Curriculum content will be loaded here dynamically -->
+                <div id="loadingMessage" style="text-align: center; padding: 2rem; color: var(--gray);">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <p>Loading course content...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="floating-actions">
+        <button class="floating-button" id="helpButton" title="Ask a question">
+            <i class="far fa-question-circle"></i>
+        </button>
+        <button class="floating-button secondary" id="notesButton" title="Take notes">
+            <i class="far fa-edit"></i>
+        </button>
+    </div>
+
+    <!-- Certificate Modal -->
+    <div class="modal" id="certificateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Certificate of Completion</h3>
+                <button class="modal-close" id="closeCertificateModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="certificate-design" id="certificatePreview">
+                    <div class="certificate-title">Certificate of Completion</div>
+                    <div class="certificate-recipient" id="certificateRecipient">John Smith</div>
+                    <div class="certificate-course" id="certificateCourseName">Course Name</div>
+                    <div class="certificate-date" id="certificateDateDisplay">Issued on Month Day, Year</div>
+                    <div class="certificate-seal">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                <div class="certificate-details">
+                    <div class="certificate-info">
+                        <div class="certificate-name" id="certificateCourseTitle"></div>
+                        <div class="certificate-date-issued">Issued: <span id="certificateDate"></span></div>
+                    </div>
+                    <div class="certificate-description" id="certificateDescription">
+                        This certificate is awarded for successfully completing all requirements for this course.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button secondary" id="downloadCertificateBtn">
+                    <i class="fas fa-download"></i> Download PDF
+                </button>
+                <button class="modal-button primary" id="shareCertificateBtn">
+                    <i class="fas fa-share-alt"></i> Share
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Badge -->
+    <div class="achievement-badge" id="achievementBadge">
+        <i class="fas fa-trophy"></i>
+        <h3>Course Completed!</h3>
+        <p>Congratulations! You've successfully completed the course and earned your certificate.</p>
+        <button class="modal-button primary" id="viewCertificateBtnBadge">
+            <i class="fas fa-certificate"></i> View Certificate
+        </button>
+    </div>
+
+    <script>
+        // Sample course database with YouTube video integration
+        const courseDatabase = {
+            "python101": {
+                id: "python101",
+                title: "Introduction to Python Programming",
+                instructor: "Dr. Sarah Johnson",
+                instructorInitials: "SJ",
+                videoUrl: "https://www.youtube.com/embed/rfscVS0vtbw",
+                thumbnail: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&h=720&q=80",
+                duration: "8 hours",
+                completedLessons: 0,
+                totalLessons: 11,
+                modules: [
+                    {
+                        id: "module1",
+                        title: "Module 1: Python Basics",
+                        lessons: [
+                            { id: "1", title: "Introduction to Python", duration: "12:45", videoUrl: "https://www.youtube.com/embed/rfscVS0vtbw", completed: false, active: true },
+                            { id: "2", title: "Variables and Data Types", duration: "18:30", videoUrl: "https://www.youtube.com/embed/LrOAl8vUFHY", completed: false },
+                            { id: "3", title: "Operators and Expressions", duration: "15:20", videoUrl: "https://www.youtube.com/embed/v5MR5JnKcZI", completed: false },
+                            { id: "4", title: "Control Flow", duration: "22:10", videoUrl: "https://www.youtube.com/embed/PqFKRqpHrjw", completed: false },
+                            { id: "5", title: "Functions", duration: "25:45", videoUrl: "https://www.youtube.com/embed/89cGQjB5R4M", completed: false }
+                        ]
+                    },
+                    {
+                        id: "module2",
+                        title: "Module 2: Intermediate Python",
+                        lessons: [
+                            { id: "6", title: "Lists and Tuples", duration: "20:15", videoUrl: "https://www.youtube.com/embed/W8KRzm-HUcc", completed: false },
+                            { id: "7", title: "Dictionaries and Sets", duration: "18:40", videoUrl: "https://www.youtube.com/embed/daefaLgNkw0", completed: false },
+                            { id: "8", title: "List Comprehensions", duration: "15:30", videoUrl: "https://www.youtube.com/embed/AhSvKGTh28Q", completed: false },
+                            { id: "9", title: "File Handling", duration: "25:10", videoUrl: "https://www.youtube.com/embed/Uh2ebFW8OYM", completed: false },
+                            { id: "10", title: "Error Handling", duration: "18:25", videoUrl: "https://www.youtube.com/embed/NIWwJbo-9_8", completed: false },
+                            { id: "11", title: "Modules and Packages", duration: "22:50", videoUrl: "https://www.youtube.com/embed/CqvZ3vGoGs0", completed: false }
+                        ]
+                    }
+                ],
+                certificateEarned: false
+            },
+            "javascript101": {
+                id: "javascript101",
+                title: "Modern JavaScript Development",
+                instructor: "Prof. Michael Chen",
+                instructorInitials: "MC",
+                videoUrl: "https://www.youtube.com/embed/W6NZfCO5SIk",
+                thumbnail: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&h=720&q=80",
+                duration: "10 hours",
+                completedLessons: 0,
+                totalLessons: 11,
+                modules: [
+                    {
+                        id: "module1",
+                        title: "Module 1: JavaScript Fundamentals",
+                        lessons: [
+                            { id: "1", title: "JavaScript Basics", duration: "15:20", videoUrl: "https://www.youtube.com/embed/W6NZfCO5SIk", completed: false, active: true },
+                            { id: "2", title: "Variables and Scopes", duration: "18:45", videoUrl: "https://www.youtube.com/embed/9vJRopau0g0", completed: false },
+                            { id: "3", title: "Functions and Closures", duration: "22:10", videoUrl: "https://www.youtube.com/embed/vKJpN5FAeF4", completed: false },
+                            { id: "4", title: "Objects and Prototypes", duration: "25:30", videoUrl: "https://www.youtube.com/embed/1UTqFAjYx1k", completed: false },
+                            { id: "5", title: "Arrays and Iteration", duration: "20:15", videoUrl: "https://www.youtube.com/embed/R8rmfD9Y5-c", completed: false }
+                        ]
+                    },
+                    {
+                        id: "module2",
+                        title: "Module 2: Modern JavaScript",
+                        lessons: [
+                            { id: "6", title: "ES6+ Features", duration: "28:40", videoUrl: "https://www.youtube.com/embed/NCwa_xi0Uuc", completed: false },
+                            { id: "7", title: "Asynchronous JavaScript", duration: "32:20", videoUrl: "https://www.youtube.com/embed/ZYb_ZU8LNxs", completed: false },
+                            { id: "8", title: "Modules and Bundlers", duration: "25:10", videoUrl: "https://www.youtube.com/embed/cRHQNNcYf6s", completed: false }
+                        ]
+                    },
+                    {
+                        id: "module3",
+                        title: "Module 3: Browser APIs",
+                        lessons: [
+                            { id: "9", title: "DOM Manipulation", duration: "30:15", videoUrl: "https://www.youtube.com/embed/y17RuWkWdn8", completed: false },
+                            { id: "10", title: "Events", duration: "22:40", videoUrl: "https://www.youtube.com/embed/XF1_MlZ5l6M", completed: false },
+                            { id: "11", title: "Fetch API", duration: "25:50", videoUrl: "https://www.youtube.com/embed/cuEtnrL9-H0", completed: false }
+                        ]
+                    }
+                ],
+                certificateEarned: false
+            },
+            "webdesign101": {
+                id: "webdesign101",
+                title: "UX/UI Design Principles",
+                instructor: "Lisa Rodriguez",
+                instructorInitials: "LR",
+                videoUrl: "https://www.youtube.com/embed/c9Wg6Cb_YlU",
+                thumbnail: "https://images.unsplash.com/photo-1541462608143-67571c6738dd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&h=720&q=80",
+                duration: "6 hours",
+                completedLessons: 0,
+                totalLessons: 8,
+                modules: [
+                    {
+                        id: "module1",
+                        title: "Module 1: Design Fundamentals",
+                        lessons: [
+                            { id: "1", title: "Introduction to UX/UI", duration: "18:20", videoUrl: "https://www.youtube.com/embed/c9Wg6Cb_YlU", completed: false, active: true },
+                            { id: "2", title: "User Research", duration: "22:45", videoUrl: "https://www.youtube.com/embed/Ovj4hFxko7c", completed: false },
+                            { id: "3", title: "Information Architecture", duration: "20:10", videoUrl: "https://www.youtube.com/embed/Ij4WquJaRTc", completed: false }
+                        ]
+                    },
+                    {
+                        id: "module2",
+                        title: "Module 2: Visual Design",
+                        lessons: [
+                            { id: "4", title: "Color Theory", duration: "25:30", videoUrl: "https://www.youtube.com/embed/_2LLXnUdUIc", completed: false },
+                            { id: "5", title: "Typography", duration: "22:15", videoUrl: "https://www.youtube.com/embed/sByzHoiYFX0", completed: false },
+                            { id: "6", title: "Layout Design", duration: "24:30", videoUrl: "https://www.youtube.com/embed/3C_22eBWpjg", completed: false },
+                            { id: "7", title: "Design Systems", duration: "28:15", videoUrl: "https://www.youtube.com/embed/wc5krC28ynQ", completed: false },
+                            { id: "8", title: "Prototyping", duration: "26:40", videoUrl: "https://www.youtube.com/embed/KWZGCCEtY8Y", completed: false }
+                        ]
+                    }
+                ],
+                certificateEarned: false
+            }
+        };
+
+        // User data (in a real app, this would come from authentication)
+        const userData = {
+            name: "John Smith",
+            avatar: "JS"
+        };
+
+        // Initialize the course player with the course from URL parameter
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get course ID from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseId = urlParams.get('id') || 'python101'; // Default to Python course
+            
+            // Set user data
+            document.getElementById('userAvatar').textContent = userData.avatar;
+            
+            // Load the course data
+            loadCourse(courseId);
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+
+        function loadCourse(courseId) {
+            const courseData = courseDatabase[courseId];
+            if (!courseData) {
+                alert('Course not found!');
+                return;
+            }
+            
+            // Set course info
+            document.getElementById('courseTitle').textContent = courseData.title;
+            document.getElementById('instructorName').textContent = courseData.instructor;
+            document.getElementById('instructorInitials').textContent = courseData.instructorInitials;
+            
+            // Set video source for YouTube iframe
+            const videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.src = courseData.videoUrl;
+            
+            // Update progress
+            updateCourseProgress(courseData);
+            
+            // Render course curriculum
+            renderCourseCurriculum(courseData);
+            
+            // Check if certificate is earned
+            checkCertificateEligibility(courseData);
+            
+            // Update certificate modal info
+            updateCertificateInfo(courseData);
+            
+            // Load progress from localStorage
+            loadVideoProgress(courseId);
+        }
+        
+        // Function to load video progress from localStorage
+        function loadVideoProgress(courseId) {
+            const progress = JSON.parse(localStorage.getItem('courseProgress')) || {};
+            if (progress[courseId]) {
+                const courseData = courseDatabase[courseId];
+                courseData.completedLessons = progress[courseId].completedLessons || 0;
+                
+                // Update completed lessons in modules
+                if (progress[courseId].completedLessonIds) {
+                    progress[courseId].completedLessonIds.forEach(lessonId => {
+                        for (const module of courseData.modules) {
+                            const lesson = module.lessons.find(l => l.id === lessonId);
+                            if (lesson) {
+                                lesson.completed = true;
+                            }
+                        }
+                    });
+                }
+                
+                updateCourseProgress(courseData);
+            }
+        }
+        
+        // Function to save video progress to localStorage
+        function saveVideoProgress(courseId, completedLessons, completedLessonIds) {
+            const progress = JSON.parse(localStorage.getItem('courseProgress')) || {};
+            progress[courseId] = {
+                completedLessons: completedLessons,
+                completedLessonIds: completedLessonIds,
+                lastUpdated: new Date().toISOString()
+            };
+            localStorage.setItem('courseProgress', JSON.stringify(progress));
+        }
+
+        function updateCourseProgress(courseData) {
+            const progressPercentage = (courseData.completedLessons / courseData.totalLessons) * 100;
+            document.getElementById('progressFill').style.width = `${progressPercentage}%`;
+            document.getElementById('progressText').innerHTML = 
+                `<span>${Math.round(progressPercentage)}% completed</span><span>${courseData.completedLessons}/${courseData.totalLessons} lessons</span>`;
+        }
+
+        function renderCourseCurriculum(courseData) {
+            const courseContent = document.getElementById('courseContent');
+            
+            // Clear loading message
+            courseContent.innerHTML = '';
+            
+            // Create modules HTML
+            let modulesHTML = '';
+            let totalAssessments = 0;
+            let passedAssessments = 0;
+            
+            courseData.modules.forEach((module, moduleIndex) => {
+                let lessonsHTML = '';
+                
+                // Render lessons
+                module.lessons.forEach(lesson => {
+                    lessonsHTML += `
+                        <div class="lesson ${lesson.completed ? 'completed' : ''} ${lesson.active ? 'active' : ''}" 
+                             data-lesson-id="${lesson.id}" data-course-id="${courseData.id}">
+                            <div class="lesson-icon">
+                                <i class="${lesson.completed ? 'fas fa-check-circle' : lesson.active ? 'fas fa-play-circle' : 'far fa-circle'}"></i>
+                            </div>
+                            <div class="lesson-title">${lesson.title}</div>
+                            <div class="lesson-duration">${lesson.duration}</div>
+                        </div>
+                    `;
+                });
+                
+                // Check if all lessons in module are completed
+                const allLessonsCompleted = module.lessons.every(l => l.completed);
+                
+                // Add assessment item after lessons
+                totalAssessments++;
+                const assessmentPassed = module.assessmentPassed || false;
+                if (assessmentPassed) passedAssessments++;
+                
+                const assessmentType = moduleIndex % 2 === 0 ? 'MCQ Quiz' : 'Assignment';
+                const assessmentIcon = moduleIndex % 2 === 0 ? 'fa-clipboard-list' : 'fa-file-alt';
+                
+                lessonsHTML += `
+                    <div class="assessment-item ${!allLessonsCompleted ? 'locked' : ''} ${assessmentPassed ? 'passed' : ''}"
+                         onclick="${allLessonsCompleted ? `startAssessment('${module.id}', '${assessmentType}', ${moduleIndex})` : ''}">
+                        <div class="assessment-icon">
+                            <i class="fas ${assessmentPassed ? 'fa-check-circle' : !allLessonsCompleted ? 'fa-lock' : assessmentIcon}"></i>
+                        </div>
+                        <div class="assessment-title">
+                            ${module.title} - ${assessmentType}
+                            ${!allLessonsCompleted ? '<br><small style="color: var(--gray); font-weight: normal;">🔒 Complete all lessons to unlock</small>' : ''}
+                        </div>
+                        <div class="assessment-badge">${assessmentType}</div>
+                        ${assessmentPassed ? '<div class="assessment-score">✓ Passed</div>' : ''}
+                    </div>
+                `;
+                
+                modulesHTML += `
+                    <div class="module">
+                        <div class="module-header">
+                            <div class="module-title">${module.title}</div>
+                            <div class="module-progress">
+                                ${module.lessons.filter(l => l.completed).length}/${module.lessons.length} lessons
+                            </div>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="module-content">
+                            ${lessonsHTML}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Add requirements notice
+            modulesHTML += `
+                <div class="requirements-notice">
+                    <h5><i class="fas fa-exclamation-circle"></i> Certificate Requirements</h5>
+                    <p style="color: var(--gray); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        To earn your certificate, you must complete:
+                    </p>
+                    <ul>
+                        <li>✓ Complete all ${courseData.totalLessons} video lessons</li>
+                        <li>${passedAssessments}/${totalAssessments} Pass all module assessments (MCQ quizzes & assignments)</li>
+                        <li>Achieve minimum passing score of 70% on each assessment</li>
+                    </ul>
+                    <p style="color: var(--gray); font-size: 0.85rem; margin-top: 0.5rem;">
+                        <strong>Assessment Progress:</strong> ${passedAssessments} of ${totalAssessments} completed
+                    </p>
+                </div>
+            `;
+            
+            // Add certificate notice
+            const allAssessmentsPassed = passedAssessments === totalAssessments && courseData.completedLessons === courseData.totalLessons;
+            modulesHTML += `
+                <div class="certificate-notice">
+                    <h4><i class="fas fa-certificate"></i> ${allAssessmentsPassed ? 'Certificate Available!' : 'Certificate of Completion'}</h4>
+                    <p>${allAssessmentsPassed ? 
+                        'Congratulations! You have completed all requirements and earned your certificate.' : 
+                        'Complete all lessons and pass all assessments to earn your certificate which you can share on LinkedIn and other platforms.'
+                    }</p>
+                    <button class="certificate-button" id="viewCertificateBtn" style="display: ${allAssessmentsPassed ? 'inline-flex' : 'none'};">
+                        <i class="fas fa-certificate"></i> Generate & View Certificate
+                    </button>
+                </div>
+            `;
+            
+            courseContent.innerHTML = modulesHTML;
+            
+            // Set up module toggle functionality
+            const moduleHeaders = document.querySelectorAll('.module-header');
+            moduleHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    header.classList.toggle('collapsed');
+                    const content = header.nextElementSibling;
+                    content.classList.toggle('collapsed');
+                });
+            });
+        }
+        
+        // Function to start assessment
+        function startAssessment(moduleId, assessmentType, moduleIndex) {
+            alert(`🎯 Starting ${assessmentType} for ${moduleId}!\n\n` +
+                  `This assessment will test your knowledge from this module.\n\n` +
+                  `📋 Assessment Details:\n` +
+                  `• Type: ${assessmentType}\n` +
+                  `• Passing Score: 70%\n` +
+                  `• ${assessmentType === 'MCQ Quiz' ? 'Time Limit: 15 minutes\n• Questions: 10 multiple choice' : 'Submit your work for instructor review'}\n\n` +
+                  `In the full implementation, this will:\n` +
+                  `✓ Load questions from backend\n` +
+                  `✓ ${assessmentType === 'MCQ Quiz' ? 'Show timer and auto-grade' : 'Allow file upload and text submission'}\n` +
+                  `✓ Submit to backend for grading\n` +
+                  `✓ Display results and unlock next module if passed`);
+            
+            // Simulate passing the assessment for demo
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseId = urlParams.get('id') || 'python101';
+            const courseData = courseDatabase[courseId];
+            
+            if (confirm('Simulate passing this assessment? (Click OK to pass, Cancel to skip)')) {
+                courseData.modules[moduleIndex].assessmentPassed = true;
+                renderCourseCurriculum(courseData);
+                alert('✅ Assessment Passed!\n\nYou scored 85%\nNext module is now unlocked.');
+            }
+        }
+
+        function checkCertificateEligibility(courseData) {
+            if (courseData.completedLessons === courseData.totalLessons && !courseData.certificateEarned) {
+                // Award certificate
+                courseData.certificateEarned = true;
+                
+                // Show achievement badge
+                showAchievementBadge(courseData);
+                
+                // Update certificate notice
+                const viewCertificateBtn = document.getElementById('viewCertificateBtn');
+                if (viewCertificateBtn) {
+                    viewCertificateBtn.style.display = 'inline-flex';
+                    const notice = document.querySelector('.certificate-notice');
+                    if (notice) {
+                        notice.querySelector('h4').innerHTML = '<i class="fas fa-check-circle"></i> Certificate Earned!';
+                        notice.querySelector('p').textContent = 'Congratulations! You have completed all lessons and earned your certificate.';
+                    }
+                }
+                
+                // Save certificate to user's certificate list
+                saveCertificateToUser(courseData);
+            }
+        }
+
+        function showAchievementBadge(courseData) {
+            const badge = document.getElementById('achievementBadge');
+            badge.classList.add('show');
+            
+            // Create confetti effect
+            createConfetti();
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                badge.classList.remove('show');
+            }, 5000);
+        }
+
+        function createConfetti() {
+            const colors = ['#4a00e0', '#8e2de2', '#ff6b6b', '#00b894', '#fdcb6e'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation completes
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+
+        function saveCertificateToUser(courseData) {
+            // In a real app, this would save to a database
+            // For this demo, we'll save to localStorage
+            const userCertificates = JSON.parse(localStorage.getItem('userCertificates')) || [];
+            
+            const certificate = {
+                id: generateCertificateId(),
+                courseId: courseData.id,
+                courseTitle: courseData.title,
+                instructor: courseData.instructor,
+                dateEarned: new Date().toISOString(),
+                duration: courseData.duration,
+                completedLessons: courseData.completedLessons,
+                totalLessons: courseData.totalLessons
+            };
+            
+            userCertificates.push(certificate);
+            localStorage.setItem('userCertificates', JSON.stringify(userCertificates));
+            
+            console.log('Certificate saved:', certificate);
+        }
+
+        function generateCertificateId() {
+            return 'cert_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function updateCertificateInfo(courseData) {
+            const today = new Date();
+            document.getElementById('certificateDate').textContent = today.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            document.getElementById('certificateCourseTitle').textContent = courseData.title;
+            document.getElementById('certificateRecipient').textContent = userData.name;
+            document.getElementById('certificateCourseName').textContent = courseData.title;
+            document.getElementById('certificateDateDisplay').textContent = `Issued on ${today.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            })}`;
+            
+            document.getElementById('certificateDescription').textContent = 
+                `This certificate is awarded to ${userData.name} for successfully completing the ${courseData.title} course with all ${courseData.totalLessons} lessons.`;
+        }
+
+        function setupEventListeners() {
+            const video = document.querySelector('.video-player');
+            const playPauseBtn = document.querySelector('.play-pause');
+            const rewindBtn = document.querySelector('.rewind-button');
+            const forwardBtn = document.querySelector('.forward-button');
+            const muteBtn = document.querySelector('.mute-button');
+            const fullscreenBtn = document.querySelector('.fullscreen-button');
+            const progressContainer = document.querySelector('.progress-container');
+            const volumeSlider = document.querySelector('.volume-slider');
+            const volumeProgress = document.querySelector('.volume-progress');
+            const settingsBtn = document.querySelector('.settings-button');
+            const courseTabs = document.querySelectorAll('.course-tab');
+            const helpButton = document.getElementById('helpButton');
+            const notesButton = document.getElementById('notesButton');
+            const viewCertificateBtn = document.getElementById('viewCertificateBtn');
+            const viewCertificateBtnBadge = document.getElementById('viewCertificateBtnBadge');
+            const certificateModal = document.getElementById('certificateModal');
+            const closeCertificateModal = document.getElementById('closeCertificateModal');
+            const downloadCertificateBtn = document.getElementById('downloadCertificateBtn');
+            const shareCertificateBtn = document.getElementById('shareCertificateBtn');
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            // Play/Pause toggle
+            playPauseBtn.addEventListener('click', () => {
+                if (video.paused) {
+                    video.play();
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                } else {
+                    video.pause();
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                }
+            });
+            
+            // Rewind 10 seconds
+            rewindBtn.addEventListener('click', () => {
+                video.currentTime = Math.max(0, video.currentTime - 10);
+            });
+            
+            // Forward 10 seconds
+            forwardBtn.addEventListener('click', () => {
+                video.currentTime = Math.min(video.duration, video.currentTime + 10);
+            });
+            
+            // Mute toggle
+            muteBtn.addEventListener('click', () => {
+                video.muted = !video.muted;
+                muteBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+            });
+            
+            // Fullscreen toggle
+            fullscreenBtn.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.querySelector('.video-container').requestFullscreen().catch(err => {
+                        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                    });
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+            
+            // Update time display
+            video.addEventListener('timeupdate', () => {
+                const currentTime = formatTime(video.currentTime);
+                const duration = formatTime(video.duration);
+                document.querySelector('.time-display').textContent = `${currentTime} / ${duration}`;
+                
+                // Update progress bar
+                const progress = (video.currentTime / video.duration) * 100;
+                document.querySelector('.progress-bar').style.width = `${progress}%`;
+            });
+            
+            // Click on progress bar to seek
+            progressContainer.addEventListener('click', (e) => {
+                const rect = progressContainer.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                video.currentTime = pos * video.duration;
+            });
+            
+            // Volume control
+            volumeSlider.addEventListener('click', (e) => {
+                const rect = volumeSlider.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                video.volume = pos;
+                volumeProgress.style.width = `${pos * 100}%`;
+            });
+            
+            // Toggle settings menu
+            settingsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelector('.settings-menu').classList.toggle('show');
+            });
+            
+            // Close settings menu when clicking elsewhere
+            document.addEventListener('click', () => {
+                document.querySelector('.settings-menu').classList.remove('show');
+            });
+            
+            // Lesson selection (delegated event for dynamically loaded content)
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.lesson')) {
+                    const lesson = e.target.closest('.lesson');
+                    const courseId = lesson.getAttribute('data-course-id');
+                    const lessonId = lesson.getAttribute('data-lesson-id');
+                    
+                    if (!courseId || !lessonId) return;
+                    
+                    // Get course data
+                    const courseData = courseDatabase[courseId];
+                    if (!courseData) return;
+                    
+                    // Find the lesson in course data
+                    let foundLesson = null;
+                    for (const module of courseData.modules) {
+                        foundLesson = module.lessons.find(l => l.id === lessonId);
+                        if (foundLesson) break;
+                    }
+                    
+                    if (!foundLesson) return;
+                    
+                    // Remove active class from all lessons
+                    document.querySelectorAll('.lesson').forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to clicked lesson
+                    lesson.classList.add('active');
+                    
+                    // Update lesson icon
+                    const icon = lesson.querySelector('.lesson-icon i');
+                    icon.classList.remove('fa-circle', 'fa-play-circle');
+                    icon.classList.add('fa-play-circle');
+                    
+                    // Update video source with the lesson's YouTube video
+                    const videoPlayer = document.getElementById('videoPlayer');
+                    if (foundLesson.videoUrl) {
+                        videoPlayer.src = foundLesson.videoUrl;
+                    }
+                    
+                    // Update progress if this is a new lesson
+                    if (!foundLesson.completed) {
+                        lesson.classList.add('completed');
+                        lesson.querySelector('.lesson-icon i').classList.remove('fa-play-circle', 'fa-circle');
+                        lesson.querySelector('.lesson-icon i').classList.add('fa-check-circle');
+                        
+                        // Update course data
+                        foundLesson.completed = true;
+                        courseData.completedLessons++;
+                        updateCourseProgress(courseData);
+                        checkCertificateEligibility(courseData);
+                        
+                        // Save progress to localStorage
+                        const completedLessonIds = [];
+                        courseData.modules.forEach(module => {
+                            module.lessons.forEach(l => {
+                                if (l.completed) completedLessonIds.push(l.id);
+                            });
+                        });
+                        saveVideoProgress(courseId, courseData.completedLessons, completedLessonIds);
+                        
+                        // Update module progress
+                        const moduleHeader = lesson.closest('.module').querySelector('.module-header');
+                        const moduleProgress = moduleHeader.querySelector('.module-progress');
+                        const completedCount = lesson.closest('.module-content').querySelectorAll('.lesson.completed').length;
+                        const totalCount = lesson.closest('.module-content').querySelectorAll('.lesson').length;
+                        moduleProgress.textContent = `${completedCount}/${totalCount} lessons`;
+                    }
+                }
+            });
+            
+            // Course tabs
+            courseTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    courseTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // In a real app, we would load the content for this tab
+                    const tabName = tab.getAttribute('data-tab');
+                    console.log(`Loading ${tabName} tab...`);
+                });
+            });
+            
+            // Navigation items
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Remove active class from all nav items
+                    navItems.forEach(i => i.classList.remove('active'));
+                    
+                    // Add active class to clicked nav item
+                    item.classList.add('active');
+                    
+                    // In a real app, we would load the content for this section
+                    const section = item.getAttribute('data-section');
+                    console.log(`Loading ${section} section...`);
+                });
+            });
+            
+            // Help button
+            helpButton.addEventListener('click', () => {
+                alert('Help feature would open a question form in a real application.');
+            });
+            
+            // Notes button
+            notesButton.addEventListener('click', () => {
+                alert('Note-taking feature would open in a real application.');
+            });
+            
+            // Certificate buttons
+            if (viewCertificateBtn) {
+                viewCertificateBtn.addEventListener('click', () => {
+                    certificateModal.style.display = 'flex';
+                });
+            }
+            
+            if (viewCertificateBtnBadge) {
+                viewCertificateBtnBadge.addEventListener('click', () => {
+                    document.getElementById('achievementBadge').classList.remove('show');
+                    certificateModal.style.display = 'flex';
+                });
+            }
+            
+            // Close certificate modal
+            closeCertificateModal.addEventListener('click', () => {
+                certificateModal.style.display = 'none';
+            });
+            
+            // Download certificate
+            downloadCertificateBtn.addEventListener('click', () => {
+                alert('In a real application, this would download the certificate as a PDF.');
+            });
+            
+            // Share certificate
+            shareCertificateBtn.addEventListener('click', () => {
+                alert('In a real application, this would open sharing options (LinkedIn, Twitter, etc.).');
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === certificateModal) {
+                    certificateModal.style.display = 'none';
+                }
+                if (e.target === document.getElementById('achievementBadge')) {
+                    document.getElementById('achievementBadge').classList.remove('show');
+                }
+            });
+        }
+        
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+    </script>
+</body>
+</html>

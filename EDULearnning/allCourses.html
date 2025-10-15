@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Courses | EduLearn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #564FD8;
+            --secondary: #FF416C;
+            --dark: #1A1A2E;
+            --light: #F5F5F7;
+            --accent: #00E5FF;
+            --success: #2ECC71;
+            --warning: #F39C12;
+            --danger: #E74C3C;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --glow: 0 0 15px rgba(108, 99, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FAFAFA;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header & Navigation - Updated to match previous style */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0 5%;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            box-shadow: var(--shadow-md);
+            border-radius: 0.5rem;
+            padding: 1rem 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 100;
+        }
+
+        .dropdown:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 0.5rem 1.5rem;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f7;
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            width: 300px;
+            transition: var(--transition);
+        }
+
+        .search-bar:focus-within {
+            box-shadow: var(--glow);
+            background-color: white;
+        }
+
+        .search-bar i {
+            color: #777;
+            margin-right: 0.5rem;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(108, 99, 255, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: 1px solid var(--primary);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            box-shadow: var(--glow);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 5rem 5% 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+        }
+
+        .page-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        /* Filter Bar - Updated */
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-options select {
+            padding: 0.8rem 1.2rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            font-size: 1rem;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+            min-width: 180px;
+            transition: var(--transition);
+        }
+
+        .filter-options select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+        }
+
+        /* Courses Grid - Updated */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .course-card {
+            background-color: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1) 0%, rgba(0, 229, 255, 0.05) 100%);
+            z-index: 0;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .course-card:hover::before {
+            opacity: 1;
+        }
+
+        .course-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-img::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+        }
+
+        .course-info {
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .course-category {
+            display: inline-block;
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        .course-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .course-instructor {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .course-price {
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+        }
+
+        .course-price.original {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .course-price.sale {
+            color: var(--secondary);
+        }
+
+        .course-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: #F39C12;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .course-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-enroll {
+            width: 100%;
+            text-align: center;
+            padding: 0.8rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-enroll:hover {
+            background-color: var(--primary-dark);
+            box-shadow: var(--glow);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-left: 0.5rem;
+            color: white;
+        }
+
+        .badge-new {
+            background-color: var(--accent);
+        }
+
+        .badge-popular {
+            background-color: var(--secondary);
+        }
+
+        .badge-free {
+            background-color: var(--success);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            overflow-y: auto;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 900px;
+            margin: 2rem auto;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-50px);
+            transition: var(--transition);
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            position: relative;
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .modal-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .modal-instructor {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .instructor-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+            border: 3px solid var(--primary);
+        }
+
+        .instructor-info h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .instructor-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .modal-details {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .course-description {
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .course-features {
+            margin-bottom: 2rem;
+        }
+
+        .features-list {
+            list-style: none;
+        }
+
+        .features-list li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .features-list i {
+            margin-right: 0.8rem;
+            color: var(--primary);
+        }
+
+        .modal-sidebar {
+            background-color: #f9f9f9;
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sidebar-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-price.original {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        .sidebar-price.sale {
+            color: var(--secondary);
+        }
+
+        .sidebar-meta {
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-meta-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar-meta-item:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar-meta-item span:first-child {
+            color: #666;
+        }
+
+        .sidebar-meta-item span:last-child {
+            font-weight: 600;
+        }
+
+        .modal-enroll-btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+
+        .modal-enroll-btn:hover {
+            background-color: var(--primary-dark);
+            box-shadow: var(--glow);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .header-container {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .search-bar {
+                order: 3;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .modal-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .courses-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+
+            .filter-bar {
+                flex-direction: column;
+            }
+            
+            .filter-options {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .filter-options select {
+                width: 100%;
+            }
+
+            .modal-header {
+                height: 200px;
+            }
+
+            .modal-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .filter-bar {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                min-width: 100%;
+            }
+            
+            .filter-options select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="homepage.html" class="logo">
+                <i class="fas fa-graduation-cap"></i>EduLearn
+            </a>
+            
+            <nav>
+                <ul>
+                    <li><a href="homepage.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Courses <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="allCourses.html">All Courses</a>
+                        <a href="popular.html">Popular Courses</a>
+                        <a href="newReleases.html">New Releases</a>
+                        <a href="freeCourses.html">Free Courses</a>
+                        </div>
+                    </li>
+                    <li><a href="instructors.html">Instructors</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search courses, instructors...">
+            </div>
+            
+            <div class="user-actions">
+                <a href="login.html" class="btn btn-outline">Log In</a>
+                <a href="studentSignUp.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <h1>All Courses</h1>
+        <p>Browse our complete catalog of cutting-edge courses across all categories and skill levels</p>
+    </div>
+
+    <div class="container">
+        <div class="filter-bar">
+            <h3>Filter Courses:</h3>
+            <div class="filter-options">
+                <select>
+                    <option>All Categories</option>
+                    <option>Web Development</option>
+                    <option>Data Science</option>
+                    <option>Mobile Development</option>
+                    <option>Design</option>
+                    <option>Business</option>
+                </select>
+                <select>
+                    <option>All Levels</option>
+                    <option>Beginner</option>
+                    <option>Intermediate</option>
+                    <option>Advanced</option>
+                </select>
+                <select>
+                    <option>All Prices</option>
+                    <option>Free</option>
+                    <option>Paid</option>
+                    <option>On Sale</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="courses-grid">
+            <!-- Course 1 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Web Development</span>
+                    <h3 class="course-title">Complete JavaScript Course 2024: From Zero to Expert <span class="badge badge-new">NEW</span></h3>
+                    <p class="course-instructor">By John Smith</p>
+                    <div class="course-meta">
+                        <div>
+                            <span class="course-price original">₹1300</span>
+                            <span class="course-price sale">₹900</span>
+                        </div>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.8 (1,245)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openModal('course1')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Data Science</span>
+                    <h3 class="course-title">Python for Data Science and Machine Learning <span class="badge badge-popular">POPULAR</span></h3>
+                    <p class="course-instructor">By Sarah Johnson</p>
+                    <div class="course-meta">
+                        <span class="course-price">₹748</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.7 (892)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openModal('course2')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Web Development</span>
+                    <h3 class="course-title">Modern React with Redux <span class="badge badge-popular">POPULAR</span></h3>
+                    <p class="course-instructor">By Michael Brown</p>
+                    <div class="course-meta">
+                        <span class="course-price">₹2000</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.9 (1,532)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openModal('course3')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 4 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Data Science</span>
+                    <h3 class="course-title">SQL for Data Analysis</h3>
+                    <p class="course-instructor">By Emily Wilson</p>
+                    <div class="course-meta">
+                        <span class="course-price">₹1928</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.6 (567)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openModal('course4')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 5 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Mobile Development</span>
+                    <h3 class="course-title">Flutter & Dart - Complete Guide 2024</h3>
+                    <p class="course-instructor">By David Lee</p>
+                    <div class="course-meta">
+                        <span class="course-price">₹3631</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.8 (723)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openModal('course5')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 6 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Business</span>
+                    <h3 class="course-title">Digital Marketing Masterclass</h3>
+                    <p class="course-instructor">By Jessica Chen</p>
+                    <div class="course-meta">
+                        <span class="course-price">₹2738</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.5 (421)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openModal('course6')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 7 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1541462608143-67571c6738dd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Design</span>
+                    <h3 class="course-title">UI/UX Design Fundamentals <span class="badge badge-free">FREE</span></h3>
+                    <p class="course-instructor">By Alex Turner</p>
+                    <div class="course-meta">
+                        <span class="course-price">₹1373</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.7 (654)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openModal('course7')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 8 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Web Development</span>
+                    <h3 class="course-title">Node.js - The Complete Guide <span class="badge badge-new">NEW</span></h3>
+                    <p class="course-instructor">By Robert Taylor</p>
+                    <div class="course-meta">
+                        <span class="course-price">₹5363</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.9 (987)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openModal('course8')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Modals -->
+    <!-- Course 1 Modal -->
+    <div class="modal" id="course1-modal">
+        <div class="modal-content">
+            <div class="modal-header" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');">
+                <button class="modal-close" onclick="closeModal('course1')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title">Complete JavaScript Course 2024: From Zero to Expert <span class="badge badge-new">NEW</span></h2>
+                
+                <div class="modal-instructor">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Smith" class="instructor-avatar">
+                    <div class="instructor-info">
+                        <h4>John Smith</h4>
+                        <p>Senior Web Developer | 10+ Years Experience</p>
+                    </div>
+                </div>
+                
+                <div class="modal-details">
+                    <div class="course-details">
+                        <div class="course-description">
+                            <p>Master JavaScript with the most complete course on the market! Projects, challenges, quizzes, JavaScript ES6+, OOP, AJAX, Webpack, and more! This course includes everything you need to go from JavaScript beginner to JavaScript expert.</p>
+                            <p>You'll learn modern JavaScript from the very beginning, step-by-step. I'll guide you through practical and fun code examples, important theory about how JavaScript works behind the scenes, and beautiful and complete projects.</p>
+                        </div>
+                        
+                        <div class="course-features">
+                            <h3>What you'll learn</h3>
+                            <ul class="features-list">
+                                <li><i class="fas fa-check"></i> Become an advanced, confident, and modern JavaScript developer</li>
+                                <li><i class="fas fa-check"></i> Build 6 beautiful real-world projects for your portfolio</li>
+                                <li><i class="fas fa-check"></i> How to think and work like a developer: problem-solving, researching, workflows</li>
+                                <li><i class="fas fa-check"></i> Modern ES6+ from the beginning: arrow functions, destructuring, spread operator, etc.</li>
+                                <li><i class="fas fa-check"></i> Complex concepts like the 'this' keyword, higher-order functions, closures, etc.</li>
+                                <li><i class="fas fa-check"></i> Asynchronous JavaScript: Event loop, promises, async/await, AJAX calls</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-sidebar">
+                        <div class="sidebar-price">
+                            <span class="course-price original">₹1300</span>
+                            <span class="course-price sale">₹900</span>
+                        </div>
+                        
+                        <div class="sidebar-meta">
+                            <div class="sidebar-meta-item">
+                                <span>Category:</span>
+                                <span>Web Development</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span>Level:</span>
+                                <span>Beginner to Advanced</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span>Duration:</span>
+                                <span>42 hours</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span>Lectures:</span>
+                                <span>320</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span>Students:</span>
+                                <span>12,458</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span>Rating:</span>
+                                <span>4.8 (1,245 reviews)</span>
+                            </div>
+                        </div>
+                        
+                         <button class="modal-enroll-btn" onclick="redirectToPayment('Modern React with Redux', '2000', 'course3')">Enroll Now</button>
+                    <button class="btn-outline" style="width: 100%; margin-top: 0.5rem;">Add to Wishlist</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course 2 Modal -->
+    <div class="modal" id="course2-modal">
+        <div class="modal-content">
+            <div class="modal-header" style="background-image: url('https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');">
+                <button class="modal-close" onclick="closeModal('course2')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title">Python for Data Science and Machine Learning <span class="badge badge-popular">POPULAR</span></h2>
+                
+                <div class="modal-instructor">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson" class="instructor-avatar">
+                    <div class="instructor-info">
+                        <h4>Sarah Johnson</h4>
+                        <p>Data Scientist | AI Researcher</p>
+                    </div>
+                </div>
+                
+                <div class="modal-details">
+                    <div class="course-details">
+                        <div class="course-description">
+                            <p>This comprehensive course will be your guide to learning how to use the power of Python to analyze data, create beautiful visualizations, and use powerful machine learning algorithms! Data Scientist has been ranked the number one job on Glassdoor and the average salary of a data scientist is over $120,000 in the United States according to Indeed!</p>
+                            <p>This course is designed for both beginners with some programming experience or experienced developers looking to make the jump to Data Science! We'll teach you how to program with Python, how to create amazing data visualizations, and how to use Machine Learning with Python!</p>
+                        </div>
+                        
+                        <div class="course-features">
+                            <h3>What you'll learn</h3>
+                            <ul class="features-list">
+                                <li><i class="fas fa-check"></i> Use Python for Data Science and Machine Learning</li>
+                                <li><i class="fas fa-check"></i> Use Spark for Big Data Analysis</li>
+                                <li><i class="fas fa-check"></i> Implement Machine Learning Algorithms</li>
+                                <li><i class="fas fa-check"></i> Learn to use NumPy for Numerical Data</li>
+                                <li><i class="fas fa-check"></i> Learn to use Pandas for Data Analysis</li>
+                                <li><i class="fas fa-check"></i> Learn to use Matplotlib for Python Plotting</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-sidebar">
+                        <div class="sidebar-price">
+                            <span class="course-price">₹748</span>
+                        </div>
+                        
+                        <div class="sidebar-meta">
+                            <div class="sidebar-meta-item">
+                                <span>Category:</span>
+                                <span>Data Science</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span>Level:</span>
+                                <span>Intermediate</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span>Duration:</span>
+                                <span>36 hours</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span>Lectures:</span>
+                                <span>280</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span>Students:</span>
+                                <span>8,942</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span>Rating:</span>
+                                <span>4.7 (892 reviews)</span>
+                            </div>
+                        </div>
+                        
+                         <button class="modal-enroll-btn" onclick="redirectToPayment('Modern React with Redux', '2000', 'course3')">Enroll Now</button>
+                    <button class="btn-outline" style="width: 100%; margin-top: 0.5rem;">Add to Wishlist</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course 3 Modal -->
+<div class="modal" id="course3-modal">
+    <div class="modal-content">
+        <div class="modal-header" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');">
+            <button class="modal-close" onclick="closeModal('course3')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <h2 class="modal-title">Modern React with Redux <span class="badge badge-popular">POPULAR</span></h2>
+            
+            <div class="modal-instructor">
+                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Michael Brown" class="instructor-avatar">
+                <div class="instructor-info">
+                    <h4>Michael Brown</h4>
+                    <p>Frontend Architect | React Specialist</p>
+                </div>
+            </div>
+            
+            <div class="modal-details">
+                <div class="course-details">
+                    <div class="course-description">
+                        <p>This is the tutorial you've been looking for to master modern React development in 2024! This course walks you through building several React apps of increasing complexity, each designed to demonstrate a core concept of React development.</p>
+                        <p>You'll learn all about React Hooks, Redux, React Router, and more. We'll start from the ground up, teaching you the basics of React and then moving on to more advanced topics. By the end of this course, you'll be able to build your own full-stack React applications from scratch.</p>
+                    </div>
+                    
+                    <div class="course-features">
+                        <h3>What you'll learn</h3>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Build amazing single page applications with React and Redux</li>
+                            <li><i class="fas fa-check"></i> Master the latest React features including Hooks, Context API, Suspense, and more</li>
+                            <li><i class="fas fa-check"></i> Realize the power of building composable components</li>
+                            <li><i class="fas fa-check"></i> Be the engineer who explains how Redux works to everyone else</li>
+                            <li><i class="fas fa-check"></i> Become fluent in the toolchain supporting React, including NPM, Webpack, Babel, and ES6/ES7</li>
+                            <li><i class="fas fa-check"></i> Build your own custom React hooks</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="modal-sidebar">
+                    <div class="sidebar-price">
+                        <span class="course-price">₹2000</span>
+                    </div>
+                    
+                    <div class="sidebar-meta">
+                        <div class="sidebar-meta-item">
+                            <span>Category:</span>
+                            <span>Web Development</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Level:</span>
+                            <span>Intermediate</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Duration:</span>
+                            <span>48 hours</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Lectures:</span>
+                            <span>350</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Students:</span>
+                            <span>15,320</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Rating:</span>
+                            <span>4.9 (1,532 reviews)</span>
+                        </div>
+                    </div>
+                    
+                    <button class="modal-enroll-btn" onclick="redirectToPayment('Modern React with Redux', '2000', 'course3')">Enroll Now</button>
+                    <button class="btn-outline" style="width: 100%; margin-top: 0.5rem;">Add to Wishlist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Course 4 Modal -->
+<div class="modal" id="course4-modal">
+    <div class="modal-content">
+        <div class="modal-header" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');">
+            <button class="modal-close" onclick="closeModal('course4')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <h2 class="modal-title">SQL for Data Analysis</h2>
+            
+            <div class="modal-instructor">
+                <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Emily Wilson" class="instructor-avatar">
+                <div class="instructor-info">
+                    <h4>Emily Wilson</h4>
+                    <p>Data Analyst | SQL Expert</p>
+                </div>
+            </div>
+            
+            <div class="modal-details">
+                <div class="course-details">
+                    <div class="course-description">
+                        <p>Master SQL for Data Analysis and learn how to work with databases to extract meaningful insights. This course covers everything from basic queries to advanced analytical functions used by data professionals.</p>
+                        <p>You'll learn how to write complex SQL queries, work with multiple tables, use window functions, and optimize queries for performance. By the end, you'll be able to analyze large datasets efficiently and answer complex business questions.</p>
+                    </div>
+                    
+                    <div class="course-features">
+                        <h3>What you'll learn</h3>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Write complex SQL queries for data analysis</li>
+                            <li><i class="fas fa-check"></i> Work with joins, subqueries, and common table expressions</li>
+                            <li><i class="fas fa-check"></i> Use window functions for advanced analytics</li>
+                            <li><i class="fas fa-check"></i> Optimize query performance</li>
+                            <li><i class="fas fa-check"></i> Analyze real-world datasets</li>
+                            <li><i class="fas fa-check"></i> Create reports and visualizations from SQL results</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="modal-sidebar">
+                    <div class="sidebar-price">
+                        <span class="course-price">₹1928</span>
+                    </div>
+                    
+                    <div class="sidebar-meta">
+                        <div class="sidebar-meta-item">
+                            <span>Category:</span>
+                            <span>Data Science</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Level:</span>
+                            <span>Beginner to Intermediate</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Duration:</span>
+                            <span>28 hours</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Lectures:</span>
+                            <span>190</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Students:</span>
+                            <span>5,670</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Rating:</span>
+                            <span>4.6 (567 reviews)</span>
+                        </div>
+                    </div>
+                    
+                    <button class="modal-enroll-btn" onclick="redirectToPayment('SQL for Data Analysis', '1928', 'course4')">Enroll Now</button>
+                    <button class="btn-outline" style="width: 100%; margin-top: 0.5rem;">Add to Wishlist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Course 5 Modal -->
+<div class="modal" id="course5-modal">
+    <div class="modal-content">
+        <div class="modal-header" style="background-image: url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');">
+            <button class="modal-close" onclick="closeModal('course5')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <h2 class="modal-title">Flutter & Dart - Complete Guide 2024</h2>
+            
+            <div class="modal-instructor">
+                <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="David Lee" class="instructor-avatar">
+                <div class="instructor-info">
+                    <h4>David Lee</h4>
+                    <p>Mobile Developer | Flutter Expert</p>
+                </div>
+            </div>
+            
+            <div class="modal-details">
+                <div class="course-details">
+                    <div class="course-description">
+                        <p>Learn Flutter and Dart to build beautiful, natively compiled applications for mobile, web, and desktop from a single codebase. This complete guide covers everything from basics to advanced topics.</p>
+                        <p>You'll build multiple apps throughout the course, learning state management, navigation, animations, and how to publish your apps. By the end, you'll be able to create professional-quality Flutter applications.</p>
+                    </div>
+                    
+                    <div class="course-features">
+                        <h3>What you'll learn</h3>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Build cross-platform apps with Flutter</li>
+                            <li><i class="fas fa-check"></i> Master Dart programming language</li>
+                            <li><i class="fas fa-check"></i> Implement state management solutions</li>
+                            <li><i class="fas fa-check"></i> Create beautiful UIs with Flutter widgets</li>
+                            <li><i class="fas fa-check"></i> Work with APIs and databases</li>
+                            <li><i class="fas fa-check"></i> Publish apps to Play Store and App Store</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="modal-sidebar">
+                    <div class="sidebar-price">
+                        <span class="course-price">₹3631</span>
+                    </div>
+                    
+                    <div class="sidebar-meta">
+                        <div class="sidebar-meta-item">
+                            <span>Category:</span>
+                            <span>Mobile Development</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Level:</span>
+                            <span>Intermediate</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Duration:</span>
+                            <span>40 hours</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Lectures:</span>
+                            <span>310</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Students:</span>
+                            <span>7,230</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Rating:</span>
+                            <span>4.8 (723 reviews)</span>
+                        </div>
+                    </div>
+                    
+                    <button class="modal-enroll-btn" onclick="redirectToPayment('Flutter & Dart - Complete Guide 2024', '3631', 'course5')">Enroll Now</button>
+                    <button class="btn-outline" style="width: 100%; margin-top: 0.5rem;">Add to Wishlist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Course 6 Modal -->
+<div class="modal" id="course6-modal">
+    <div class="modal-content">
+        <div class="modal-header" style="background-image: url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');">
+            <button class="modal-close" onclick="closeModal('course6')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <h2 class="modal-title">Digital Marketing Masterclass</h2>
+            
+            <div class="modal-instructor">
+                <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Jessica Chen" class="instructor-avatar">
+                <div class="instructor-info">
+                    <h4>Jessica Chen</h4>
+                    <p>Marketing Strategist | Growth Hacker</p>
+                </div>
+            </div>
+            
+            <div class="modal-details">
+                <div class="course-details">
+                    <div class="course-description">
+                        <p>This comprehensive digital marketing course covers all essential aspects of modern marketing including SEO, social media, email marketing, content marketing, PPC, and analytics.</p>
+                        <p>You'll learn strategies used by top marketers to grow businesses online. The course includes practical exercises and real-world case studies to help you apply what you learn immediately.</p>
+                    </div>
+                    
+                    <div class="course-features">
+                        <h3>What you'll learn</h3>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Develop complete digital marketing strategies</li>
+                            <li><i class="fas fa-check"></i> Master SEO and content marketing</li>
+                            <li><i class="fas fa-check"></i> Run effective social media campaigns</li>
+                            <li><i class="fas fa-check"></i> Create high-converting email sequences</li>
+                            <li><i class="fas fa-check"></i> Set up and optimize Google Ads</li>
+                            <li><i class="fas fa-check"></i> Analyze data with Google Analytics</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="modal-sidebar">
+                    <div class="sidebar-price">
+                        <span class="course-price">₹2738</span>
+                    </div>
+                    
+                    <div class="sidebar-meta">
+                        <div class="sidebar-meta-item">
+                            <span>Category:</span>
+                            <span>Business</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Level:</span>
+                            <span>All Levels</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Duration:</span>
+                            <span>35 hours</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Lectures:</span>
+                            <span>240</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Students:</span>
+                            <span>4,210</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Rating:</span>
+                            <span>4.5 (421 reviews)</span>
+                        </div>
+                    </div>
+                    
+                    <button class="modal-enroll-btn" onclick="redirectToPayment('Digital Marketing Masterclass', '2738', 'course6')">Enroll Now</button>
+                    <button class="btn-outline" style="width: 100%; margin-top: 0.5rem;">Add to Wishlist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Course 7 Modal -->
+<div class="modal" id="course7-modal">
+    <div class="modal-content">
+        <div class="modal-header" style="background-image: url('https://images.unsplash.com/photo-1541462608143-67571c6738dd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');">
+            <button class="modal-close" onclick="closeModal('course7')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <h2 class="modal-title">UI/UX Design Fundamentals <span class="badge badge-free">FREE</span></h2>
+            
+            <div class="modal-instructor">
+                <img src="https://randomuser.me/api/portraits/men/55.jpg" alt="Alex Turner" class="instructor-avatar">
+                <div class="instructor-info">
+                    <h4>Alex Turner</h4>
+                    <p>Product Designer | UX Researcher</p>
+                </div>
+            </div>
+            
+            <div class="modal-details">
+                <div class="course-details">
+                    <div class="course-description">
+                        <p>Learn the fundamentals of UI/UX design in this comprehensive free course. You'll learn design principles, user research methods, prototyping techniques, and how to create intuitive user interfaces.</p>
+                        <p>The course includes hands-on projects where you'll design a complete app from scratch, giving you practical experience to add to your portfolio.</p>
+                    </div>
+                    
+                    <div class="course-features">
+                        <h3>What you'll learn</h3>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Apply UX design principles</li>
+                            <li><i class="fas fa-check"></i> Conduct user research</li>
+                            <li><i class="fas fa-check"></i> Create wireframes and prototypes</li>
+                            <li><i class="fas fa-check"></i> Design intuitive user interfaces</li>
+                            <li><i class="fas fa-check"></i> Use Figma for UI design</li>
+                            <li><i class="fas fa-check"></i> Test and iterate designs</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="modal-sidebar">
+                    <div class="sidebar-price">
+                        <span class="course-price">FREE</span>
+                    </div>
+                    
+                    <div class="sidebar-meta">
+                        <div class="sidebar-meta-item">
+                            <span>Category:</span>
+                            <span>Design</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Level:</span>
+                            <span>Beginner</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Duration:</span>
+                            <span>25 hours</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Lectures:</span>
+                            <span>180</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Students:</span>
+                            <span>6,540</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Rating:</span>
+                            <span>4.7 (654 reviews)</span>
+                        </div>
+                    </div>
+                    
+                    <button class="modal-enroll-btn" onclick="redirectToPayment('UI/UX Design Fundamentals', '0', 'course7')">Enroll Now</button>
+                    <button class="btn-outline" style="width: 100%; margin-top: 0.5rem;">Add to Wishlist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Course 8 Modal -->
+<div class="modal" id="course8-modal">
+    <div class="modal-content">
+        <div class="modal-header" style="background-image: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');">
+            <button class="modal-close" onclick="closeModal('course8')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <h2 class="modal-title">Node.js - The Complete Guide <span class="badge badge-new">NEW</span></h2>
+            
+            <div class="modal-instructor">
+                <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="Robert Taylor" class="instructor-avatar">
+                <div class="instructor-info">
+                    <h4>Robert Taylor</h4>
+                    <p>Backend Developer | Node.js Specialist</p>
+                </div>
+            </div>
+            
+            <div class="modal-details">
+                <div class="course-details">
+                    <div class="course-description">
+                        <p>Master Node.js and learn to build modern, scalable backend applications with JavaScript. This comprehensive course covers everything from the basics to advanced topics like authentication, file uploads, and deployment.</p>
+                        <p>You'll build several projects including a complete REST API and a real-time application. By the end, you'll be able to create production-ready Node.js applications.</p>
+                    </div>
+                    
+                    <div class="course-features">
+                        <h3>What you'll learn</h3>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Build server-side applications with Node.js</li>
+                            <li><i class="fas fa-check"></i> Create RESTful APIs with Express</li>
+                            <li><i class="fas fa-check"></i> Work with databases (MongoDB & SQL)</li>
+                            <li><i class="fas fa-check"></i> Implement authentication and authorization</li>
+                            <li><i class="fas fa-check"></i> Handle file uploads and processing</li>
+                            <li><i class="fas fa-check"></i> Deploy Node.js applications</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="modal-sidebar">
+                    <div class="sidebar-price">
+                        <span class="course-price">₹5363</span>
+                    </div>
+                    
+                    <div class="sidebar-meta">
+                        <div class="sidebar-meta-item">
+                            <span>Category:</span>
+                            <span>Web Development</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Level:</span>
+                            <span>Intermediate</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Duration:</span>
+                            <span>45 hours</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Lectures:</span>
+                            <span>380</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Students:</span>
+                            <span>9,870</span>
+                        </div>
+                        <div class="sidebar-meta-item">
+                            <span>Rating:</span>
+                            <span>4.9 (987 reviews)</span>
+                        </div>
+                    </div>
+                    
+                    <button class="modal-enroll-btn" onclick="redirectToPayment('Node.js - The Complete Guide', '5363', 'course8')">Enroll Now</button>
+                    <button class="btn-outline" style="width: 100%; margin-top: 0.5rem;">Add to Wishlist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Course data management for allCourses.html
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load and display courses from localStorage
+        loadCoursesFromStorage();
+        
+        // Add event listeners for filter functionality
+        setupFilterHandlers();
+        
+        // Search functionality
+        setupSearchFunctionality();
+    });
+
+    // Function to redirect to payment page with course details
+    function redirectToPayment(courseName, coursePrice, courseId) {
+        // Get additional course details from the modal
+        const modal = document.getElementById(`${courseId}-modal`);
+        let category = 'Web Development';
+        let instructor = 'John Doe';
+        let thumbnail = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60';
+        
+        if (modal) {
+            const categoryElement = modal.querySelector('.sidebar-meta-item:nth-child(1) span:last-child');
+            const instructorElement = modal.querySelector('.instructor-info h4');
+            const thumbnailStyle = modal.querySelector('.modal-header').style.backgroundImage;
+            
+            if (categoryElement) category = categoryElement.textContent;
+            if (instructorElement) instructor = instructorElement.textContent;
+            if (thumbnailStyle) {
+                thumbnail = thumbnailStyle.replace('url("', '').replace('")', '');
+            }
+        }
+        
+        // Store course details in localStorage to use on payment page
+        localStorage.setItem('enrollingCourse', JSON.stringify({
+            name: courseName,
+            price: coursePrice,
+            id: courseId,
+            category: category,
+            instructor: instructor,
+            thumbnail: thumbnail
+        }));
+        
+        // Redirect to payment page
+        window.location.href = 'coursePayment.html';
+    }
+
+    // Function to open modal
+    function openModal(courseId) {
+        const modal = document.getElementById(`${courseId}-modal`);
+        if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    // Function to close modal
+    function closeModal(courseId) {
+        const modal = document.getElementById(`${courseId}-modal`);
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Close modal when clicking outside of it
+    window.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Function to load courses from localStorage and display them
+    function loadCoursesFromStorage() {
+        try {
+            const storedCourses = JSON.parse(localStorage.getItem('edulearnCourses') || '[]');
+            const coursesGrid = document.querySelector('.courses-grid');
+            
+            if (storedCourses.length === 0) {
+                console.log('No custom courses found in localStorage');
+                return;
+            }
+            
+            // Add new courses from localStorage (starting after the 8 default courses)
+            storedCourses.forEach((course, index) => {
+                // Check if course already exists to avoid duplicates
+                if (!document.getElementById(`course-${course.id}`)) {
+                    const courseCard = createCourseCard(course, index + 9); // Start after existing courses
+                    coursesGrid.appendChild(courseCard);
+                }
+            });
+            
+            console.log(`Loaded ${storedCourses.length} custom courses from localStorage`);
+            
+        } catch (error) {
+            console.error('Error loading courses from localStorage:', error);
+        }
+    }
+
+    // Function to create a course card HTML element
+    function createCourseCard(course, displayIndex) {
+        const courseCard = document.createElement('div');
+        courseCard.className = 'course-card';
+        courseCard.id = `course-${course.id}`;
+        
+        // Determine badge type
+        let badgeHTML = '';
+        const daysSinceCreation = Math.floor((new Date() - new Date(course.createdAt)) / (1000 * 60 * 60 * 24));
+        
+        if (daysSinceCreation < 30) {
+            badgeHTML = '<span class="badge badge-new">NEW</span>';
+        } else if (course.students > 500) {
+            badgeHTML = '<span class="badge badge-popular">POPULAR</span>';
+        } else if (course.price === 0) {
+            badgeHTML = '<span class="badge badge-free">FREE</span>';
+        }
+        
+        // Price display logic
+        let priceHTML = '';
+        if (course.price === 0) {
+            priceHTML = '<span class="course-price">FREE</span>';
+        } else {
+            // Add some random sale logic for demonstration
+            const hasSale = Math.random() > 0.7;
+            if (hasSale) {
+                const originalPrice = Math.round(course.price * 1.3);
+                priceHTML = `
+                    <span class="course-price original">₹${originalPrice}</span>
+                    <span class="course-price sale">₹${course.price}</span>
+                `;
+            } else {
+                priceHTML = `<span class="course-price">₹${course.price}</span>`;
+            }
+        }
+        
+        courseCard.innerHTML = `
+            <div class="course-img" style="background-image: url('${course.thumbnail}');"></div>
+            <div class="course-info">
+                <span class="course-category">${course.category}</span>
+                <h3 class="course-title">${course.title} ${badgeHTML}</h3>
+                <p class="course-instructor">By ${course.instructor || 'John Doe'}</p>
+                <div class="course-meta">
+                    <div>${priceHTML}</div>
+                    <span class="course-rating">
+                        <i class="fas fa-star"></i> ${course.rating || '4.5'} (${course.reviews || '0'})
+                    </span>
+                </div>
+                <div class="course-actions">
+                    <button class="btn-enroll" onclick="openModal('custom-course${displayIndex}')">Enroll Now</button>
+                </div>
+            </div>
+        `;
+        
+        // Also create a corresponding modal for this course
+        createCourseModal(course, displayIndex);
+        
+        return courseCard;
+    }
+
+    // Function to create a modal for the course
+    function createCourseModal(course, displayIndex) {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.id = `custom-course${displayIndex}-modal`;
+        
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header" style="background-image: url('${course.thumbnail}');">
+                    <button class="modal-close" onclick="closeModal('custom-course${displayIndex}')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h2 class="modal-title">${course.title}</h2>
+                    
+                    <div class="modal-instructor">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="${course.instructor || 'John Doe'}" class="instructor-avatar">
+                        <div class="instructor-info">
+                            <h4>${course.instructor || 'John Doe'}</h4>
+                            <p>Course Instructor</p>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-details">
+                        <div class="course-details">
+                            <div class="course-description">
+                                <p>${course.description}</p>
+                            </div>
+                            
+                            <div class="course-features">
+                                <h3>What you'll learn</h3>
+                                <ul class="features-list">
+                                    <li><i class="fas fa-check"></i> Comprehensive coverage of ${course.category} topics</li>
+                                    <li><i class="fas fa-check"></i> Practical examples and real-world applications</li>
+                                    <li><i class="fas fa-check"></i> Hands-on projects to build your portfolio</li>
+                                    <li><i class="fas fa-check"></i> Expert guidance from experienced instructor</li>
+                                    <li><i class="fas fa-check"></i> Lifetime access to course materials</li>
+                                    <li><i class="fas fa-check"></i> Certificate of completion</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-sidebar">
+                            <div class="sidebar-price">
+                                ${course.price === 0 ? 
+                                    '<span class="course-price">FREE</span>' : 
+                                    `<span class="course-price">₹${course.price}</span>`
+                                }
+                            </div>
+                            
+                            <div class="sidebar-meta">
+                                <div class="sidebar-meta-item">
+                                    <span>Category:</span>
+                                    <span>${course.category}</span>
+                                </div>
+                                <div class="sidebar-meta-item">
+                                    <span>Level:</span>
+                                    <span>${course.level || 'All Levels'}</span>
+                                </div>
+                                <div class="sidebar-meta-item">
+                                    <span>Duration:</span>
+                                    <span>${course.duration || 'Self-paced'}</span>
+                                </div>
+                                <div class="sidebar-meta-item">
+                                    <span>Lectures:</span>
+                                    <span>${course.lectures || 'Coming soon'}</span>
+                                </div>
+                                <div class="sidebar-meta-item">
+                                    <span>Students:</span>
+                                    <span>${course.students || '0'}</span>
+                                </div>
+                                <div class="sidebar-meta-item">
+                                    <span>Rating:</span>
+                                    <span>${course.rating || 'New'} (${course.reviews || '0'} reviews)</span>
+                                </div>
+                            </div>
+                            
+                            <button class="modal-enroll-btn" onclick="redirectToPayment('${course.title}', '${course.price}', 'custom-course${displayIndex}')">Enroll Now</button>
+                            <button class="btn-outline" style="width: 100%; margin-top: 0.5rem;">Add to Wishlist</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    }
+
+    // Function to setup filter handlers
+    function setupFilterHandlers() {
+        const filterSelects = document.querySelectorAll('.filter-options select');
+        
+        filterSelects.forEach(select => {
+            select.addEventListener('change', filterCourses);
+        });
+    }
+
+    // Function to setup search functionality
+    function setupSearchFunctionality() {
+        const searchInput = document.querySelector('.search-bar input');
+        
+        searchInput.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+        });
+        
+        searchInput.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
+        
+        searchInput.addEventListener('input', function() {
+            searchCourses(this.value);
+        });
+    }
+
+    // Function to search courses
+    function searchCourses(searchTerm) {
+        const courseCards = document.querySelectorAll('.course-card');
+        const searchLower = searchTerm.toLowerCase();
+        
+        courseCards.forEach(card => {
+            const title = card.querySelector('.course-title').textContent.toLowerCase();
+            const category = card.querySelector('.course-category').textContent.toLowerCase();
+            const instructor = card.querySelector('.course-instructor').textContent.toLowerCase();
+            
+            if (title.includes(searchLower) || category.includes(searchLower) || instructor.includes(searchLower)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    // Function to filter courses based on selections
+    function filterCourses() {
+        const categoryFilter = document.querySelector('.filter-options select:nth-child(1)').value;
+        const levelFilter = document.querySelector('.filter-options select:nth-child(2)').value;
+        const priceFilter = document.querySelector('.filter-options select:nth-child(3)').value;
+        
+        const courseCards = document.querySelectorAll('.course-card');
+        
+        courseCards.forEach(card => {
+            let showCard = true;
+            const category = card.querySelector('.course-category').textContent;
+            const priceText = card.querySelector('.course-price:not(.original)') ? 
+                card.querySelector('.course-price:not(.original)').textContent : 
+                card.querySelector('.course-price').textContent;
+            const isFree = priceText === 'FREE';
+            const price = isFree ? 0 : parseInt(priceText.replace('₹', ''));
+            
+            // Category filter
+            if (categoryFilter !== 'All Categories' && category !== categoryFilter) {
+                showCard = false;
+            }
+            
+            // Price filter
+            if (priceFilter === 'Free' && !isFree) {
+                showCard = false;
+            } else if (priceFilter === 'Paid' && isFree) {
+                showCard = false;
+            } else if (priceFilter === 'On Sale' && !card.querySelector('.course-price.original')) {
+                showCard = false;
+            }
+            
+            // Show or hide card
+            card.style.display = showCard ? 'block' : 'none';
+        });
+    }
+
+    // Utility function to clear custom courses (for testing)
+    function clearCustomCourses() {
+        if (confirm('Are you sure you want to clear all custom courses?')) {
+            localStorage.removeItem('edulearnCourses');
+            location.reload();
+        }
+    }
+
+    // Utility function to add sample courses (for testing)
+    function addSampleCourses() {
+        const sampleCourses = [
+            {
+                id: Date.now(),
+                title: "Advanced JavaScript Masterclass",
+                category: "Web Development",
+                description: "Take your JavaScript skills to the next level with this comprehensive masterclass covering advanced concepts and modern practices.",
+                price: 2999,
+                instructor: "John Doe",
+                rating: 4.8,
+                reviews: 150,
+                students: 850,
+                status: "published",
+                thumbnail: "https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                level: "Advanced",
+                duration: "35 hours",
+                lectures: 280,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            }
+        ];
+        
+        localStorage.setItem('edulearnCourses', JSON.stringify(sampleCourses));
+        location.reload();
+    }
+</script>
+</body>
+</html>

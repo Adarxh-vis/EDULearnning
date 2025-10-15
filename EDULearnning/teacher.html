@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Dashboard - EduLearn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3a5a78; /* Professional blue-gray */
+            --primary-light: #5d8bf4; /* Lighter blue for accents */
+            --secondary: #2c3e50; /* Dark blue-gray */
+            --accent: #4a9fe0; /* Bright blue for CTAs */
+            --success: #28a745; /* Green */
+            --warning: #ffc107; /* Yellow */
+            --danger: #dc3545; /* Red */
+            --dark: #2d3748; /* Dark gray-blue */
+            --dark-light: #4a5568; /* Lighter dark */
+            --light: #f8f9fa; /* Light background */
+            --gray: #6c757d; /* Medium gray */
+            --light-gray: #e9ecef; /* Very light gray */
+            --white: #ffffff;
+            --sidebar-bg: #2d3748; /* Dark sidebar */
+            --sidebar-active: #4a9fe0; /* Active item color */
+            --sidebar-hover: #3a5a78; /* Hover color */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 2rem;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            max-width: 500px;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--light-gray);
+            outline: none;
+            transition: all 0.3s;
+            background-color: var(--light-gray);
+        }
+        
+        .search-bar input:focus {
+            border-color: var(--accent);
+            background-color: var(--white);
+            box-shadow: 0 0 0 3px rgba(74, 159, 224, 0.2);
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-actions a {
+            margin-left: 1.5rem;
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-actions a i {
+            margin-right: 0.3rem;
+        }
+        
+        .user-actions a:hover {
+            color: var(--accent);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px rgba(74, 159, 224, 0.3);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .teacher-dashboard {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .teacher-sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            color: var(--white);
+            padding: 1.5rem 0;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .sidebar-user h4 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .sidebar-user p {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        
+        .sidebar-menu li {
+            padding: 0.8rem 1.5rem;
+            margin: 0.2rem 0;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+        
+        .sidebar-menu li i {
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .sidebar-menu li:hover {
+            background-color: var(--sidebar-hover);
+            color: var(--white);
+        }
+        
+        .sidebar-menu li:hover i {
+            color: var(--white);
+        }
+        
+        .sidebar-menu li.active {
+            background-color: var(--sidebar-hover);
+            color: var(--white);
+            border-left: 4px solid var(--sidebar-active);
+            font-weight: 600;
+        }
+        
+        .sidebar-menu li.active i {
+            color: var(--sidebar-active);
+        }
+        
+        .sidebar-menu li .menu-badge {
+            margin-left: auto;
+            background-color: var(--sidebar-active);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+        }
+        
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            width: 280px;
+            padding: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-footer a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+        
+        .sidebar-footer a:hover {
+            color: var(--white);
+        }
+        
+        .sidebar-footer a i {
+            margin-right: 0.5rem;
+        }
+        
+        .teacher-main {
+            flex-grow: 1;
+            padding: 2rem 3rem;
+            background-color: var(--light);
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+        
+        .welcome-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            right: -30px;
+            width: 250px;
+            height: 250px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+        
+        .welcome-banner h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-banner p {
+            color: rgba(255,255,255,0.9);
+            position: relative;
+            z-index: 1;
+            max-width: 60%;
+        }
+        
+        .welcome-actions {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-actions .btn {
+            background-color: rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+        }
+        
+        .welcome-actions .btn:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-card h3 i {
+            margin-right: 0.5rem;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--dark);
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-number i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+        
+        .stat-change {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-change.up {
+            color: var(--success);
+        }
+        
+        .stat-change.down {
+            color: var(--danger);
+        }
+        
+        .stat-trend {
+            margin-left: auto;
+            font-size: 1.5rem;
+        }
+        
+        .upload-section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .upload-section h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .upload-section h3 i {
+            margin-right: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--light-gray);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: rgba(74, 159, 224, 0.03);
+        }
+        
+        .upload-area:hover {
+            border-color: var(--accent);
+            background-color: rgba(74, 159, 224, 0.05);
+        }
+        
+        .upload-area i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        
+        .upload-area p {
+            color: var(--gray);
+            margin: 0.3rem 0;
+        }
+        
+        .upload-area .btn-browse {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: var(--light);
+        }
+        
+        .form-group input:focus, 
+        .form-group textarea:focus, 
+        .form-group select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(74, 159, 224, 0.2);
+            outline: none;
+            background-color: var(--white);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(58, 90, 120, 0.2);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(74, 159, 224, 0.1);
+        }
+        
+        .btn-secondary {
+            background-color: var(--gray);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--dark-light);
+        }
+        
+        .course-list {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .course-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .course-list-header h3 {
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .course-list-header h3 i {
+            margin-right: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .course-list-header .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .course-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid var(--light-gray);
+            transition: all 0.3s;
+        }
+        
+        .course-item:last-child {
+            border-bottom: none;
+        }
+        
+        .course-item:hover {
+            background-color: rgba(74, 159, 224, 0.03);
+        }
+        
+        .course-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+        .course-thumbnail {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            background-color: var(--light-gray);
+            margin-right: 1.5rem;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .course-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .course-details h4 {
+            color: var(--dark);
+            margin-bottom: 0.3rem;
+        }
+        
+        .course-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        .course-meta span {
+            display: flex;
+            align-items: center;
+        }
+        
+        .course-meta i {
+            margin-right: 0.3rem;
+            font-size: 0.8rem;
+        }
+        
+        .course-rating {
+            color: var(--warning);
+        }
+        
+        .course-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .badge {
+            padding: 0.3rem 0.6rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+        
+        .badge-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: var(--warning);
+        }
+        
+        .badge-primary {
+            background-color: rgba(74, 159, 224, 0.1);
+            color: var(--accent);
+        }
+        
+        .badge-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+        }
+        
+        .course-progress {
+            width: 100%;
+            height: 6px;
+            background-color: var(--light-gray);
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+        
+        /* Recent students section */
+        .students-section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .students-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .students-section h3 i {
+            margin-right: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .student-card {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .student-card:hover {
+            background: rgba(74, 159, 224, 0.05);
+            transform: translateY(-3px);
+        }
+        
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .student-info h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .student-info p {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        /* Calendar section */
+        .calendar-section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .calendar-header h3 {
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .calendar-header h3 i {
+            margin-right: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            color: var(--gray);
+            padding: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            background: var(--light);
+            border-radius: 8px;
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+        }
+        
+        .calendar-day:hover {
+            background: rgba(74, 159, 224, 0.05);
+        }
+        
+        .calendar-day.empty {
+            background: transparent;
+            pointer-events: none;
+        }
+        
+        .calendar-day-number {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        
+        .calendar-event {
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.3rem;
+            border-radius: 4px;
+            margin-bottom: 0.2rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .calendar-event.office-hours {
+            background: var(--success);
+        }
+        
+        .calendar-event.live-session {
+            background: var(--danger);
+        }
+        
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--dark);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+            max-width: 300px;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast-success {
+            background: var(--success);
+        }
+        
+        .toast-error {
+            background: var(--danger);
+        }
+        
+        .toast-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading {
+            position: relative;
+        }
+        
+        .loading::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255,255,255,0.7);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 1200px) {
+            .teacher-sidebar {
+                width: 240px;
+            }
+            
+            .sidebar-footer {
+                width: 240px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .teacher-dashboard {
+                flex-direction: column;
+            }
+            
+            .teacher-sidebar {
+                width: 100%;
+                padding: 0;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+                padding: 0.5rem;
+            }
+            
+            .sidebar-menu li {
+                padding: 0.8rem 1.5rem;
+                white-space: nowrap;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            
+            .sidebar-menu li.active {
+                border-left: none;
+                border-bottom: 3px solid var(--sidebar-active);
+            }
+            
+            .sidebar-footer {
+                position: static;
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
+            }
+            
+            .search-bar {
+                width: 100%;
+                margin: 1rem 0;
+            }
+            
+            .user-actions {
+                margin-top: 1rem;
+            }
+            
+            .teacher-main {
+                padding: 1.5rem;
+            }
+            
+            .course-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .course-actions {
+                margin-top: 1rem;
+                align-self: flex-end;
+            }
+            
+            .welcome-banner p {
+                max-width: 100%;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .students-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: repeat(7, minmax(30px, 1fr));
+                font-size: 0.8rem;
+            }
+            
+            .calendar-day-number {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>EduLearn
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search courses, students, or analytics...">
+        </div>
+        <div class="user-actions">
+            <a href="#"><i class="fas fa-bell"></i> <span class="notification-badge">3</span></a>
+            <a href="#"><i class="fas fa-envelope"></i> <span class="notification-badge">5</span></a>
+            <a href="#" id="profileLink"><i class="fas fa-user"></i> My Profile</a>
+            <div class="user-avatar" id="userAvatar">JD</div>
+        </div>
+    </header>
+    
+    <div class="teacher-dashboard">
+        <div class="teacher-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-avatar" id="sidebarAvatar">JD</div>
+                <div class="sidebar-user">
+                    <h4 id="sidebarUserName">Loading...</h4>
+                    <p>Instructor</p>
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="active"><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                <li><a href="courses.html"><i class="fas fa-book-open"></i>My Courses <span class="menu-badge">8</span></a></li>
+                <li><a href="upload.html"><i class="fas fa-cloud-upload-alt"></i>Upload Content</a></li>
+                <li><a href="students.html"><i class="fas fa-users"></i>Students <span class="menu-badge">124</span></a></li>
+                <li><a href="analytics.html"><i class="fas fa-chart-line"></i>Analytics</a></li>
+                <li><a href="earnings.html"><i class="fas fa-wallet"></i>Earnings</a></li>
+                <li><a href="messages.html"><i class="fas fa-comments"></i>Messages <span class="menu-badge">5</span></a></li>
+                <li><a href="calendar.html"><i class="fas fa-calendar-alt"></i>Calendar</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i>Settings</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#"><i class="fas fa-question-circle"></i> Help & Support</a>
+            </div>
+        </div>
+        
+        <div class="teacher-main">
+            <div class="welcome-banner">
+                <h2 id="welcomeMessage">Welcome back, <span id="userName">Loading...</span>!</h2>
+                <p>You have 3 new students and 2 pending course reviews this week</p>
+                <div class="welcome-actions">
+                    <button class="btn"><i class="fas fa-video"></i> Schedule Live Session</button>
+                    <button class="btn"><i class="fas fa-bullhorn"></i> Announcement</button>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3><i class="fas fa-book"></i> Total Courses</h3>
+                    <div class="stat-number">8</div>
+                    <div class="stat-change up"><i class="fas fa-arrow-up"></i> 2 new this month <i class="fas fa-chart-line stat-trend"></i></div>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-users"></i> Total Students</h3>
+                    <div class="stat-number">1,248</div>
+                    <div class="stat-change up"><i class="fas fa-arrow-up"></i> 12% from last month <i class="fas fa-chart-line stat-trend"></i></div>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-star"></i> Avg. Rating</h3>
+                    <div class="stat-number">4.7</div>
+                    <div class="stat-change up"><i class="fas fa-arrow-up"></i> 0.2 from last month <i class="fas fa-chart-line stat-trend"></i></div>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-dollar-sign"></i> Monthly Earnings</h3>
+                    <div class="stat-number">$3,845</div>
+                    <div class="stat-change down"><i class="fas fa-arrow-down"></i> 5% from last month <i class="fas fa-chart-line stat-trend"></i></div>
+                </div>
+            </div>
+            
+            <div class="upload-section">
+                <h3><i class="fas fa-cloud-upload-alt"></i> Upload New Content</h3>
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-file-video"></i>
+                    <p>Drag and drop video files here or <span class="btn-browse">browse</span> your device</p>
+                    <p>Supported formats: MP4, MOV, AVI (Max 2GB)</p>
+                </div>
+                <form id="courseForm">
+                    <div class="form-group">
+                        <label>Course Title</label>
+                        <input type="text" id="courseTitle" placeholder="Enter course title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Course Category</label>
+                        <select id="courseCategory" required>
+                            <option value="">Select a category</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Mobile Development">Mobile Development</option>
+                            <option value="Data Science">Data Science</option>
+                            <option value="Design">Design</option>
+                            <option value="Business">Business</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="courseDescription" placeholder="Enter course description (minimum 200 characters)" required minlength="200"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" id="coursePrice" placeholder="Enter course price in USD" required min="0">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="publishBtn">
+                        <i class="fas fa-upload"></i> Upload and Publish
+                    </button>
+                    <button type="button" class="btn btn-outline" id="saveDraftBtn">
+                        <i class="far fa-save"></i> Save as Draft
+                    </button>
+                </form>
+            </div>
+            
+            <div class="students-section">
+                <h3><i class="fas fa-users"></i> Recent Students</h3>
+                <div class="students-grid" id="studentsContainer">
+                    <div class="student-card">
+                        <div class="student-avatar">AM</div>
+                        <div class="student-info">
+                            <h4>Alex Morgan</h4>
+                            <p>Web Development</p>
+                        </div>
+                    </div>
+                    <div class="student-card">
+                        <div class="student-avatar">SJ</div>
+                        <div class="student-info">
+                            <h4>Sarah Johnson</h4>
+                            <p>Data Science</p>
+                        </div>
+                    </div>
+                    <div class="student-card">
+                        <div class="student-avatar">RK</div>
+                        <div class="student-info">
+                            <h4>Robert Kim</h4>
+                            <p>Mobile Development</p>
+                        </div>
+                    </div>
+                    <div class="student-card">
+                        <div class="student-avatar">MP</div>
+                        <div class="student-info">
+                            <h4>Maria Perez</h4>
+                            <p>Business</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <h3><i class="fas fa-calendar-alt"></i> Teaching Calendar</h3>
+                    <div class="calendar-nav">
+                        <button class="btn btn-outline"><i class="fas fa-chevron-left"></i></button>
+                        <span>August 2023</span>
+                        <button class="btn btn-outline"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="calendar-grid">
+                    <div class="calendar-day-header">Sun</div>
+                    <div class="calendar-day-header">Mon</div>
+                    <div class="calendar-day-header">Tue</div>
+                    <div class="calendar-day-header">Wed</div>
+                    <div class="calendar-day-header">Thu</div>
+                    <div class="calendar-day-header">Fri</div>
+                    <div class="calendar-day-header">Sat</div>
+                    
+                    <div class="calendar-day empty"></div>
+                    <div class="calendar-day empty"></div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">1</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">2</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">3</div>
+                        <div class="calendar-event office-hours">Office Hours</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">4</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">5</div>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">6</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">7</div>
+                        <div class="calendar-event live-session">Live Session</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">8</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">9</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">10</div>
+                        <div class="calendar-event office-hours">Office Hours</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">11</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">12</div>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">13</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">14</div>
+                        <div class="calendar-event live-session">Live Session</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">15</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">16</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">17</div>
+                        <div class="calendar-event office-hours">Office Hours</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">18</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">19</div>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">20</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">21</div>
+                        <div class="calendar-event live-session">Live Session</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">22</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">23</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">24</div>
+                        <div class="calendar-event office-hours">Office Hours</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">25</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">26</div>
+                    </div>
+                    
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">27</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">28</div>
+                        <div class="calendar-event live-session">Live Session</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">29</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">30</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="calendar-day-number">31</div>
+                        <div class="calendar-event office-hours">Office Hours</div>
+                    </div>
+                    <div class="calendar-day empty"></div>
+                    <div class="calendar-day empty"></div>
+                </div>
+            </div>
+            
+            <div class="course-list">
+                <div class="course-list-header">
+                    <h3><i class="fas fa-book-open"></i> Your Recent Courses</h3>
+                    <div class="btn-group">
+                        <button class="btn btn-outline"><i class="fas fa-filter"></i> Filter</button>
+                        <button class="btn btn-primary" id="newCourseBtn"><i class="fas fa-plus"></i> New Course</button>
+                    </div>
+                </div>
+                
+                <div id="coursesContainer">
+                    <div class="course-item">
+                        <div class="course-info">
+                            <div class="course-thumbnail">
+                                <img src="https://via.placeholder.com/80x60/3a5a78/ffffff?text=Web+Dev" alt="Advanced Web Development">
+                            </div>
+                            <div class="course-details">
+                                <h4>Advanced Web Development</h4>
+                                <div class="course-meta">
+                                    <span><i class="fas fa-users"></i> 428 students</span>
+                                    <span><i class="fas fa-calendar-alt"></i> Updated: Aug 5, 2023</span>
+                                    <span class="course-rating"><i class="fas fa-star"></i> 4.8 (127)</span>
+                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Published</span>
+                                </div>
+                                <div class="course-progress">
+                                    <div class="progress-bar" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn btn-outline edit-course"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn btn-outline view-analytics"><i class="fas fa-chart-bar"></i> Analytics</button>
+                        </div>
+                    </div>
+                    
+                    <div class="course-item">
+                        <div class="course-info">
+                            <div class="course-thumbnail">
+                                <img src="https://via.placeholder.com/80x60/4a9fe0/ffffff?text=React" alt="React Masterclass">
+                            </div>
+                            <div class="course-details">
+                                <h4>React Masterclass</h4>
+                                <div class="course-meta">
+                                    <span><i class="fas fa-users"></i> 312 students</span>
+                                    <span><i class="fas fa-calendar-alt"></i> Updated: Jul 28, 2023</span>
+                                    <span class="course-rating"><i class="fas fa-star"></i> 4.7 (98)</span>
+                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Published</span>
+                                </div>
+                                <div class="course-progress">
+                                    <div class="progress-bar" style="width: 72%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn btn-outline edit-course"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn btn-outline view-analytics"><i class="fas fa-chart-bar"></i> Analytics</button>
+                        </div>
+                    </div>
+                    
+                    <div class="course-item">
+                        <div class="course-info">
+                            <div class="course-thumbnail">
+                                <img src="https://via.placeholder.com/80x60/28a745/ffffff?text=Node.js" alt="Node.js Fundamentals">
+                            </div>
+                            <div class="course-details">
+                                <h4>Node.js Fundamentals</h4>
+                                <div class="course-meta">
+                                    <span><i class="fas fa-users"></i> 276 students</span>
+                                    <span><i class="fas fa-calendar-alt"></i> Updated: Jul 15, 2023</span>
+                                    <span class="course-rating"><i class="fas fa-star"></i> 4.6 (84)</span>
+                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Published</span>
+                                </div>
+                                <div class="course-progress">
+                                    <div class="progress-bar" style="width: 65%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn btn-outline edit-course"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn btn-outline view-analytics"><i class="fas fa-chart-bar"></i> Analytics</button>
+                        </div>
+                    </div>
+                    
+                    <div class="course-item">
+                        <div class="course-info">
+                            <div class="course-thumbnail">
+                                <img src="https://via.placeholder.com/80x60/dc3545/ffffff?text=Python" alt="Python for Beginners">
+                            </div>
+                            <div class="course-details">
+                                <h4>Python for Beginners</h4>
+                                <div class="course-meta">
+                                    <span><i class="fas fa-users"></i> 198 students</span>
+                                    <span><i class="fas fa-calendar-alt"></i> Updated: Jul 10, 2023</span>
+                                    <span class="course-rating"><i class="fas fa-star"></i> 4.5 (62)</span>
+                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Published</span>
+                                </div>
+                                <div class="course-progress">
+                                    <div class="progress-bar" style="width: 58%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn btn-outline edit-course"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn btn-outline view-analytics"><i class="fas fa-chart-bar"></i> Analytics</button>
+                        </div>
+                    </div>
+                    
+                    <div class="course-item">
+                        <div class="course-info">
+                            <div class="course-thumbnail">
+                                <img src="https://via.placeholder.com/80x60/ffc107/ffffff?text=Angular" alt="Angular Advanced Concepts">
+                            </div>
+                            <div class="course-details">
+                                <h4>Angular Advanced Concepts</h4>
+                                <div class="course-meta">
+                                    <span><i class="fas fa-users"></i> 156 students</span>
+                                    <span><i class="fas fa-calendar-alt"></i> Draft created: Aug 8, 2023</span>
+                                    <span class="badge badge-warning"><i class="fas fa-pencil-alt"></i> Draft</span>
+                                </div>
+                                <div class="course-progress">
+                                    <div class="progress-bar" style="width: 35%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="course-actions">
+                            <button class="btn btn-outline edit-course"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn btn-primary publish-course"><i class="fas fa-upload"></i> Publish</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+    // Enhanced API module with localStorage integration
+    const userAPI = {
+        getCurrentUser: async (token) => {
+            return {
+                ok: true,
+                json: async () => ({
+                    id: 123,
+                    fullName: "John Doe",
+                    initials: "JD",
+                    email: "john.doe@edulearn.com",
+                    joinDate: "2022-01-15",
+                    bio: "Senior Web Developer and Instructor with 8 years of experience",
+                    avatarColor: "#4a9fe0"
+                })
+            };
+        },
+        getInstructorStats: async (token) => {
+            return {
+                ok: true,
+                json: async () => ({
+                    totalCourses: 8,
+                    newCoursesThisMonth: 2,
+                    totalStudents: 1248,
+                    studentChangePercentage: 12,
+                    averageRating: 4.7,
+                    ratingChange: 0.2,
+                    monthlyEarnings: 3845,
+                    earningsChangePercentage: -5,
+                    pendingReviews: 3,
+                    upcomingSessions: 2
+                })
+            };
+        }
+    };
+
+    // Enhanced courseAPI with localStorage integration
+    const courseAPI = {
+        getInstructorCourses: async (token) => {
+            // Get courses from localStorage first, then combine with default courses
+            const storedCourses = JSON.parse(localStorage.getItem('edulearnCourses') || '[]');
+            const defaultCourses = [
+                {
+                    id: 1,
+                    title: "Advanced Web Development",
+                    thumbnail: "https://via.placeholder.com/80x60/3a5a78/ffffff?text=Web+Dev",
+                    students: 428,
+                    rating: 4.8,
+                    reviews: 127,
+                    status: "published",
+                    createdAt: "2023-01-10",
+                    updatedAt: "2023-08-05",
+                    progress: 85
+                },
+                {
+                    id: 2,
+                    title: "React Masterclass",
+                    thumbnail: "https://via.placeholder.com/80x60/4a9fe0/ffffff?text=React",
+                    students: 312,
+                    rating: 4.7,
+                    reviews: 98,
+                    status: "published",
+                    createdAt: "2023-02-15",
+                    updatedAt: "2023-07-28",
+                    progress: 72
+                },
+                {
+                    id: 3,
+                    title: "Node.js Fundamentals",
+                    thumbnail: "https://via.placeholder.com/80x60/28a745/ffffff?text=Node.js",
+                    students: 276,
+                    rating: 4.6,
+                    reviews: 84,
+                    status: "published",
+                    createdAt: "2023-03-05",
+                    updatedAt: "2023-07-15",
+                    progress: 65
+                },
+                {
+                    id: 4,
+                    title: "Python for Beginners",
+                    thumbnail: "https://via.placeholder.com/80x60/dc3545/ffffff?text=Python",
+                    students: 198,
+                    rating: 4.5,
+                    reviews: 62,
+                    status: "published",
+                    createdAt: "2023-04-20",
+                    updatedAt: "2023-07-10",
+                    progress: 58
+                },
+                {
+                    id: 5,
+                    title: "Angular Advanced Concepts",
+                    thumbnail: "https://via.placeholder.com/80x60/ffc107/ffffff?text=Angular",
+                    students: 156,
+                    status: "draft",
+                    createdAt: "2023-08-08",
+                    updatedAt: "2023-08-08",
+                    progress: 35
+                }
+            ];
+            
+            // Combine courses, ensuring no duplicates
+            const allCourses = [...defaultCourses];
+            storedCourses.forEach(storedCourse => {
+                if (!allCourses.find(course => course.id === storedCourse.id)) {
+                    allCourses.push(storedCourse);
+                }
+            });
+            
+            return {
+                ok: true,
+                json: async () => allCourses
+            };
+        },
+        
+        createCourse: async (token, data) => {
+            console.log("Creating course:", data);
+            
+            // Generate a unique ID and timestamp
+            const courseId = Date.now();
+            const newCourse = {
+                id: courseId,
+                ...data,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                instructor: "John Doe",
+                rating: 4.5, // Default rating
+                reviews: 0,
+                students: 0,
+                status: data.status || 'published',
+                thumbnail: getThumbnailByCategory(data.category),
+                level: 'All Levels',
+                duration: '25 hours', // Default duration
+                lectures: 150 // Default lecture count
+            };
+            
+            // Save to localStorage
+            saveCourseToStorage(newCourse);
+            
+            return {
+                ok: true,
+                json: async () => newCourse
+            };
+        },
+        
+        updateCourse: async (token, id, data) => {
+            console.log(`Updating course ${id}:`, data);
+            
+            // Update course in localStorage
+            updateCourseInStorage(id, data);
+            
+            return {
+                ok: true,
+                json: async () => ({
+                    id,
+                    ...data
+                })
+            };
+        }
+    };
+
+    // Function to get appropriate thumbnail based on category
+    function getThumbnailByCategory(category) {
+        const thumbnails = {
+            'Web Development': 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+            'Mobile Development': 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+            'Data Science': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+            'Design': 'https://images.unsplash.com/photo-1541462608143-67571c6738dd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+            'Business': 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+        };
+        
+        return thumbnails[category] || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';
+    }
+
+    // Function to save course to localStorage
+    function saveCourseToStorage(course) {
+        try {
+            // Get existing courses from localStorage
+            const existingCourses = JSON.parse(localStorage.getItem('edulearnCourses') || '[]');
+            
+            // Add new course
+            existingCourses.push(course);
+            
+            // Save back to localStorage
+            localStorage.setItem('edulearnCourses', JSON.stringify(existingCourses));
+            
+            console.log('Course saved to localStorage:', course);
+            return true;
+        } catch (error) {
+            console.error('Error saving course to localStorage:', error);
+            return false;
+        }
+    }
+
+    // Function to update course in localStorage
+    function updateCourseInStorage(courseId, updates) {
+        try {
+            const courses = JSON.parse(localStorage.getItem('edulearnCourses') || '[]');
+            const courseIndex = courses.findIndex(course => course.id == courseId);
+            
+            if (courseIndex !== -1) {
+                courses[courseIndex] = { ...courses[courseIndex], ...updates, updatedAt: new Date().toISOString() };
+                localStorage.setItem('edulearnCourses', JSON.stringify(courses));
+                console.log('Course updated in localStorage:', courses[courseIndex]);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Error updating course in localStorage:', error);
+            return false;
+        }
+    }
+
+    // DOM Elements
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    const userName = document.getElementById('userName');
+    const sidebarUserName = document.getElementById('sidebarUserName');
+    const userAvatar = document.getElementById('userAvatar');
+    const sidebarAvatar = document.getElementById('sidebarAvatar');
+    const profileLink = document.getElementById('profileLink');
+    
+    // Course form elements
+    const courseForm = document.getElementById('courseForm');
+    const courseTitle = document.getElementById('courseTitle');
+    const courseCategory = document.getElementById('courseCategory');
+    const courseDescription = document.getElementById('courseDescription');
+    const coursePrice = document.getElementById('coursePrice');
+    const publishBtn = document.getElementById('publishBtn');
+    const saveDraftBtn = document.getElementById('saveDraftBtn');
+    const newCourseBtn = document.getElementById('newCourseBtn');
+    
+    // Courses container
+    const coursesContainer = document.getElementById('coursesContainer');
+    
+    // Check authentication
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        window.location.href = 'login.html';
+    }
+
+    // Load dashboard data
+    async function loadDashboard() {
+        try {
+            // Load user data
+            const userRes = await userAPI.getCurrentUser(token);
+            if (!userRes.ok) {
+                throw new Error('Failed to load user data');
+            }
+            const user = await userRes.json();
+            
+            // Update user info in UI
+            userName.textContent = user.fullName;
+            sidebarUserName.textContent = user.fullName;
+            userAvatar.textContent = user.initials || user.fullName.charAt(0);
+            sidebarAvatar.textContent = user.initials || user.fullName.charAt(0);
+            if (user.avatarColor) {
+                userAvatar.style.backgroundColor = user.avatarColor;
+                sidebarAvatar.style.backgroundColor = user.avatarColor;
+            }
+            profileLink.href = `profile.html?id=${user.id}`;
+            
+            // Load instructor stats
+            const statsRes = await userAPI.getInstructorStats(token);
+            if (!statsRes.ok) {
+                throw new Error('Failed to load instructor stats');
+            }
+            const stats = await statsRes.json();
+            
+            // Update stats in UI
+            document.querySelector('.stat-number').textContent = stats.totalCourses;
+            document.querySelector('.stat-change').innerHTML = `<i class="fas fa-arrow-up"></i> ${stats.newCoursesThisMonth} new this month <i class="fas fa-chart-line stat-trend"></i>`;
+            
+            // Load courses
+            await loadCourses();
+            
+        } catch (error) {
+            console.error('Dashboard error:', error);
+            showToast('Failed to load dashboard data', 'error');
+        }
+    }
+    
+    // Load courses
+    async function loadCourses() {
+        try {
+            coursesContainer.innerHTML = '<div class="loading-message">Loading courses...</div>';
+            
+            const res = await courseAPI.getInstructorCourses(token);
+            if (!res.ok) {
+                throw new Error('Failed to load courses');
+            }
+            
+            const courses = await res.json();
+            
+            if (courses.length === 0) {
+                coursesContainer.innerHTML = '<div class="no-courses">You haven\'t created any courses yet.</div>';
+                return;
+            }
+            
+            renderCourses(courses);
+        } catch (error) {
+            console.error('Courses error:', error);
+            coursesContainer.innerHTML = '<div class="error-message">Failed to load courses. Please try again.</div>';
+        }
+    }
+    
+    // Render courses
+    function renderCourses(courses) {
+        coursesContainer.innerHTML = '';
+        
+        courses.forEach(course => {
+            const courseItem = document.createElement('div');
+            courseItem.className = 'course-item';
+            
+            const statusClass = course.status === 'published' ? 'badge-success' : 'badge-warning';
+            const statusIcon = course.status === 'published' ? 'fa-check-circle' : 'fa-pencil-alt';
+            const statusText = course.status === 'published' ? 'Published' : 'Draft';
+            
+            courseItem.innerHTML = `
+                <div class="course-info">
+                    <div class="course-thumbnail">
+                        <img src="${course.thumbnail || 'https://via.placeholder.com/80x60'}" alt="${course.title}">
+                    </div>
+                    <div class="course-details">
+                        <h4>${course.title}</h4>
+                        <div class="course-meta">
+                            <span><i class="fas fa-users"></i> ${course.students || 0} students</span>
+                            <span><i class="fas fa-calendar-alt"></i> ${course.status === 'published' ? 'Updated: ' + formatDate(course.updatedAt) : 'Draft created: ' + formatDate(course.createdAt)}</span>
+                            ${course.rating ? `<span class="course-rating"><i class="fas fa-star"></i> ${course.rating.toFixed(1)} (${course.reviews || 0})</span>` : ''}
+                            <span class="badge ${statusClass}"><i class="fas ${statusIcon}"></i> ${statusText}</span>
+                        </div>
+                        <div class="course-progress">
+                            <div class="progress-bar" style="width: ${course.progress || 0}%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="course-actions">
+                    <button class="btn btn-outline edit-course" data-id="${course.id}"><i class="fas fa-edit"></i> Edit</button>
+                    ${course.status === 'published' ? 
+                        `<button class="btn btn-outline view-analytics" data-id="${course.id}"><i class="fas fa-chart-bar"></i> Analytics</button>` : 
+                        `<button class="btn btn-primary publish-course" data-id="${course.id}"><i class="fas fa-upload"></i> Publish</button>`}
+                </div>
+            `;
+            
+            coursesContainer.appendChild(courseItem);
+        });
+        
+        // Add event listeners to course action buttons
+        document.querySelectorAll('.edit-course').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const courseId = e.target.closest('button').dataset.id;
+                editCourse(courseId);
+            });
+        });
+        
+        document.querySelectorAll('.view-analytics').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const courseId = e.target.closest('button').dataset.id;
+                viewAnalytics(courseId);
+            });
+        });
+        
+        document.querySelectorAll('.publish-course').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const courseId = e.target.closest('button').dataset.id;
+                publishCourse(courseId);
+            });
+        });
+    }
+    
+    function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+    }
+    
+    // Course form handling
+    courseForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        try {
+            publishBtn.disabled = true;
+            publishBtn.innerHTML = '<span class="spinner"></span> Publishing...';
+            
+            const courseData = {
+                title: courseTitle.value,
+                category: courseCategory.value,
+                description: courseDescription.value,
+                price: parseFloat(coursePrice.value),
+                status: 'published'
+            };
+            
+            const res = await courseAPI.createCourse(token, courseData);
+            
+            if (!res.ok) {
+                throw new Error('Failed to create course');
+            }
+            
+            const newCourse = await res.json();
+            showToast('Course published successfully! It will appear in the courses catalog.', 'success');
+            await loadCourses();
+            resetForm();
+            
+        } catch (error) {
+            console.error('Publish error:', error);
+            showToast('Failed to publish course', 'error');
+        } finally {
+            publishBtn.disabled = false;
+            publishBtn.innerHTML = '<i class="fas fa-upload"></i> Upload and Publish';
+        }
+    });
+    
+    saveDraftBtn.addEventListener('click', async () => {
+        try {
+            if (!courseTitle.value) {
+                showToast('Please at least enter a course title', 'warning');
+                return;
+            }
+            
+            saveDraftBtn.disabled = true;
+            saveDraftBtn.innerHTML = '<span class="spinner"></span> Saving...';
+            
+            const courseData = {
+                title: courseTitle.value,
+                category: courseCategory.value,
+                description: courseDescription.value,
+                price: parseFloat(coursePrice.value),
+                status: 'draft'
+            };
+            
+            const res = await courseAPI.createCourse(token, courseData);
+            
+            if (!res.ok) {
+                throw new Error('Failed to save draft');
+            }
+            
+            const newCourse = await res.json();
+            showToast('Draft saved successfully!', 'success');
+            await loadCourses();
+            resetForm();
+            
+        } catch (error) {
+            console.error('Save draft error:', error);
+            showToast('Failed to save draft', 'error');
+        } finally {
+            saveDraftBtn.disabled = false;
+            saveDraftBtn.innerHTML = '<i class="far fa-save"></i> Save as Draft';
+        }
+    });
+    
+    newCourseBtn.addEventListener('click', () => {
+        // Scroll to the course form
+        document.querySelector('.upload-section').scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+    
+    function resetForm() {
+        courseForm.reset();
+    }
+    
+    // Course actions
+    async function editCourse(courseId) {
+        window.location.href = `edit-course.html?id=${courseId}`;
+    }
+    
+    async function viewAnalytics(courseId) {
+        window.location.href = `analytics.html?id=${courseId}`;
+    }
+    
+    async function publishCourse(courseId) {
+        try {
+            const button = document.querySelector(`.publish-course[data-id="${courseId}"]`);
+            button.disabled = true;
+            button.innerHTML = '<span class="spinner"></span> Publishing...';
+            
+            const res = await courseAPI.updateCourse(token, courseId, { status: 'published' });
+            
+            if (!res.ok) {
+                throw new Error('Failed to publish course');
+            }
+            
+            showToast('Course published successfully!', 'success');
+            await loadCourses();
+            
+        } catch (error) {
+            console.error('Publish error:', error);
+            showToast('Failed to publish course', 'error');
+        }
+    }
+    
+    // Upload area interaction
+    const uploadArea = document.getElementById('uploadArea');
+    
+    uploadArea.addEventListener('click', function() {
+        showToast('File upload dialog would open here', 'info');
+    });
+    
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.style.borderColor = 'var(--accent)';
+        this.style.backgroundColor = 'rgba(74, 159, 224, 0.1)';
+    });
+    
+    uploadArea.addEventListener('dragleave', function() {
+        this.style.borderColor = 'var(--light-gray)';
+        this.style.backgroundColor = 'rgba(74, 159, 224, 0.03)';
+    });
+    
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.style.borderColor = 'var(--light-gray)';
+        this.style.backgroundColor = 'rgba(74, 159, 224, 0.03)';
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            showToast(`${files.length} file(s) selected for upload`, 'success');
+        }
+    });
+    
+    // Toast notification
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 300);
+        }, 3000);
+    }
+    
+    // Initialize dashboard
+    loadDashboard();
+</script>
+</body>
+</html>

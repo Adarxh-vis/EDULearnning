@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDULearn - Settings</title>
+    <style>
+        :root {
+            --primary: #4a6bdf;
+            --secondary: #f8f9fa;
+            --accent: #ff7e5f;
+            --text: #333;
+            --light-text: #6c757d;
+            --border: #e9ecef;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text);
+            background-color: #f5f7fa;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            padding: 20px 0;
+        }
+        
+        .logo {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        
+        .logo img {
+            height: 40px;
+        }
+        
+        .nav-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: var(--light-text);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+            background-color: rgba(74, 107, 223, 0.1);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .nav-item:hover:not(.active) {
+            background-color: var(--secondary);
+        }
+        
+        .nav-item i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        /* Settings specific styles */
+        .settings-container {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 30px;
+        }
+        
+        .settings-sidebar {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 15px 0;
+        }
+        
+        .settings-tab {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: var(--light-text);
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .settings-tab.active {
+            color: var(--primary);
+            border-left-color: var(--primary);
+            background-color: rgba(74, 107, 223, 0.05);
+        }
+        
+        .settings-tab:hover:not(.active) {
+            background-color: var(--secondary);
+        }
+        
+        .settings-tab i {
+            margin-right: 10px;
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .settings-content {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 30px;
+        }
+        
+        .settings-section {
+            margin-bottom: 40px;
+        }
+        
+        .settings-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .form-text {
+            font-size: 13px;
+            color: var(--light-text);
+            margin-top: 5px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .avatar-upload {
+            display: flex;
+            align-items: center;
+        }
+        
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 3px solid var(--border);
+        }
+        
+        .avatar-upload-btn {
+            padding: 8px 15px;
+            background-color: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .avatar-upload-btn:hover {
+            background-color: #e9ecef;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5bd9;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--light-text);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--secondary);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .notification-label {
+            font-weight: 500;
+        }
+        
+        .notification-desc {
+            font-size: 13px;
+            color: var(--light-text);
+            margin-top: 3px;
+        }
+        
+        .security-session {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .session-info {
+            flex: 1;
+            margin-right: 20px;
+        }
+        
+        .session-device {
+            font-weight: 500;
+        }
+        
+        .session-details {
+            font-size: 13px;
+            color: var(--light-text);
+            margin-top: 3px;
+        }
+        
+        .session-current {
+            color: var(--success);
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 15px;
+        }
+        
+        .preference-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .preference-label {
+            font-weight: 500;
+        }
+        
+        .preference-desc {
+            font-size: 13px;
+            color: var(--light-text);
+            margin-top: 3px;
+        }
+        
+        .select-control {
+            width: 200px;
+            padding: 8px 15px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: white;
+        }
+        
+        .danger-zone {
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+        
+        .danger-zone-title {
+            color: var(--danger);
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .danger-zone-title i {
+            margin-right: 10px;
+        }
+        
+        .danger-zone-text {
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="https://via.placeholder.com/150x40?text=EDULearn" alt="EDULearn Logo">
+            </div>
+            <nav>
+                <a href="student.html" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="studentCourses.html" class="nav-item">
+                    <i class="fas fa-book-open"></i>
+                    My Courses
+                </a>
+                <a href="studentCertificates.html" class="nav-item">
+                    <i class="fas fa-certificate"></i>
+                    Certificates
+                </a>
+                <a href="studentMessages.html" class="nav-item">
+                    <i class="fas fa-envelope"></i>
+                    Messages
+                    <span class="badge" style="margin-left: auto; background-color: var(--accent); color: white; border-radius: 10px; padding: 2px 8px; font-size: 12px;">3</span>
+                </a>
+                <a href="studentSchedule.html" class="nav-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    Schedule
+                </a>
+                <a href="studentProgress.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    Progress
+                </a>
+                <a href="studentSettings.html" class="nav-item active">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <div class="header">
+                <h1>Settings</h1>
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40" alt="User Profile">
+                    <span>John Doe</span>
+                </div>
+            </div>
+            
+            <div class="settings-container">
+                <div class="settings-sidebar">
+                    <a href="#account" class="settings-tab active" onclick="showTab('account')">
+                        <i class="fas fa-user"></i>
+                        Account
+                    </a>
+                    <a href="#security" class="settings-tab" onclick="showTab('security')">
+                        <i class="fas fa-shield-alt"></i>
+                        Security
+                    </a>
+                    <a href="#notifications" class="settings-tab" onclick="showTab('notifications')">
+                        <i class="fas fa-bell"></i>
+                        Notifications
+                    </a>
+                    <a href="#preferences" class="settings-tab" onclick="showTab('preferences')">
+                        <i class="fas fa-sliders-h"></i>
+                        Preferences
+                    </a>
+                    <a href="#billing" class="settings-tab" onclick="showTab('billing')">
+                        <i class="fas fa-credit-card"></i>
+                        Billing
+                    </a>
+                </div>
+                
+                <div class="settings-content">
+                    <!-- Account Tab -->
+                    <div id="account" class="tab-content active">
+                        <div class="settings-section">
+                            <h3 class="settings-title">Profile Information</h3>
+                            <div class="form-group">
+                                <div class="avatar-upload">
+                                    <img src="https://via.placeholder.com/80x80?text=JD" alt="Avatar" class="avatar-preview" id="avatarPreview">
+                                    <div>
+                                        <button class="avatar-upload-btn" onclick="document.getElementById('avatarUpload').click()">
+                                            Change Avatar
+                                        </button>
+                                        <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="previewAvatar(event)">
+                                        <div class="form-text">JPG, GIF or PNG. Max size 2MB</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" class="form-control" value="John">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" value="Doe">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" value="john.doe@example.com">
+                                <div class="form-text">This is the email associated with your account</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Bio</label>
+                                <textarea class="form-control" rows="3">Web developer and data science enthusiast. Currently learning advanced React techniques.</textarea>
+                                <div class="form-text">Tell other students a bit about yourself</div>
+                            </div>
+                            
+                            <button class="btn btn-primary">Save Changes</button>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3 class="settings-title">Social Profiles</h3>
+                            <div class="form-group">
+                                <label class="form-label">Twitter</label>
+                                <div class="input-group" style="display: flex;">
+                                    <span style="padding: 10px 15px; background-color: var(--secondary); border: 1px solid var(--border); border-right: none; border-radius: 6px 0 0 6px; color: var(--light-text);">twitter.com/</span>
+                                    <input type="text" class="form-control" style="border-radius: 0 6px 6px 0; border-left: none;" placeholder="username" value="johndoe">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">LinkedIn</label>
+                                <div class="input-group" style="display: flex;">
+                                    <span style="padding: 10px 15px; background-color: var(--secondary); border: 1px solid var(--border); border-right: none; border-radius: 6px 0 0 6px; color: var(--light-text);">linkedin.com/in/</span>
+                                    <input type="text" class="form-control" style="border-radius: 0 6px 6px 0; border-left: none;" placeholder="username" value="john-doe-123">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">GitHub</label>
+                                <div class="input-group" style="display: flex;">
+                                    <span style="padding: 10px 15px; background-color: var(--secondary); border: 1px solid var(--border); border-right: none; border-radius: 6px 0 0 6px; color: var(--light-text);">github.com/</span>
+                                    <input type="text" class="form-control" style="border-radius: 0 6px 6px 0; border-left: none;" placeholder="username" value="johndoe-dev">
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary">Update Social Links</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Security Tab -->
+                    <div id="security" class="tab-content">
+                        <div class="settings-section">
+                            <h3 class="settings-title">Password</h3>
+                            <div class="form-group">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" class="form-control" placeholder="Enter current password">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">New Password</label>
+                                <input type="password" class="form-control" placeholder="Enter new password">
+                                <div class="form-text">Minimum 8 characters with at least one number and one special character</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" placeholder="Confirm new password">
+                            </div>
+                            
+                            <button class="btn btn-primary">Change Password</button>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3 class="settings-title">Two-Factor Authentication</h3>
+                            <div class="notification-item">
+                                <div>
+                                    <div class="notification-label">SMS Authentication</div>
+                                    <div class="notification-desc">Use your mobile phone to receive verification codes</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item" style="border-bottom: none; padding-bottom: 0;">
+                                <div>
+                                    <div class="notification-label">Authenticator App</div>
+                                    <div class="notification-desc">Use an app like Google Authenticator or Authy</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3 class="settings-title">Active Sessions</h3>
+                            <div class="security-session">
+                                <div class="session-info">
+                                    <div class="session-device">MacBook Pro (Chrome, macOS)</div>
+                                    <div class="session-details">New York, USA • Last active: 2 hours ago</div>
+                                </div>
+                                <span class="session-current">Current Session</span>
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Log Out</button>
+                            </div>
+                            
+                            <div class="security-session">
+                                <div class="session-info">
+                                    <div class="session-device">iPhone 13 (Safari, iOS)</div>
+                                    <div class="session-details">Boston, USA • Last active: 3 days ago</div>
+                                </div>
+                                <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Log Out</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notifications Tab -->
+                    <div id="notifications" class="tab-content">
+                        <div class="settings-section">
+                            <h3 class="settings-title">Email Notifications</h3>
+                            <div class="notification-item">
+                                <div>
+                                    <div class="notification-label">Course Announcements</div>
+                                    <div class="notification-desc">Receive emails about new announcements in your courses</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div>
+                                    <div class="notification-label">Assignment Deadlines</div>
+                                    <div class="notification-desc">Get reminders about upcoming assignment deadlines</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div>
+                                    <div class="notification-label">New Messages</div>
+                                    <div class="notification-desc">Notify me when I receive new messages</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div>
+                                    <div class="notification-label">Course Recommendations</div>
+                                    <div class="notification-desc">Receive personalized course recommendations</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3 class="settings-title">Push Notifications</h3>
+                            <div class="notification-item">
+                                <div>
+                                    <div class="notification-label">Live Session Reminders</div>
+                                    <div class="notification-desc">Get notifications before live sessions start</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item">
+                                <div>
+                                    <div class="notification-label">Assignment Grades</div>
+                                    <div class="notification-desc">Notify me when new grades are posted</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="notification-item" style="border-bottom: none; padding-bottom: 0;">
+                                <div>
+                                    <div class="notification-label">Forum Activity</div>
+                                    <div class="notification-desc">Notify me about replies to my forum posts</div>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Preferences Tab -->
+                    <div id="preferences" class="tab-content">
+                        <div class="settings-section">
+                            <h3 class="settings-title">Display Preferences</h3>
+                            <div class="preference-item">
+                                <div>
+                                    <div class="preference-label">Theme</div>
+                                    <div class="preference-desc">Choose between light and dark mode</div>
+                                </div>
+                                <select class="select-control">
+                                    <option>Light</option>
+                                    <option>Dark</option>
+                                    <option>System Default</option>
+                                </select>
+                            </div>
+                            
+                            <div class="preference-item">
+                                <div>
+                                    <div class="preference-label">Font Size</div>
+                                    <div class="preference-desc">Adjust the base font size for the platform</div>
+                                </div>
+                                <select class="select-control">
+                                    <option>Small</option>
+                                    <option selected>Medium</option>
+                                    <option>Large</option>
+                                </select>
+                            </div>
+                            
+                            <div class="preference-item" style="border-bottom: none; padding-bottom: 0;">
+                                <div>
+                                    <div class="preference-label">Density</div>
+                                    <div class="preference-desc">Control the spacing and sizing of elements</div>
+                                </div>
+                                <select class="select-control">
+                                    <option>Compact</option>
+                                    <option selected>Normal</option>
+                                    <option>Spacious</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3 class="settings-title">Language & Region</h3>
+                            <div class="form-group">
+                                <label class="form-label">Language</label>
+                                <select class="form-control">
+                                    <option>English (United States)</option>
+                                    <option>Español (Spanish)</option>
+                                    <option>Français (French)</option>
+                                    <option>Deutsch (German)</option>
+                                    <option>中文 (Chinese)</option>
+                                    <option>日本語 (Japanese)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Time Zone</label>
+                                <select class="form-control">
+                                    <option>(GMT-05:00) Eastern Time (US & Canada)</option>
+                                    <option>(GMT-08:00) Pacific Time (US & Canada)</option>
+                                    <option>(GMT+00:00) London</option>
+                                    <option>(GMT+01:00) Berlin</option>
+                                    <option>(GMT+08:00) Beijing</option>
+                                    <option>(GMT+09:00) Tokyo</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Date Format</label>
+                                <select class="form-control">
+                                    <option>MM/DD/YYYY (10/15/2023)</option>
+                                    <option>DD/MM/YYYY (15/10/2023)</option>
+                                    <option>YYYY-MM-DD (2023-10-15)</option>
+                                </select>
+                            </div>
+                            
+                            <button class="btn btn-primary">Save Preferences</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Billing Tab -->
+                    <div id="billing" class="tab-content">
+                        <div class="settings-section">
+                            <h3 class="settings-title">Subscription Plan</h3>
+                            <div class="card" style="background: rgba(74, 107, 223, 0.05); border: 1px solid rgba(74, 107, 223, 0.3); border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 18px;">Pro Plan</div>
+                                        <div style="color: var(--light-text); font-size: 14px;">Full access to all courses and features</div>
+                                    </div>
+                                    <div style="font-weight: 600; font-size: 24px;">$19.99<span style="font-size: 14px; font-weight: normal; color: var(--light-text);">/month</span></div>
+                                </div>
+                                <div style="display: flex;">
+                                    <button class="btn btn-outline" style="margin-right: 10px;">Change Plan</button>
+                                    <button class="btn btn-danger">Cancel Subscription</button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Payment Method</label>
+                                <div style="display: flex; align-items: center; padding: 15px; background: var(--secondary); border-radius: 6px;">
+                                    <i class="fab fa-cc-visa" style="font-size: 24px; margin-right: 15px; color: #1a1f71;"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 500;">Visa ending in 4242</div>
+                                        <div style="font-size: 13px; color: var(--light-text);">Expires 04/2025</div>
+                                    </div>
+                                    <button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Edit</button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Billing Address</label>
+                                <div style="padding: 15px; background: var(--secondary); border-radius: 6px;">
+                                    <div style="font-weight: 500;">John Doe</div>
+                                    <div style="font-size: 14px; margin-top: 5px;">123 Main Street</div>
+                                    <div style="font-size: 14px;">New York, NY 10001</div>
+                                    <div style="font-size: 14px;">United States</div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary">Update Billing Information</button>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3 class="settings-title">Billing History</h3>
+                            <div style="border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead style="background-color: var(--secondary);">
+                                        <tr>
+                                            <th style="padding: 12px 15px; text-align: left; font-weight: 500;">Date</th>
+                                            <th style="padding: 12px 15px; text-align: left; font-weight: 500;">Description</th>
+                                            <th style="padding: 12px 15px; text-align: left; font-weight: 500;">Amount</th>
+                                            <th style="padding: 12px 15px; text-align: left; font-weight: 500;">Status</th>
+                                            <th style="padding: 12px 15px; text-align: left; font-weight: 500;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr style="border-bottom: 1px solid var(--border);">
+                                            <td style="padding: 12px 15px;">Oct 1, 2023</td>
+                                            <td style="padding: 12px 15px;">Pro Plan Subscription</td>
+                                            <td style="padding: 12px 15px;">$19.99</td>
+                                            <td style="padding: 12px 15px; color: var(--success);">Paid</td>
+                                            <td style="padding: 12px 15px;"><a href="#" style="color: var(--primary); text-decoration: none;">Invoice</a></td>
+                                        </tr>
+                                        <tr style="border-bottom: 1px solid var(--border);">
+                                            <td style="padding: 12px 15px;">Sep 1, 2023</td>
+                                            <td style="padding: 12px 15px;">Pro Plan Subscription</td>
+                                            <td style="padding: 12px 15px;">$19.99</td>
+                                            <td style="padding: 12px 15px; color: var(--success);">Paid</td>
+                                            <td style="padding: 12px 15px;"><a href="#" style="color: var(--primary); text-decoration: none;">Invoice</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 12px 15px;">Aug 1, 2023</td>
+                                            <td style="padding: 12px 15px;">Pro Plan Subscription</td>
+                                            <td style="padding: 12px 15px;">$19.99</td>
+                                            <td style="padding: 12px 15px; color: var(--success);">Paid</td>
+                                            <td style="padding: 12px 15px;"><a href="#" style="color: var(--primary); text-decoration: none;">Invoice</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Danger Zone -->
+                    <div class="settings-section">
+                        <div class="danger-zone">
+                            <div class="danger-zone-title">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Danger Zone
+                            </div>
+                            <div class="danger-zone-text">
+                                These actions are irreversible. Please proceed with caution.
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-download"></i> Export Data
+                                </button>
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-trash-alt"></i> Delete Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="js/api.js">
+        // Tab switching functionality
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Deactivate all tab links
+            document.querySelectorAll('.settings-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Activate the selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Activate the clicked tab link
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Avatar preview functionality
+        function previewAvatar(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('avatarPreview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+        
+        // Initialize the first tab as active
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.settings-tab').classList.add('active');
+            document.querySelector('.tab-content').classList.add('active');
+        });
+    </script>
+</body>
+</html>

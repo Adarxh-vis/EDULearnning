@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration - EduLearn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a00e0;
+            --primary-light: #7b48ff;
+            --secondary: #8e2de2;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --danger: #dc3545;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .signup-container {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 500px;
+            max-width: 95%;
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .logo {
+            font-size: 2.2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+        }
+        
+        .signup-title {
+            font-size: 1.6rem;
+            margin-bottom: 1.8rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .signup-form .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+            position: relative;
+        }
+        
+        .signup-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+        
+        .signup-form input, 
+        .signup-form select {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+        
+        .signup-form select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+        
+        .signup-form input:focus,
+        .signup-form select:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(74, 0, 224, 0.1);
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            color: var(--gray);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .input-icon:hover {
+            color: var(--primary);
+        }
+        
+        .password-strength {
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .strength-meter {
+            height: 100%;
+            width: 0%;
+            background: var(--danger);
+            transition: all 0.3s;
+        }
+        
+        .password-hints {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
+        }
+        
+        .password-hints ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .password-hints li {
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .password-hints i {
+            font-size: 0.6rem;
+            transition: all 0.3s;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .terms input {
+            width: auto;
+            margin-right: 0.7rem;
+            margin-top: 0.2rem;
+        }
+        
+        .terms a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .terms a:hover {
+            text-decoration: underline;
+        }
+        
+        .signup-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .signup-btn:hover {
+            opacity: 0.95;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 0, 224, 0.3);
+        }
+        
+        .signup-btn:active {
+            transform: translateY(0);
+        }
+        
+        .signup-btn .spinner {
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+        
+        .login-link {
+            margin-top: 1.5rem;
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+        
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+        
+        .success-message {
+            color: var(--success);
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+        
+        .form-group.error input,
+        .form-group.error select {
+            border-color: var(--danger);
+        }
+        
+        .form-group.error .error-message {
+            display: block;
+        }
+        
+        .form-group.success input,
+        .form-group.success select {
+            border-color: var(--success);
+        }
+        
+        .form-group.success .success-message {
+            display: block;
+        }
+        
+        .hint-item.valid {
+            color: var(--success);
+        }
+        
+        .hint-item.valid i {
+            color: var(--success);
+        }
+        
+        .progress-container {
+            width: 100%;
+            margin: 1.5rem 0;
+            display: none;
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e9ecef;
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+        
+        .progress-bar {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 2px;
+            background: var(--primary);
+            z-index: 2;
+            transform: translateY(-50%);
+            transition: width 0.3s ease;
+        }
+        
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            font-weight: bold;
+            position: relative;
+            z-index: 3;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .step.completed {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-outline {
+            background: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(74, 0, 224, 0.05);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 0, 224, 0.3);
+        }
+        
+        .btn-primary:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 0.3rem;
+            color: var(--gray);
+            cursor: help;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+            font-weight: normal;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .signup-container {
+                padding: 1.8rem;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .signup-title {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            <span>EduLearn</span>
+        </div>
+        <h2 class="signup-title">Student Registration</h2>
+        
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-steps">
+                <div class="step completed" id="step1">1</div>
+                <div class="step" id="step2">2</div>
+                <div class="step" id="step3">3</div>
+            </div>
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <form class="signup-form" id="signupForm">
+            <!-- Step 1: Personal Information -->
+            <div class="form-step active" id="stepPersonal">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name <span class="tooltip">?<span class="tooltiptext">Your legal first name as it appears on official documents</span></span></label>
+                        <input type="text" id="firstName" placeholder="First name" required>
+                        <span class="error-message">Please enter your first name</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" placeholder="Last name" required>
+                        <span class="error-message">Please enter your last name</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" required>
+                    <span class="error-message">Please enter your date of birth</span>
+                    <span class="success-message">Valid date of birth</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" required>
+                        <option value="">Select gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer-not-to-say">Prefer not to say</option>
+                    </select>
+                    <span class="error-message">Please select your gender</span>
+                </div>
+                
+                <div class="nav-buttons">
+                    <button type="button" class="btn btn-outline" id="nextBtn1">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Academic Information -->
+            <div class="form-step" id="stepAcademic">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="student@example.com" required>
+                    <span class="error-message">Please enter a valid email address</span>
+                    <span class="success-message">Valid email address</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="institution">Educational Institution</label>
+                    <input type="text" id="institution" placeholder="School/University name" required>
+                    <span class="error-message">Please enter your institution name</span>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gradeLevel">Grade Level</label>
+                        <select id="gradeLevel" required>
+                            <option value="">Select grade level</option>
+                            <option value="elementary">Elementary School</option>
+                            <option value="middle">Middle School</option>
+                            <option value="high">High School</option>
+                            <option value="undergraduate">Undergraduate</option>
+                            <option value="graduate">Graduate</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <span class="error-message">Please select your grade level</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="major">Major/Field <span class="tooltip">?<span class="tooltiptext">Your primary area of study (if applicable)</span></span></label>
+                        <input type="text" id="major" placeholder="e.g. Computer Science">
+                    </div>
+                </div>
+                
+                <div class="nav-buttons">
+                    <button type="button" class="btn btn-outline" id="backBtn1"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button type="button" class="btn btn-primary" id="nextBtn2">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Account Setup -->
+            <div class="form-step" id="stepAccount">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Choose a username" required>
+                    <span class="error-message">Username must be 4-20 characters</span>
+                    <span class="success-message">Username available</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Create a password" required>
+                    <i class="fas fa-eye input-icon" id="togglePassword"></i>
+                    <div class="password-strength">
+                        <div class="strength-meter" id="strengthMeter"></div>
+                    </div>
+                    <div class="password-hints">
+                        <ul>
+                            <li class="hint-item" id="lengthHint">
+                                <i class="fas fa-circle"></i>
+                                <span>At least 8 characters</span>
+                            </li>
+                            <li class="hint-item" id="numberHint">
+                                <i class="fas fa-circle"></i>
+                                <span>Contains a number</span>
+                            </li>
+                            <li class="hint-item" id="specialHint">
+                                <i class="fas fa-circle"></i>
+                                <span>Contains a special character</span>
+                            </li>
+                            <li class="hint-item" id="upperHint">
+                                <i class="fas fa-circle"></i>
+                                <span>Contains uppercase letter</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <span class="error-message">Password doesn't meet requirements</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Re-enter your password" required>
+                    <span class="error-message">Passwords don't match</span>
+                </div>
+                
+                <div class="terms">
+                    <input type="checkbox" id="agreeTerms" required>
+                    <label for="agreeTerms">I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a></label>
+                </div>
+                
+                <div class="terms">
+                    <input type="checkbox" id="newsletter">
+                    <label for="newsletter">Subscribe to our newsletter for educational resources and updates</label>
+                </div>
+                
+                <div class="nav-buttons">
+                    <button type="button" class="btn btn-outline" id="backBtn2"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button type="submit" class="btn btn-primary" id="signupBtn">
+                        <span id="btnText">Create Account</span>
+                        <i class="fas fa-spinner spinner" id="spinner"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        
+        <p class="login-link">Already have an account? <a href="login.html">Log in</a></p>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // DOM Elements
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const form = document.getElementById('signupForm');
+        const signupBtn = document.getElementById('signupBtn');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('spinner');
+        
+        // Multi-step form elements
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        
+        const stepPersonal = document.getElementById('stepPersonal');
+        const stepAcademic = document.getElementById('stepAcademic');
+        const stepAccount = document.getElementById('stepAccount');
+        
+        const nextBtn1 = document.getElementById('nextBtn1');
+        const nextBtn2 = document.getElementById('nextBtn2');
+        const backBtn1 = document.getElementById('backBtn1');
+        const backBtn2 = document.getElementById('backBtn2');
+        
+        let currentStep = 1;
+        const totalSteps = 3;
+        
+        // Initialize multi-step form
+        function showStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.form-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Show current step
+            if (step === 1) {
+                stepPersonal.classList.add('active');
+                progressContainer.style.display = 'none';
+            } else {
+                progressContainer.style.display = 'block';
+                if (step === 2) {
+                    stepAcademic.classList.add('active');
+                } else if (step === 3) {
+                    stepAccount.classList.add('active');
+                }
+            }
+            
+            // Update progress bar
+            updateProgressBar(step);
+            
+            // Update current step
+            currentStep = step;
+        }
+        
+        function updateProgressBar(step) {
+            // Update step indicators
+            [step1, step2, step3].forEach((el, index) => {
+                el.classList.remove('active', 'completed');
+                if (index + 1 < step) {
+                    el.classList.add('completed');
+                } else if (index + 1 === step) {
+                    el.classList.add('active');
+                }
+            });
+            
+            // Update progress bar width
+            const progressPercent = ((step - 1) / (totalSteps - 1)) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+        }
+        
+        // Navigation between steps
+        nextBtn1.addEventListener('click', function() {
+            if (validateStep1()) {
+                showStep(2);
+            }
+        });
+        
+        nextBtn2.addEventListener('click', function() {
+            if (validateStep2()) {
+                showStep(3);
+            }
+        });
+        
+        backBtn1.addEventListener('click', function() {
+            showStep(1);
+        });
+        
+        backBtn2.addEventListener('click', function() {
+            showStep(2);
+        });
+        
+        // Step validation functions
+        function validateStep1() {
+            const isValid = validateFirstName() && 
+                           validateLastName() && 
+                           validateDOB() && 
+                           validateGender();
+            return isValid;
+        }
+        
+        function validateStep2() {
+            const isValid = validateEmail() && 
+                           validateInstitution() && 
+                           validateGradeLevel();
+            return isValid;
+        }
+        
+        // Field validation functions
+        function validateField(fieldId, validationFn, errorMessage = '', successMessage = '') {
+            const field = document.getElementById(fieldId);
+            const isValid = validationFn(field.value);
+            const formGroup = field.parentElement;
+            
+            formGroup.classList.toggle('error', !isValid);
+            formGroup.classList.toggle('success', isValid);
+            
+            if (errorMessage && formGroup.querySelector('.error-message')) {
+                formGroup.querySelector('.error-message').textContent = !isValid ? errorMessage : '';
+            }
+            
+            if (successMessage && formGroup.querySelector('.success-message')) {
+                formGroup.querySelector('.success-message').textContent = isValid ? successMessage : '';
+            }
+            
+            return isValid;
+        }
+        
+        // Specific validation functions
+        function validateFirstName() {
+            return validateField('firstName', value => value.trim().length >= 2, 
+                              'Please enter a valid first name (min 2 chars)');
+        }
+        
+        function validateLastName() {
+            return validateField('lastName', value => value.trim().length >= 2, 
+                              'Please enter a valid last name (min 2 chars)');
+        }
+        
+        function validateDOB() {
+            const dob = document.getElementById('dob').value;
+            if (!dob) return false;
+            
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            const isValid = age >= 5 && age <= 100;
+            
+            return validateField('dob', () => isValid, 
+                              'Please enter a valid date of birth (age 5-100)',
+                              'Valid date of birth');
+        }
+        
+        function validateGender() {
+            return validateField('gender', value => value !== '', 
+                              'Please select your gender');
+        }
+        
+        function validateEmail() {
+            return validateField('email', value => /^\S+@\S+\.\S+$/.test(value), 
+                              'Please enter a valid email address',
+                              'Valid email address');
+        }
+        
+        function validateInstitution() {
+            return validateField('institution', value => value.trim().length >= 3, 
+                              'Please enter a valid institution name (min 3 chars)');
+        }
+        
+        function validateGradeLevel() {
+            return validateField('gradeLevel', value => value !== '', 
+                              'Please select your grade level');
+        }
+        
+        function validateUsername() {
+            return validateField('username', value => /^[a-zA-Z0-9_]{4,20}$/.test(value), 
+                              'Username must be 4-20 characters (letters, numbers, _)',
+                              'Username available');
+        }
+        
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const isValid = password.length >= 8 && 
+                         /\d/.test(password) && 
+                         /[!@#$%^&*(),.?":{}|<>]/.test(password) &&
+                         /[A-Z]/.test(password);
+            
+            return validateField('password', () => isValid, 
+                               'Password must meet all requirements');
+        }
+        
+        function validateConfirmPassword() {
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            const isValid = password === confirm && password !== '';
+            
+            return validateField('confirmPassword', () => isValid, 
+                              'Passwords must match');
+        }
+        
+        function validateTerms() {
+            const termsChecked = document.getElementById('agreeTerms').checked;
+            if (!termsChecked) {
+                alert('Please agree to the terms and conditions');
+            }
+            return termsChecked;
+        }
+        
+        // Password strength evaluation
+        function evaluatePasswordStrength(value) {
+            let strength = 0;
+            const hints = {
+                length: document.getElementById('lengthHint'),
+                number: document.getElementById('numberHint'),
+                special: document.getElementById('specialHint'),
+                upper: document.getElementById('upperHint')
+            };
+
+            // Criteria checks
+            const hasMinLength = value.length >= 8;
+            const hasNumber = /\d/.test(value);
+            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+            const hasUpperCase = /[A-Z]/.test(value);
+
+            // Update hint visuals
+            hints.length.classList.toggle('valid', hasMinLength);
+            hints.number.classList.toggle('valid', hasNumber);
+            hints.special.classList.toggle('valid', hasSpecialChar);
+            hints.upper.classList.toggle('valid', hasUpperCase);
+
+            // Calculate strength (0-4)
+            strength = [hasMinLength, hasNumber, hasSpecialChar, hasUpperCase].filter(Boolean).length;
+            return strength;
+        }
+
+        // Update password strength meter
+        password.addEventListener('input', function() {
+            const strengthMeter = document.getElementById('strengthMeter');
+            const strength = evaluatePasswordStrength(this.value);
+            const width = (strength / 4) * 100;
+
+            strengthMeter.style.width = `${width}%`;
+            
+            // Update meter color based on strength
+            strengthMeter.style.backgroundColor = 
+                strength <= 1 ? 'var(--danger)' :
+                strength === 2 ? 'var(--warning)' :
+                strength === 3 ? 'var(--info)' :
+                'var(--success)';
+            
+            // Validate password in real-time
+            validatePassword();
+            
+            // Also validate confirmation if there's a value
+            if (confirmPassword.value) {
+                validateConfirmPassword();
+            }
+        });
+        
+        // Confirm password validation
+        confirmPassword.addEventListener('input', validateConfirmPassword);
+        
+        // Username validation with debounce
+        let usernameTimeout;
+        document.getElementById('username').addEventListener('input', function() {
+            clearTimeout(usernameTimeout);
+            usernameTimeout = setTimeout(() => {
+                validateUsername();
+                // Here you would typically check username availability with an API call
+            }, 500);
+        });
+        
+        // Password visibility toggle
+        togglePassword.addEventListener('click', function() {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+            this.setAttribute('title', type === 'password' ? 'Show password' : 'Hide password');
+        });
+        
+        // Real-time validation triggers for step 1
+        document.getElementById('firstName').addEventListener('input', validateFirstName);
+        document.getElementById('lastName').addEventListener('input', validateLastName);
+        document.getElementById('dob').addEventListener('change', validateDOB);
+        document.getElementById('gender').addEventListener('change', validateGender);
+        
+        // Real-time validation triggers for step 2
+        document.getElementById('email').addEventListener('input', validateEmail);
+        document.getElementById('institution').addEventListener('input', validateInstitution);
+        document.getElementById('gradeLevel').addEventListener('change', validateGradeLevel);
+        
+        // Mock API function for when backend is not available
+        async function mockAuthAPI(data) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    // Simulate a successful response
+                    const mockResponse = {
+                        ok: true,
+                        json: () => Promise.resolve({
+                            success: true,
+                            message: "Account created successfully (mock response)",
+                            token: "mock-token-12345",
+                            user: {
+                                id: "mock-user-123",
+                                firstName: data.firstName,
+                                lastName: data.lastName,
+                                email: data.email,
+                                role: "student"
+                            }
+                        })
+                    };
+                    resolve(mockResponse);
+                }, 1500);
+            });
+        }
+
+        // Form submission handler
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validate all fields in current step
+            const isFormValid = validateUsername() & validatePassword() & 
+                              validateConfirmPassword() & validateTerms();
+
+            if (isFormValid) {
+                try {
+                    // UI feedback during submission
+                    btnText.textContent = 'Creating Account...';
+                    spinner.style.display = 'block';
+                    signupBtn.disabled = true;
+
+                    // Prepare data for API
+                    const userData = {
+                        firstName: document.getElementById('firstName').value,
+                        lastName: document.getElementById('lastName').value,
+                        dob: document.getElementById('dob').value,
+                        gender: document.getElementById('gender').value,
+                        email: document.getElementById('email').value,
+                        institution: document.getElementById('institution').value,
+                        gradeLevel: document.getElementById('gradeLevel').value,
+                        major: document.getElementById('major').value,
+                        username: document.getElementById('username').value,
+                        password: document.getElementById('password').value,
+                        newsletter: document.getElementById('newsletter').checked,
+                        role: 'student'
+                    };
+
+                    const fullName = `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`.trim();
+                    const payload = {
+                        fullName,
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value
+                    };
+                    const response = await fetch('http://localhost:5000/api/auth/student/signup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        // Success feedback
+                        btnText.textContent = 'Account Created!';
+                        signupBtn.style.background = 'linear-gradient(135deg, var(--success), #5cb85c)';
+
+                        // Store token if returned (works for both real and mock)
+                        if (data.token) {
+                            localStorage.setItem('authToken', data.token);
+                            localStorage.setItem('userData', JSON.stringify({
+                                firstName: userData.firstName,
+                                lastName: userData.lastName,
+                                email: userData.email,
+                                gradeLevel: userData.gradeLevel,
+                                institution: userData.institution,
+                                role: userData.role
+                            }));
+                        }
+
+                        // Redirect to dashboard after brief delay
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 1500);
+                    } else {
+                        // Handle API errors
+                        btnText.textContent = 'Create Account';
+                        spinner.style.display = 'none';
+                        signupBtn.disabled = false;
+                        
+                        // Show error message from API or default
+                        alert(data.message || 'Registration failed. Please try again.');
+                    }
+
+                } catch (error) {
+                    console.error('Signup error:', error);
+                    btnText.textContent = 'Error - Try Again';
+                    signupBtn.style.background = 'linear-gradient(135deg, var(--danger), #c82333)';
+                    spinner.style.display = 'none';
+                    
+                    // Reset button after delay
+                    setTimeout(() => {
+                        btnText.textContent = 'Create Account';
+                        signupBtn.style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))';
+                        signupBtn.disabled = false;
+                    }, 2000);
+                }
+            }
+        });
+        
+        // Initialize first step
+        showStep(1);
+    });
+</script>
+</body>
+</html>

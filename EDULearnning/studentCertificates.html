@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDULearn - Certificates</title>
+    <style>
+        /* Shared styles from Dashboard */
+        :root {
+            --primary: #4a6bdf;
+            --secondary: #f8f9fa;
+            --accent: #ff7e5f;
+            --text: #333;
+            --light-text: #6c757d;
+            --sidebar-width: 240px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text);
+            background-color: #f5f7fa;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            padding: 20px 0;
+            position: fixed;
+            width: var(--sidebar-width);
+            height: 100vh;
+            z-index: 100;
+        }
+        
+        .logo {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+        
+        .logo img {
+            height: 40px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: var(--light-text);
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .sidebar-menu li.active {
+            color: var(--primary);
+            background-color: rgba(74, 107, 223, 0.1);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .sidebar-menu li:hover:not(.active) {
+            background-color: var(--secondary);
+        }
+        
+        .sidebar-menu li i {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .sidebar-menu li span {
+            flex: 1;
+        }
+        
+        .badge {
+            background-color: var(--accent);
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+        
+        /* Course Navigation Dropdown */
+        .sidebar-menu .dropdown {
+            position: relative;
+        }
+        
+        .sidebar-menu .dropdown > a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            justify-content: space-between;
+            width: 100%;
+        }
+        
+        .sidebar-menu .dropdown > a .fa-chevron-down {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            margin-left: auto;
+        }
+        
+        .sidebar-menu .dropdown.active > a .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-content {
+            display: none;
+            background-color: rgba(74, 107, 223, 0.05);
+            padding-left: 1rem;
+            border-left: 3px solid var(--primary);
+            margin-left: 1rem;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease;
+        }
+        
+        .sidebar-menu .dropdown.active .dropdown-content {
+            display: block !important;
+            max-height: 500px;
+        }
+        
+        .dropdown-content a {
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--light-text);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: rgba(74, 107, 223, 0.1);
+            color: var(--primary);
+        }
+        
+        .dropdown-content i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        
+        .main-content {
+            padding: 30px;
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            padding: 10px 0;
+            width: 200px;
+            display: none;
+        }
+        
+        .user-profile:hover .user-dropdown {
+            display: block;
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 8px 20px;
+            color: var(--text);
+            text-decoration: none;
+        }
+        
+        .user-dropdown a:hover {
+            background-color: var(--secondary);
+        }
+        
+        /* Certificates specific styles */
+        .certificates-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .certificate-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .certificate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        
+        .certificate-preview {
+            position: relative;
+            height: 200px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .certificate-design {
+            width: 90%;
+            height: 160px;
+            background: white;
+            border: 2px solid var(--primary);
+            position: relative;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .certificate-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .certificate-recipient {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .certificate-course {
+            font-size: 14px;
+            color: var(--light-text);
+            margin-bottom: 15px;
+        }
+        
+        .certificate-date {
+            font-size: 12px;
+            color: var(--light-text);
+            margin-bottom: 15px;
+        }
+        
+        .certificate-seal {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .certificate-details {
+            padding: 20px;
+        }
+        
+        .certificate-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .certificate-name {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .certificate-date-issued {
+            color: var(--light-text);
+            font-size: 14px;
+        }
+        
+        .certificate-description {
+            color: var(--light-text);
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .certificate-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin-left: 10px;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .btn i {
+            margin-right: 5px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5bd9;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #ddd;
+            color: var(--light-text);
+        }
+        
+        .btn-outline:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 30px;
+            padding: 8px 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            width: 300px;
+        }
+        
+        .search-bar input {
+            border: none;
+            outline: none;
+            flex: 1;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .empty-state i {
+            font-size: 50px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+        
+        .empty-state p {
+            color: var(--light-text);
+            margin-bottom: 20px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                display: none;
+            }
+            
+            .sidebar.active {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .certificates-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-bar {
+                width: 100%;
+                margin-top: 15px;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                z-index: 101;
+                background: var(--primary);
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 8px 12px;
+                font-size: 18px;
+            }
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <img src="https://via.placeholder.com/150x40?text=EDULearn" alt="EDULearn Logo">
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="student.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="studentCourses.html" class="nav-link">
+                        <i class="fas fa-book-open"></i>
+                        <span>My Courses</span>
+                    </a>
+                </li>
+                <li class="dropdown" id="coursesDropdown">
+                    <a href="#" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                        <div style="display: flex; align-items: center;">
+                            <i class="fas fa-graduation-cap" style="margin-right: 10px; font-size: 18px; width: 24px; text-align: center;"></i>
+                            <span>Courses</span>
+                        </div>
+                        <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                    </a>
+                    <div class="dropdown-content" style="display: none;">
+                        <a href="allCourses.html"><i class="fas fa-book"></i> All Courses</a>
+                        <a href="popular.html"><i class="fas fa-fire"></i> Popular Courses</a>
+                        <a href="newReleases.html"><i class="fas fa-star"></i> New Releases</a>
+                        <a href="freeCourses.html"><i class="fas fa-gift"></i> Free Courses</a>
+                    </div>
+                </li>
+                <li class="active">
+                    <a href="studentCertificates.html" class="nav-link">
+                        <i class="fas fa-certificate"></i>
+                        <span>Certificates</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="studentMessages.html" class="nav-link">
+                        <i class="fas fa-comments"></i>
+                        <span>Messages</span>
+                        <span class="badge">3</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="studentSchedule.html" class="nav-link">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Schedule</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="studentProgress.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Progress</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="studentSettings.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="logout.html" class="nav-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <div class="header">
+                <h1>Certificates</h1>
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40" alt="User Profile">
+                    <span>John Doe</span>
+                    <div class="user-dropdown">
+                        <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                        <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="logout.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="certificates-header">
+                <h2>My Achievements</h2>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search certificates...">
+                </div>
+            </div>
+            
+            <div class="certificate-card">
+                <div class="certificate-preview">
+                    <div class="certificate-design">
+                        <div class="certificate-title">Certificate of Completion</div>
+                        <div class="certificate-recipient">John Doe</div>
+                        <div class="certificate-course">Advanced Web Development</div>
+                        <div class="certificate-date">Issued on October 10, 2023</div>
+                        <div class="certificate-seal">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="certificate-details">
+                    <div class="certificate-info">
+                        <div class="certificate-name">Advanced Web Development</div>
+                        <div class="certificate-date-issued">Issued: Oct 10, 2023</div>
+                    </div>
+                    <div class="certificate-description">
+                        This certificate is awarded to John Doe for successfully completing the Advanced Web Development course with a final grade of 92%.
+                    </div>
+                    <div class="certificate-actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="certificate-card">
+                <div class="certificate-preview">
+                    <div class="certificate-design">
+                        <div class="certificate-title">Certificate of Completion</div>
+                        <div class="certificate-recipient">John Doe</div>
+                        <div class="certificate-course">Data Science Fundamentals</div>
+                        <div class="certificate-date">Issued on August 15, 2023</div>
+                        <div class="certificate-seal">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="certificate-details">
+                    <div class="certificate-info">
+                        <div class="certificate-name">Data Science Fundamentals</div>
+                        <div class="certificate-date-issued">Issued: Aug 15, 2023</div>
+                    </div>
+                    <div class="certificate-description">
+                        This certificate is awarded to John Doe for successfully completing the Data Science Fundamentals course with distinction.
+                    </div>
+                    <div class="certificate-actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { certificateAPI, getAuthToken, getCurrentUserId, handleAPIError } from './js/api.js';
+        
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+        
+        // Set active menu item based on current page
+        document.addEventListener('DOMContentLoaded', async function() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const menuItems = document.querySelectorAll('.sidebar-menu li');
+            
+            menuItems.forEach(item => {
+                const link = item.querySelector('a');
+                if (link && link.getAttribute('href') === currentPage) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Toggle course dropdown
+            const coursesDropdown = document.getElementById('coursesDropdown');
+            if (coursesDropdown) {
+                coursesDropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.classList.toggle('active');
+                });
+            }
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (coursesDropdown && !coursesDropdown.contains(e.target)) {
+                    coursesDropdown.classList.remove('active');
+                }
+            });
+            
+            // Load certificates from backend
+            await loadUserCertificates();
+        });
+        
+        // Load user's certificates from backend
+        async function loadUserCertificates() {
+            try {
+                const token = getAuthToken();
+                const userId = getCurrentUserId();
+                
+                if (!token || !userId) {
+                    console.log('No authentication token found');
+                    return;
+                }
+                
+                const response = await certificateAPI.getUserCertificates(userId, token);
+                const certificates = await handleAPIError(response);
+                
+                displayCertificates(certificates);
+            } catch (error) {
+                console.error('Error loading certificates:', error);
+                showEmptyState();
+            }
+        }
+        
+        // Display certificates
+        function displayCertificates(certificates) {
+            const container = document.querySelector('.main-content');
+            
+            // Remove existing certificate cards (keep header)
+            const existingCards = container.querySelectorAll('.certificate-card');
+            existingCards.forEach(card => card.remove());
+            
+            if (certificates.length === 0) {
+                showEmptyState();
+                return;
+            }
+            
+            // Add new certificate cards
+            certificates.forEach(cert => {
+                const card = createCertificateCard(cert);
+                container.appendChild(card);
+            });
+        }
+        
+        // Create certificate card HTML
+        function createCertificateCard(cert) {
+            const card = document.createElement('div');
+            card.className = 'certificate-card';
+            
+            const issueDate = new Date(cert.issueDate);
+            const formattedDate = issueDate.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            card.innerHTML = `
+                <div class="certificate-preview">
+                    <div class="certificate-design">
+                        <div class="certificate-title">Certificate of Completion</div>
+                        <div class="certificate-recipient">${cert.userName}</div>
+                        <div class="certificate-course">${cert.courseTitle}</div>
+                        <div class="certificate-date">Issued on ${formattedDate}</div>
+                        <div class="certificate-seal">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="certificate-details">
+                    <div class="certificate-info">
+                        <div class="certificate-name">${cert.courseTitle}</div>
+                        <div class="certificate-date-issued">Issued: ${formattedDate}</div>
+                    </div>
+                    <div class="certificate-description">
+                        Certificate ID: ${cert.certificateId}<br>
+                        Verification Code: ${cert.verificationCode}<br>
+                        Instructor: ${cert.instructorName}
+                    </div>
+                    <div class="certificate-actions">
+                        <button class="btn btn-outline" onclick="shareCertificate('${cert.certificateId}')">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                        <button class="btn btn-primary" onclick="downloadCertificate('${cert._id}')">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Show empty state
+        function showEmptyState() {
+            const container = document.querySelector('.main-content');
+            const existingCards = container.querySelectorAll('.certificate-card');
+            existingCards.forEach(card => card.remove());
+            
+            const emptyState = document.createElement('div');
+            emptyState.className = 'empty-state';
+            emptyState.innerHTML = `
+                <i class="fas fa-certificate"></i>
+                <h3>No Certificates Yet</h3>
+                <p>Complete courses and pass all assessments to earn certificates that showcase your achievements.</p>
+                <a href="allCourses.html" class="btn btn-primary">Browse Courses</a>
+            `;
+            container.appendChild(emptyState);
+        }
+        
+        // Download certificate as PDF
+        window.downloadCertificate = async function(certId) {
+            try {
+                const token = getAuthToken();
+                const response = await certificateAPI.downloadCertificatePDF(certId, token);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to download certificate');
+                }
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `certificate_${certId}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                alert('Certificate downloaded successfully!');
+            } catch (error) {
+                console.error('Error downloading certificate:', error);
+                alert('Failed to download certificate. Please try again.');
+            }
+        };
+        
+        // Share certificate
+        window.shareCertificate = function(certificateId) {
+            const shareUrl = `${window.location.origin}/verify-certificate.html?id=${certificateId}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Certificate',
+                    text: 'Check out my certificate!',
+                    url: shareUrl
+                }).catch(err => console.log('Error sharing:', err));
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert('Certificate link copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                    alert('Share URL: ' + shareUrl);
+                });
+            }
+        };
+    </script>
+</body>
+</html>

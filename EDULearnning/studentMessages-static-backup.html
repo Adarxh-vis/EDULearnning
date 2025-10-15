@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDULearn - Messages</title>
+    <style>
+        /* Your existing CSS remains the same */
+        :root {
+            --primary: #4361ee;
+            --primary-light: #e0e7ff;
+            --secondary: #3f37c9;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #ef233c;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: var(--white);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .logo img {
+            height: 36px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--gray);
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-menu li a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .sidebar-menu li.active a {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .sidebar-menu li.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: var(--primary);
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .sidebar-menu li i {
+            width: 24px;
+            margin-right: 12px;
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1;
+            color: var(--white);
+            background-color: var(--accent);
+            border-radius: 10px;
+            margin-left: auto;
+        }
+        
+        /* Course Navigation Dropdown */
+        .sidebar-menu .dropdown {
+            position: relative;
+        }
+        
+        .sidebar-menu .dropdown > a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            justify-content: space-between;
+            width: 100%;
+        }
+        
+        .sidebar-menu .dropdown > a .fa-chevron-down {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            margin-left: auto;
+        }
+        
+        .sidebar-menu .dropdown.active > a .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-content {
+            display: none;
+            background-color: rgba(67, 97, 238, 0.05);
+            padding-left: 1rem;
+            border-left: 3px solid var(--primary);
+            margin-left: 1rem;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease;
+        }
+        
+        .sidebar-menu .dropdown.active .dropdown-content {
+            display: block !important;
+            max-height: 500px;
+        }
+        
+        .dropdown-content a {
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--gray);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .dropdown-content i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        
+        .main-content {
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+        }
+        
+        .user-name {
+            font-weight: 600;
+        }
+        
+        .messages-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+            height: calc(100vh - 150px);
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .conversations-list {
+            border-right: 1px solid var(--gray-light);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .conversations-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .conversations-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .new-conversation-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .new-conversation-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .conversations-search {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--gray-light);
+            outline: none;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .conversations-scroll {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .conversation-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-light);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .conversation-item:hover {
+            background-color: var(--light);
+        }
+        
+        .conversation-item.active {
+            background-color: var(--primary-light);
+        }
+        
+        .conversation-user {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        
+        .conversation-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 12px;
+        }
+        
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .conversation-name {
+            font-weight: 600;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .conversation-time {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .conversation-preview {
+            font-size: 13px;
+            color: var(--gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .conversation-unread {
+            background-color: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .message-view {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 12px;
+        }
+        
+        .message-recipient {
+            font-weight: 600;
+            flex: 1;
+        }
+        
+        .message-status {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+        
+        .message-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .message-action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray);
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+        
+        .message-action-btn:hover {
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+        
+        .message-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f9fafb;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message-date {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .message-date::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: var(--gray-light);
+            z-index: 1;
+        }
+        
+        .message-date span {
+            display: inline-block;
+            padding: 4px 12px;
+            background-color: var(--gray-light);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--gray);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            position: relative;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        .message-received {
+            background: var(--white);
+            border: 1px solid var(--gray-light);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message-sent {
+            background-color: var(--primary);
+            color: var(--white);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 4px;
+            text-align: right;
+        }
+        
+        .message-input-area {
+            padding: 16px 20px;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .message-attachment-btn {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .message-attachment-btn:hover {
+            color: var(--primary);
+        }
+        
+        .message-input {
+            flex: 1;
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            padding: 12px 16px;
+            outline: none;
+            resize: none;
+            height: 48px;
+            max-height: 120px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .message-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .message-send-btn {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .message-send-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .message-send-btn i {
+            font-size: 18px;
+        }
+        
+        .empty-message-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .empty-message-icon {
+            font-size: 60px;
+            color: var(--gray-light);
+            margin-bottom: 20px;
+        }
+        
+        .empty-message-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--dark);
+        }
+        
+        .empty-message-text {
+            color: var(--gray);
+            margin-bottom: 24px;
+            max-width: 400px;
+        }
+        
+        .empty-message-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            background-color: var(--primary);
+            color: var(--white);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .empty-message-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 80px 1fr;
+            }
+            
+            .sidebar-menu li span {
+                display: none;
+            }
+            
+            .sidebar-menu li i {
+                margin-right: 0;
+                font-size: 20px;
+            }
+            
+            .logo img {
+                height: 30px;
+            }
+            
+            .messages-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .conversations-list {
+                display: none;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="https://via.placeholder.com/150x40?text=EDULearn" alt="EDULearn Logo">
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="student.html">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="studentCourses.html">
+                        <i class="fas fa-book-open"></i>
+                        <span>My Courses</span>
+                    </a>
+                </li>
+                <li class="dropdown" id="coursesDropdown">
+                    <a href="#" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                        <div style="display: flex; align-items: center;">
+                            <i class="fas fa-graduation-cap" style="width: 24px; margin-right: 12px; text-align: center; font-size: 18px;"></i>
+                            <span>Courses</span>
+                        </div>
+                        <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                    </a>
+                    <div class="dropdown-content" style="display: none;">
+                        <a href="allCourses.html"><i class="fas fa-book"></i> All Courses</a>
+                        <a href="popular.html"><i class="fas fa-fire"></i> Popular Courses</a>
+                        <a href="newReleases.html"><i class="fas fa-star"></i> New Releases</a>
+                        <a href="freeCourses.html"><i class="fas fa-gift"></i> Free Courses</a>
+                    </div>
+                </li>
+                <li>
+                    <a href="studentCertificates.html">
+                        <i class="fas fa-certificate"></i>
+                        <span>Certificates</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="studentMessages.html">
+                        <i class="fas fa-comments"></i>
+                        <span>Messages</span>
+                        <span class="badge">3</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="studentSchedule.html">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Schedule</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="studentProgress.html">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Progress</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="studentSettings.html">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <div class="header">
+                <h1>Messages</h1>
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40" alt="User Profile" class="user-avatar">
+                    <span class="user-name">John Doe</span>
+                </div>
+            </div>
+            
+            <div class="messages-container">
+                <div class="conversations-list">
+                    <div class="conversations-header">
+                        <h3>Conversations</h3>
+                        <button class="new-conversation-btn" id="newConversationBtn">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
+                    <div class="conversations-search">
+                        <input type="text" class="search-input" id="searchInput" placeholder="Search messages...">
+                    </div>
+                    
+                    <div class="conversations-scroll" id="conversationsList">
+                        <!-- Conversations will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="message-view" id="activeConversationView">
+                    <div class="message-header">
+                        <img src="" alt="" class="message-avatar" id="currentRecipientAvatar">
+                        <div>
+                            <div class="message-recipient" id="currentRecipientName">Select a conversation</div>
+                            <div class="message-status" id="currentRecipientStatus"></div>
+                        </div>
+                        <div class="message-actions">
+                            <button class="message-action-btn">
+                                <i class="fas fa-phone"></i>
+                            </button>
+                            <button class="message-action-btn">
+                                <i class="fas fa-video"></i>
+                            </button>
+                            <button class="message-action-btn">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="message-content" id="messageContent">
+                        <!-- Messages will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="message-input-area">
+                        <button class="message-attachment-btn">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <textarea class="message-input" id="messageInput" placeholder="Type your message here..."></textarea>
+                        <button class="message-send-btn" id="sendMessageBtn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Empty state (shown when no conversation is selected) -->
+                <div class="message-view" id="emptyMessageView">
+                    <div class="empty-message-view">
+                        <i class="fas fa-comments empty-message-icon"></i>
+                        <h3 class="empty-message-title">No Conversation Selected</h3>
+                        <p class="empty-message-text">Select a conversation from the list to view messages or start a new conversation.</p>
+                        <button class="empty-message-btn" id="emptyMessageBtn">New Message</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sample conversation data
+        const conversations = [
+            {
+                id: 1,
+                name: "Dr. Sarah Johnson",
+                avatar: "https://via.placeholder.com/40",
+                status: "Online",
+                unread: 0,
+                lastMessageTime: "2h ago",
+                messages: [
+                    {
+                        id: 1,
+                        sender: "recipient",
+                        text: "Hi John, I've reviewed your final project submission for the web development course.",
+                        time: "10:42 AM",
+                        date: "Today"
+                    },
+                    {
+                        id: 2,
+                        sender: "recipient",
+                        text: "Overall, it's excellent work! You've demonstrated a strong understanding of React and Redux.",
+                        time: "10:43 AM",
+                        date: "Today"
+                    },
+                    {
+                        id: 3,
+                        sender: "user",
+                        text: "Thank you, Dr. Johnson! I really enjoyed working on this project.",
+                        time: "10:47 AM",
+                        date: "Today"
+                    },
+                    {
+                        id: 4,
+                        sender: "recipient",
+                        text: "I have a few suggestions for improvement. The state management could be simplified in the user profile section, and the error handling could be more robust.",
+                        time: "10:49 AM",
+                        date: "Today"
+                    },
+                    {
+                        id: 5,
+                        sender: "user",
+                        text: "Those are great points. Would it be possible to schedule a quick call to go over the details?",
+                        time: "10:52 AM",
+                        date: "Today"
+                    },
+                    {
+                        id: 6,
+                        sender: "recipient",
+                        text: "Of course! How about tomorrow at 2pm?",
+                        time: "10:55 AM",
+                        date: "Today"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                name: "EDULearn Support",
+                avatar: "https://via.placeholder.com/40",
+                status: "Online",
+                unread: 2,
+                lastMessageTime: "1d ago",
+                messages: [
+                    {
+                        id: 1,
+                        sender: "recipient",
+                        text: "Your certificate for 'Advanced Web Development' is now available for download.",
+                        time: "09:30 AM",
+                        date: "Yesterday"
+                    },
+                    {
+                        id: 2,
+                        sender: "recipient",
+                        text: "Please visit your certificates page to download it.",
+                        time: "09:31 AM",
+                        date: "Yesterday"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                name: "Study Group: Data Science",
+                avatar: "https://via.placeholder.com/40",
+                status: "5 members online",
+                unread: 5,
+                lastMessageTime: "2d ago",
+                messages: [
+                    {
+                        id: 1,
+                        sender: "recipient",
+                        text: "Michael: Let's schedule our next study session for Wednesday at 7pm.",
+                        time: "03:15 PM",
+                        date: "2 days ago"
+                    },
+                    {
+                        id: 2,
+                        sender: "recipient",
+                        text: "Sarah: I can't make it at 7pm, can we do 8pm instead?",
+                        time: "03:20 PM",
+                        date: "2 days ago"
+                    },
+                    {
+                        id: 3,
+                        sender: "recipient",
+                        text: "Alex: 8pm works for me too.",
+                        time: "03:25 PM",
+                        date: "2 days ago"
+                    }
+                ]
+            }
+        ];
+
+        // DOM Elements
+        const conversationsList = document.getElementById('conversationsList');
+        const activeConversationView = document.getElementById('activeConversationView');
+        const emptyMessageView = document.getElementById('emptyMessageView');
+        const messageContent = document.getElementById('messageContent');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const searchInput = document.getElementById('searchInput');
+        const newConversationBtn = document.getElementById('newConversationBtn');
+        const emptyMessageBtn = document.getElementById('emptyMessageBtn');
+        const currentRecipientName = document.getElementById('currentRecipientName');
+        const currentRecipientAvatar = document.getElementById('currentRecipientAvatar');
+        const currentRecipientStatus = document.getElementById('currentRecipientStatus');
+
+        // Current state
+        let currentConversationId = null;
+        let filteredConversations = [...conversations];
+
+        // Initialize the page
+        function init() {
+            renderConversationsList();
+            showEmptyState();
+            
+            // Event listeners
+            sendMessageBtn.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            searchInput.addEventListener('input', filterConversations);
+            newConversationBtn.addEventListener('click', startNewConversation);
+            emptyMessageBtn.addEventListener('click', startNewConversation);
+        }
+
+        // Render conversations list
+        function renderConversationsList() {
+            conversationsList.innerHTML = '';
+            
+            filteredConversations.forEach(conversation => {
+                const conversationItem = document.createElement('div');
+                conversationItem.className = `conversation-item ${conversation.id === currentConversationId ? 'active' : ''}`;
+                conversationItem.dataset.id = conversation.id;
+                
+                conversationItem.innerHTML = `
+                    <div class="conversation-user">
+                        <img src="${conversation.avatar}" alt="${conversation.name}" class="conversation-avatar">
+                        <div class="conversation-info">
+                            <div class="conversation-name">${conversation.name}</div>
+                            <div class="conversation-time">${conversation.lastMessageTime}</div>
+                        </div>
+                        ${conversation.unread > 0 ? `<div class="conversation-unread">${conversation.unread}</div>` : ''}
+                    </div>
+                    <div class="conversation-preview">
+                        ${conversation.messages[conversation.messages.length - 1].text}
+                    </div>
+                `;
+                
+                conversationItem.addEventListener('click', () => selectConversation(conversation.id));
+                conversationsList.appendChild(conversationItem);
+            });
+        }
+
+        // Filter conversations based on search input
+        function filterConversations() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            if (searchTerm === '') {
+                filteredConversations = [...conversations];
+            } else {
+                filteredConversations = conversations.filter(conversation => 
+                    conversation.name.toLowerCase().includes(searchTerm) ||
+                    conversation.messages.some(message => 
+                        message.text.toLowerCase().includes(searchTerm)
+                    )
+                );
+            }
+            
+            renderConversationsList();
+        }
+
+        // Select a conversation
+        function selectConversation(conversationId) {
+            currentConversationId = conversationId;
+            const conversation = conversations.find(c => c.id === conversationId);
+            
+            if (conversation) {
+                // Update conversation header
+                currentRecipientName.textContent = conversation.name;
+                currentRecipientAvatar.src = conversation.avatar;
+                currentRecipientAvatar.alt = conversation.name;
+                currentRecipientStatus.textContent = conversation.status;
+                
+                // Render messages
+                renderMessages(conversation.messages);
+                
+                // Mark as read
+                conversation.unread = 0;
+                
+                // Update UI
+                activeConversationView.classList.remove('hidden');
+                emptyMessageView.classList.add('hidden');
+                
+                // Re-render conversations list to update unread counts
+                renderConversationsList();
+                
+                // Focus on message input
+                messageInput.focus();
+            }
+        }
+
+        // Render messages for the selected conversation
+        function renderMessages(messages) {
+            messageContent.innerHTML = '';
+            
+            let lastDate = '';
+            
+            messages.forEach(message => {
+                // Add date separator if needed
+                if (message.date !== lastDate) {
+                    const dateElement = document.createElement('div');
+                    dateElement.className = 'message-date';
+                    dateElement.innerHTML = `<span>${message.date}</span>`;
+                    messageContent.appendChild(dateElement);
+                    lastDate = message.date;
+                }
+                
+                // Create message bubble
+                const messageBubble = document.createElement('div');
+                messageBubble.className = `message-bubble ${message.sender === 'user' ? 'message-sent' : 'message-received'}`;
+                messageBubble.innerHTML = `
+                    ${message.text}
+                    <div class="message-time">${message.time}</div>
+                `;
+                
+                messageContent.appendChild(messageBubble);
+            });
+            
+            // Scroll to bottom
+            messageContent.scrollTop = messageContent.scrollHeight;
+        }
+
+        // Send a new message
+        function sendMessage() {
+            const messageText = messageInput.value.trim();
+            
+            if (messageText === '' || !currentConversationId) return;
+            
+            // Find current conversation
+            const conversation = conversations.find(c => c.id === currentConversationId);
+            if (!conversation) return;
+            
+            // Create new message
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const dateString = getDateString(now);
+            
+            const newMessage = {
+                id: conversation.messages.length + 1,
+                sender: 'user',
+                text: messageText,
+                time: timeString,
+                date: dateString
+            };
+            
+            // Add message to conversation
+            conversation.messages.push(newMessage);
+            
+            // Update last message time
+            conversation.lastMessageTime = 'Just now';
+            
+            // Clear input
+            messageInput.value = '';
+            
+            // Re-render messages
+            renderMessages(conversation.messages);
+            
+            // Simulate reply after a delay
+            setTimeout(() => {
+                simulateReply(conversation);
+            }, 1000 + Math.random() * 2000);
+        }
+
+        // Simulate a reply from the other person
+        function simulateReply(conversation) {
+            const replies = [
+                "Thanks for your message!",
+                "I'll get back to you soon.",
+                "That's a good question. Let me check.",
+                "I agree with your point.",
+                "Can we discuss this further in our next class?",
+                "I've noted your suggestion."
+            ];
+            
+            const randomReply = replies[Math.floor(Math.random() * replies.length)];
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const dateString = getDateString(now);
+            
+            const replyMessage = {
+                id: conversation.messages.length + 1,
+                sender: 'recipient',
+                text: randomReply,
+                time: timeString,
+                date: dateString
+            };
+            
+            conversation.messages.push(replyMessage);
+            conversation.lastMessageTime = 'Just now';
+            conversation.unread = (conversation.unread || 0) + 1;
+            
+            // Update UI if this is the active conversation
+            if (currentConversationId === conversation.id) {
+                renderMessages(conversation.messages);
+                conversation.unread = 0;
+            }
+            
+            // Re-render conversations list
+            renderConversationsList();
+        }
+
+        // Show empty state when no conversation is selected
+        function showEmptyState() {
+            activeConversationView.classList.add('hidden');
+            emptyMessageView.classList.remove('hidden');
+            currentConversationId = null;
+        }
+
+        // Start a new conversation (placeholder function)
+        function startNewConversation() {
+            alert('New conversation feature would be implemented here!');
+            // In a real app, this would open a modal to select a recipient
+            // and start a new conversation
+        }
+
+        // Helper function to format date
+        function getDateString(date) {
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (date.toDateString() === today.toDateString()) {
+                return 'Today';
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                return 'Yesterday';
+            } else {
+                return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+            }
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+            
+            // Toggle course dropdown
+            const coursesDropdown = document.getElementById('coursesDropdown');
+            if (coursesDropdown) {
+                coursesDropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.classList.toggle('active');
+                });
+            }
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (coursesDropdown && !coursesDropdown.contains(e.target)) {
+                    coursesDropdown.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

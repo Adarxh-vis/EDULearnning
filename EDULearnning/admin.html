@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - EduLearn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a00e0;
+            --primary-light: #7b48ff;
+            --secondary: #8e2de2;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --danger: #dc3545;
+            --success: #28a745;
+            --warning: #ffc107;
+            --admin-accent: #e74c3c;
+            --sidebar-width: 250px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .sidebar-header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-header .badge {
+            background-color: var(--admin-accent);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 0.8rem 1.5rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: var(--admin-accent);
+        }
+
+        .menu-item.active {
+            background-color: rgba(255,255,255,0.15);
+            color: white;
+            border-left-color: var(--admin-accent);
+        }
+
+        .menu-item i {
+            margin-right: 0.8rem;
+            width: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: var(--dark);
+            font-size: 1.8rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .card-icon.users { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .card-icon.courses { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
+        .card-icon.assessments { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
+        .card-icon.certificates { background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Recent Activity */
+        .activity-section {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .activity-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--primary);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    EduLearn
+                </div>
+                <div class="badge">
+                    <i class="fas fa-crown"></i>
+                    Admin Panel
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="#dashboard" class="menu-item active" onclick="showSection('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="#users" class="menu-item" onclick="showSection('users')">
+                    <i class="fas fa-users"></i>
+                    Users
+                </a>
+                <a href="#courses" class="menu-item" onclick="showSection('courses')">
+                    <i class="fas fa-book"></i>
+                    Courses
+                </a>
+                <a href="#assessments" class="menu-item" onclick="showSection('assessments')">
+                    <i class="fas fa-clipboard-check"></i>
+                    Assessments
+                </a>
+                <a href="#certificates" class="menu-item" onclick="showSection('certificates')">
+                    <i class="fas fa-certificate"></i>
+                    Certificates
+                </a>
+                <a href="#reports" class="menu-item" onclick="showSection('reports')">
+                    <i class="fas fa-chart-bar"></i>
+                    Reports
+                </a>
+                <a href="#settings" class="menu-item" onclick="showSection('settings')">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <h1>Admin Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <span id="adminName">Admin</span>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Cards -->
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon users">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">Total Users</div>
+                            <div class="card-value" id="totalUsers">--</div>
+                            <div class="card-subtitle">Active learners</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon courses">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">Total Courses</div>
+                            <div class="card-value" id="totalCourses">--</div>
+                            <div class="card-subtitle">Available courses</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon assessments">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">Assessments</div>
+                            <div class="card-value" id="totalAssessments">--</div>
+                            <div class="card-subtitle">Created assessments</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon certificates">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div>
+                            <div class="card-title">Certificates</div>
+                            <div class="card-value" id="totalCertificates">--</div>
+                            <div class="card-subtitle">Issued certificates</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <section class="activity-section" id="dashboard-section">
+                <div class="activity-header">
+                    <h2 class="activity-title">Recent Activity</h2>
+                    <a href="#" style="color: var(--primary); text-decoration: none;">View All</a>
+                </div>
+
+                <ul class="activity-list" id="activityList">
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">New student registered: john.doe@example.com</div>
+                            <div class="activity-time">2 hours ago</div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">New course created: Advanced Python Programming</div>
+                            <div class="activity-time">4 hours ago</div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">Certificate issued to: jane.smith@example.com</div>
+                            <div class="activity-time">1 day ago</div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">Assessment completed: Data Structures Quiz</div>
+                            <div class="activity-time">2 days ago</div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Users Management Section -->
+            <section class="activity-section" id="users-section" style="display: none;">
+                <div class="activity-header">
+                    <h2 class="activity-title">User Management</h2>
+                    <button class="logout-btn" style="background: var(--success);" onclick="showAddUserModal()">
+                        <i class="fas fa-plus"></i> Add User
+                    </button>
+                </div>
+
+                <!-- Search and Filter -->
+                <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <input type="text" id="userSearch" placeholder="Search users..." style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px; flex: 1; min-width: 200px;">
+                    <select id="roleFilter" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="">All Roles</option>
+                        <option value="student">Students</option>
+                        <option value="teacher">Teachers</option>
+                        <option value="admin">Admins</option>
+                    </select>
+                    <button onclick="loadUsers()" style="padding: 0.5rem 1rem; background: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+
+                <!-- Users Table -->
+                <div style="overflow-x: auto;">
+                    <table id="usersTable" style="width: 100%; border-collapse: collapse; background: white;">
+                        <thead>
+                            <tr style="background: var(--light);">
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Name</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Email</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Role</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Status</th>
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #ddd;">Joined</th>
+                                <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #ddd;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem; color: var(--gray);">
+                                    <i class="fas fa-spinner fa-spin"></i> Loading users...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1.5rem;"></div>
+            </section>
+
+            <!-- Placeholder sections for other menu items -->
+            <section class="activity-section" id="courses-section" style="display: none;">
+                <div class="activity-header">
+                    <h2 class="activity-title">Course Management</h2>
+                </div>
+                <p style="text-align: center; padding: 2rem; color: var(--gray);">Course management features coming soon...</p>
+            </section>
+
+            <section class="activity-section" id="assessments-section" style="display: none;">
+                <div class="activity-header">
+                    <h2 class="activity-title">Assessment Management</h2>
+                </div>
+                <p style="text-align: center; padding: 2rem; color: var(--gray);">Assessment management features coming soon...</p>
+            </section>
+
+            <section class="activity-section" id="certificates-section" style="display: none;">
+                <div class="activity-header">
+                    <h2 class="activity-title">Certificate Management</h2>
+                </div>
+                <p style="text-align: center; padding: 2rem; color: var(--gray);">Certificate management features coming soon...</p>
+            </section>
+
+            <section class="activity-section" id="reports-section" style="display: none;">
+                <div class="activity-header">
+                    <h2 class="activity-title">Reports & Analytics</h2>
+                </div>
+                <p style="text-align: center; padding: 2rem; color: var(--gray);">Reports and analytics features coming soon...</p>
+            </section>
+
+            <section class="activity-section" id="settings-section" style="display: none;">
+                <div class="activity-header">
+                    <h2 class="activity-title">System Settings</h2>
+                </div>
+                <p style="text-align: center; padding: 2rem; color: var(--gray);">System settings features coming soon...</p>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const token = localStorage.getItem('authToken');
+            const userRole = localStorage.getItem('userRole');
+
+            if (!token || userRole !== 'admin') {
+                window.location.href = 'adminlogin.html';
+                return;
+            }
+
+            // Load admin data
+            loadDashboardData();
+
+            // Set admin name
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            document.getElementById('adminName').textContent = user.fullName || 'Admin';
+        });
+
+        async function loadDashboardData() {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await adminAPI.getStats(token);
+                const data = await handleAPIError(response);
+
+                // Update statistics
+                document.getElementById('totalUsers').textContent = data.totalUsers || '0';
+                document.getElementById('totalCourses').textContent = data.totalCourses || '0';
+                document.getElementById('totalAssessments').textContent = data.totalAssessments || '0';
+                document.getElementById('totalCertificates').textContent = data.totalCertificates || '0';
+
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                // Fallback to mock data
+                document.getElementById('totalUsers').textContent = '1,234';
+                document.getElementById('totalCourses').textContent = '56';
+                document.getElementById('totalAssessments').textContent = '89';
+                document.getElementById('totalCertificates').textContent = '234';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            localStorage.removeItem('userRole');
+            window.location.href = 'adminlogin.html';
+        }
+
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.activity-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Show the selected section
+            const targetSection = document.getElementById(`${sectionName}-section`);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+            }
+
+            // Update header title
+            const header = document.querySelector('.header h1');
+            const titles = {
+                'dashboard': 'Admin Dashboard',
+                'users': 'User Management',
+                'courses': 'Course Management',
+                'assessments': 'Assessment Management',
+                'certificates': 'Certificate Management',
+                'reports': 'Reports & Analytics',
+                'settings': 'System Settings'
+            };
+            header.textContent = titles[sectionName] || 'Admin Dashboard';
+        }
+
+        async function loadUsers(page = 1, limit = 10, search = '', role = '') {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+
+            try {
+                // Show loading
+                const tbody = document.getElementById('usersTableBody');
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--gray);"><i class="fas fa-spinner fa-spin"></i> Loading users...</td></tr>';
+
+                // Prepare params
+                const params = { page, limit };
+                if (search) params.search = search;
+                if (role) params.role = role;
+
+                const response = await adminAPI.getAllUsers(params, token);
+                const data = await handleAPIError(response);
+
+                // Populate table
+                tbody.innerHTML = '';
+                data.users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="padding: 1rem; border-bottom: 1px solid #ddd;">${user.fullName}</td>
+                        <td style="padding: 1rem; border-bottom: 1px solid #ddd;">${user.email}</td>
+                        <td style="padding: 1rem; border-bottom: 1px solid #ddd;">
+                            <span class="role-badge role-${user.role}">${user.role.charAt(0).toUpperCase() + user.role.slice(1)}</span>
+                        </td>
+                        <td style="padding: 1rem; border-bottom: 1px solid #ddd;">
+                            <span class="status-badge ${user.isActive ? 'active' : 'inactive'}">
+                                ${user.isActive ? 'Active' : 'Inactive'}
+                            </span>
+                        </td>
+                        <td style="padding: 1rem; border-bottom: 1px solid #ddd;">${new Date(user.createdAt).toLocaleDateString()}</td>
+                        <td style="padding: 1rem; border-bottom: 1px solid #ddd; text-align: center;">
+                            <button onclick="editUser('${user._id}')" style="background: var(--primary); color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 3px; margin-right: 0.5rem; cursor: pointer;">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteUser('${user._id}')" style="background: var(--danger); color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 3px; cursor: pointer;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                // Pagination
+                renderPagination(data.pagination);
+
+                // Add styles for badges
+                addBadgeStyles();
+            } catch (error) {
+                console.error('Error loading users:', error);
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem; color: var(--danger);">Error loading users. Please try again.</td></tr>';
+            }
+        }
+
+        function renderPagination(pagination) {
+            const paginationDiv = document.getElementById('pagination');
+            paginationDiv.innerHTML = '';
+
+            // Previous button
+            if (pagination.page > 1) {
+                const prevBtn = document.createElement('button');
+                prevBtn.textContent = 'Previous';
+                prevBtn.onclick = () => loadUsers(pagination.page - 1, pagination.limit);
+                prevBtn.style.padding = '0.5rem 1rem';
+                prevBtn.style.background = 'var(--primary)';
+                prevBtn.style.color = 'white';
+                prevBtn.style.border = 'none';
+                prevBtn.style.borderRadius = '5px';
+                prevBtn.style.cursor = 'pointer';
+                paginationDiv.appendChild(prevBtn);
+            }
+
+            // Page numbers
+            for (let i = Math.max(1, pagination.page - 2); i <= Math.min(pagination.pages, pagination.page + 2); i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => loadUsers(i, pagination.limit);
+                pageBtn.style.padding = '0.5rem 1rem';
+                pageBtn.style.background = i === pagination.page ? 'var(--primary)' : '#f8f9fa';
+                pageBtn.style.color = i === pagination.page ? 'white' : 'var(--dark)';
+                pageBtn.style.border = '1px solid #ddd';
+                pageBtn.style.borderRadius = '5px';
+                pageBtn.style.cursor = 'pointer';
+                paginationDiv.appendChild(pageBtn);
+            }
+
+            // Next button
+            if (pagination.page < pagination.pages) {
+                const nextBtn = document.createElement('button');
+                nextBtn.textContent = 'Next';
+                nextBtn.onclick = () => loadUsers(pagination.page + 1, pagination.limit);
+                nextBtn.style.padding = '0.5rem 1rem';
+                nextBtn.style.background = 'var(--primary)';
+                nextBtn.style.color = 'white';
+                nextBtn.style.border = 'none';
+                nextBtn.style.borderRadius = '5px';
+                nextBtn.style.cursor = 'pointer';
+                paginationDiv.appendChild(nextBtn);
+            }
+        }
+
+        function addBadgeStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .role-badge {
+                    padding: 0.3rem 0.6rem;
+                    border-radius: 15px;
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                }
+                .role-student { background: #d4edda; color: #155724; }
+                .role-teacher { background: #fff3cd; color: #856404; }
+                .role-admin { background: #f8d7da; color: #721c24; }
+                .status-badge {
+                    padding: 0.3rem 0.6rem;
+                    border-radius: 15px;
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                }
+                .status-badge.active { background: #d4edda; color: #155724; }
+                .status-badge.inactive { background: #f8d7da; color: #721c24; }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function showAddUserModal() {
+            // Create modal
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.5); display: flex; align-items: center; 
+                justify-content: center; z-index: 2000;
+            `;
+            modal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 10px; max-width: 500px; width: 90%;">
+                    <h3 style="margin-bottom: 1rem;">Add New User</h3>
+                    <form id="addUserForm">
+                        <div style="margin-bottom: 1rem;">
+                            <label>Full Name:</label>
+                            <input type="text" id="userName" required style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px; margin-top: 0.3rem;">
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label>Email:</label>
+                            <input type="email" id="userEmail" required style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px; margin-top: 0.3rem;">
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label>Role:</label>
+                            <select id="userRole" required style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px; margin-top: 0.3rem;">
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label>Password:</label>
+                            <input type="password" id="userPassword" required style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px; margin-top: 0.3rem;">
+                        </div>
+                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                            <button type="button" onclick="closeModal()" style="padding: 0.5rem 1rem; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+                            <button type="submit" style="padding: 0.5rem 1rem; background: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer;">Add User</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // Handle form submission
+            modal.querySelector('#addUserForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = {
+                    fullName: document.getElementById('userName').value,
+                    email: document.getElementById('userEmail').value,
+                    role: document.getElementById('userRole').value,
+                    password: document.getElementById('userPassword').value
+                };
+
+                try {
+                    const token = localStorage.getItem('authToken');
+                    // Note: This would call the authAPI.adminSignup or similar
+                    // For now, simulate success
+                    alert('User added successfully!');
+                    closeModal();
+                    loadUsers(); // Reload users
+                } catch (error) {
+                    alert('Error adding user: ' + error.message);
+                }
+            });
+        }
+
+        function closeModal() {
+            const modal = document.querySelector('.modal-overlay'); // Add class to modal if needed
+            if (modal) modal.remove();
+        }
+
+        async function editUser(userId) {
+            // Similar to add user, but prefill form with existing data
+            alert(`Edit user ${userId} - Implementation coming soon`);
+        }
+
+        async function deleteUser(userId) {
+            if (confirm('Are you sure you want to deactivate this user?')) {
+                try {
+                    const token = localStorage.getItem('authToken');
+                    const response = await adminAPI.deleteUser(userId, token);
+                    await handleAPIError(response);
+                    alert('User deactivated successfully!');
+                    loadUsers();
+                } catch (error) {
+                    alert('Error deactivating user: ' + error.message);
+                }
+            }
+        }
+
+        // Search functionality
+        document.getElementById('userSearch').addEventListener('input', (e) => {
+            const search = e.target.value;
+            const role = document.getElementById('roleFilter').value;
+            loadUsers(1, 10, search, role);
+        });
+
+        document.getElementById('roleFilter').addEventListener('change', (e) => {
+            const role = e.target.value;
+            const search = document.getElementById('userSearch').value;
+            loadUsers(1, 10, search, role);
+        });
+
+        // Initial load for users section
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+
+            // Load users when users section is shown
+            const usersMenu = document.querySelector('a[href="#users"]');
+            usersMenu.addEventListener('click', () => {
+                loadUsers();
+            });
+        });
+
+        // Menu navigation
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                const section = this.getAttribute('href').substring(1);
+                showSection(section);
+            });
+        });
+
+        // Import API functions (assuming api.js is loaded)
+        // For demo, we'll use mock data, but in production load from js/api.js
+    </script>
+</body>
+</html>

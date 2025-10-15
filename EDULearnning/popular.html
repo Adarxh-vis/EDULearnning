@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popular Courses | EduLearn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #564FD8;
+            --secondary: #FF416C;
+            --dark: #1A1A2E;
+            --light: #F5F5F7;
+            --accent: #00E5FF;
+            --success: #2ECC71;
+            --warning: #F39C12;
+            --danger: #E74C3C;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --glow: 0 0 15px rgba(108, 99, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FAFAFA;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0 5%;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            box-shadow: var(--shadow-md);
+            border-radius: 0.5rem;
+            padding: 1rem 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 100;
+        }
+
+        .dropdown:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 0.5rem 1.5rem;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f7;
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            width: 300px;
+            transition: var(--transition);
+        }
+
+        .search-bar:focus-within {
+            box-shadow: var(--glow);
+            background-color: white;
+        }
+
+        .search-bar i {
+            color: #777;
+            margin-right: 0.5rem;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(108, 99, 255, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: 1px solid var(--primary);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            box-shadow: var(--glow);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 5rem 5% 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+        }
+
+        .page-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1.5rem 0.8rem 3rem;
+            border: 1px solid #ddd;
+            border-radius: 2rem;
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+            outline: none;
+        }
+
+        .search-box::before {
+            content: '\f002';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+
+        .filter-options select {
+            padding: 0.8rem 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 2rem;
+            font-size: 1rem;
+            background-color: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-options select:focus {
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+            outline: none;
+        }
+
+        /* Courses Grid */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .course-card {
+            background-color: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1) 0%, rgba(0, 229, 255, 0.05) 100%);
+            z-index: 0;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .course-card:hover::before {
+            opacity: 1;
+        }
+
+        .course-img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-img::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+        }
+
+        .course-info {
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .course-category {
+            display: inline-block;
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        .course-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .course-instructor {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .course-price {
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+        }
+
+        .course-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: #F39C12;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .course-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-enroll {
+            width: 100%;
+            text-align: center;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.7rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-enroll:hover {
+            background-color: var(--primary-dark);
+            box-shadow: var(--glow);
+        }
+
+        /* Badge for Popular Courses */
+        .course-card::after {
+            content: 'POPULAR';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            z-index: 1;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Course Detail Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            background-color: white;
+            max-width: 1000px;
+            margin: 2rem auto;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .modal-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .course-hero {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .course-hero-image {
+            flex: 1;
+            min-width: 300px;
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .course-hero-details {
+            flex: 1;
+            min-width: 300px;
+            padding: 2rem;
+        }
+
+        .course-hero-category {
+            display: inline-block;
+            background-color: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .course-hero-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        .course-hero-instructor {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .instructor-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            object-fit: cover;
+        }
+
+        .instructor-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .instructor-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .course-hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-item i {
+            color: var(--primary);
+        }
+
+        .course-hero-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .course-hero-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-hero {
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .btn-hero-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            flex: 1;
+        }
+
+        .btn-hero-primary:hover {
+            background-color: var(--primary-dark);
+            box-shadow: var(--glow);
+        }
+
+        .btn-hero-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-hero-outline:hover {
+            background-color: rgba(108, 99, 255, 0.1);
+        }
+
+        .course-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            padding: 0 2rem;
+        }
+
+        .course-tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            position: relative;
+        }
+
+        .course-tab.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .course-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .course-tab-content {
+            padding: 2rem;
+            display: none;
+        }
+
+        .course-tab-content.active {
+            display: block;
+        }
+
+        .course-description h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .course-description p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .course-curriculum h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+
+        .curriculum-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header h4 {
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+
+        .section-content {
+            padding: 0 1rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .section-content.active {
+            max-height: 1000px;
+            padding: 1rem;
+        }
+
+        .lesson-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .lesson-item:last-child {
+            border-bottom: none;
+        }
+
+        .lesson-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .lesson-info i {
+            color: var(--primary);
+        }
+
+        .lesson-duration {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .instructor-bio {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .instructor-bio-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .instructor-bio-details h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .instructor-bio-title {
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .instructor-bio-text {
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .instructor-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .header-container {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .search-bar {
+                order: 3;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .course-hero-image {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .courses-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+
+            .course-hero {
+                flex-direction: column;
+            }
+
+            .course-hero-image {
+                height: 250px;
+            }
+
+            .course-hero-actions {
+                flex-direction: column;
+            }
+
+            .btn-hero {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .filter-bar {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                min-width: 100%;
+            }
+            
+            .filter-options select {
+                width: 100%;
+            }
+
+            .course-tabs {
+                overflow-x: auto;
+                padding: 0 1rem;
+                white-space: nowrap;
+            }
+
+            .instructor-bio {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .instructor-stats {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="homepage.html" class="logo">
+                <i class="fas fa-graduation-cap"></i>EduLearn
+            </a>
+            
+            <nav>
+                <ul>
+                    <li><a href="homepage.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Courses <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="allCourses.html">All Courses</a>
+                            <a href="popular.html">Popular Courses</a>
+                            <a href="newReleases.html">New Releases</a>
+                            <a href="freeCourses.html">Free Courses</a>
+                        </div>
+                    </li>
+                    <li><a href="instructors.html">Instructors</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search courses, instructors...">
+            </div>
+            
+            <div class="user-actions">
+                <a href="login.html" class="btn btn-outline">Log In</a>
+                <a href="studentSignUp.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <h1>Popular Courses</h1>
+        <p>Discover our most enrolled and highly rated courses loved by thousands of students worldwide</p>
+    </div>
+
+    <div class="container">
+        <div class="filter-bar">
+            <div class="search-box">
+                <input type="text" placeholder="Search popular courses...">
+            </div>
+            <div class="filter-options">
+                <select>
+                    <option>All Categories</option>
+                    <option>Web Development</option>
+                    <option>Data Science</option>
+                    <option>Mobile Development</option>
+                    <option>Business</option>
+                    <option>Design</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="courses-grid">
+            <!-- Popular Course 1 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Web Development</span>
+                    <h3 class="course-title">Complete JavaScript Course 2024: From Zero to Expert</h3>
+                    <p class="course-instructor">By John Smith</p>
+                    <div class="course-meta">
+                        <span class="course-price">₹3452</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.8 (12,345)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openCourseModal('course1')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Course 2 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Data Science</span>
+                    <h3 class="course-title">Python for Data Science and Machine Learning</h3>
+                    <p class="course-instructor">By Sarah Johnson</p>
+                    <div class="course-meta">
+                        <span class="course-price">₹3425</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.7 (10,987)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openCourseModal('course2')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Course 3 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Web Development</span>
+                    <h3 class="course-title">Modern React with Redux</h3>
+                    <p class="course-instructor">By Michael Brown</p>
+                    <div class="course-meta">
+                        <span class="course-price">₹2356</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.9 (15,432)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openCourseModal('course3')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Course 4 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Mobile Development</span>
+                    <h3 class="course-title">Flutter & Dart - Complete Guide 2024</h3>
+                    <p class="course-instructor">By David Lee</p>
+                    <div class="course-meta">
+                        <span class="course-price">₹3452</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.8 (9,876)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openCourseModal('course4')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Course 5 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Web Development</span>
+                    <h3 class="course-title">Node.js - The Complete Guide</h3>
+                    <p class="course-instructor">By Robert Taylor</p>
+                    <div class="course-meta">
+                        <span class="course-price">₹2435</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.9 (11,234)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openCourseModal('course5')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Course 6 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-info">
+                    <span class="course-category">Business</span>
+                    <h3 class="course-title">Digital Marketing Masterclass</h3>
+                    <p class="course-instructor">By Jessica Chen</p>
+                    <div class="course-meta">
+                        <span class="course-price">₹3647</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.5 (8,765)
+                        </span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-enroll" onclick="openCourseModal('course6')">Enroll Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Detail Modals -->
+   <!-- Course 1 Modal - JavaScript Course -->
+<div id="course1" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2>Complete JavaScript Course 2024: From Zero to Expert</h2>
+        </div>
+        <div class="modal-body">
+            <div class="course-hero">
+                <div class="course-hero-image" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-hero-details">
+                    <span class="course-hero-category">Web Development</span>
+                    <h1 class="course-hero-title">Complete JavaScript Course 2024: From Zero to Expert</h1>
+                    
+                    <div class="course-hero-instructor">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Smith" class="instructor-avatar">
+                        <div class="instructor-info">
+                            <h4>John Smith</h4>
+                            <p>Senior JavaScript Developer at TechCorp</p>
+                        </div>
+                    </div>
+                    
+                    <div class="course-hero-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>12,345 students</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.8 rating (3,456 reviews)</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>32 hours total</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-signal"></i>
+                            <span>All Levels</span>
+                        </div>
+                    </div>
+                    
+                    <div class="course-hero-price">₹3452</div>
+                    
+                    <div class="course-hero-actions">
+                        <a href="coursePayment.html?course=javascript-complete&price=3452&title=Complete+JavaScript+Course+2024" class="btn-hero btn-hero-primary">Enroll Now</a>
+                        <button class="btn-hero btn-hero-outline">Add to Wishlist</button>
+                    </div>
+                </div>
+            </div>
+            
+             <div class="course-tabs">
+                    <div class="course-tab active" onclick="openTab(event, 'overview1')">Overview</div>
+                    <div class="course-tab" onclick="openTab(event, 'curriculum1')">Curriculum</div>
+                    <div class="course-tab" onclick="openTab(event, 'instructor1')">Instructor</div>
+                    <div class="course-tab" onclick="openTab(event, 'reviews1')">Reviews</div>
+                </div>
+                
+                <div id="overview1" class="course-tab-content active">
+                    <div class="course-description">
+                        <h3>Course Description</h3>
+                        <p>The modern JavaScript course for everyone! Master JavaScript with projects, challenges and theory. Many courses in one!</p>
+                        <p>This is the most complete JavaScript course on EduLearn. It's an all-in-one package that will take you from the very fundamentals of JavaScript, all the way to building modern and complex applications.</p>
+                        <p>You will learn modern JavaScript from the very beginning, step-by-step. I will guide you through practical and fun code examples, important theory about how JavaScript works behind the scenes, and beautiful and complete projects.</p>
+                        
+                        <h3>What You'll Learn</h3>
+                        <ul>
+                            <li>Become an advanced, confident, and modern JavaScript developer from scratch</li>
+                            <li>Build 6 beautiful real-world projects for your portfolio</li>
+                            <li>How to think and work like a developer: problem-solving, researching, workflows</li>
+                            <li>Complex concepts like the 'this' keyword, higher-order functions, closures, etc.</li>
+                            <li>Modern ES6+ from the beginning: arrow functions, destructuring, spread operator, etc.</li>
+                            <li>Asynchronous JavaScript: Event loop, promises, async/await, AJAX calls</li>
+                        </ul>
+                        
+                        <h3>Requirements</h3>
+                        <ul>
+                            <li>No coding experience is necessary to take this course</li>
+                            <li>Any computer and OS will work — Windows, macOS or Linux</li>
+                            <li>A basic understanding of HTML and CSS is a plus, but not required</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="curriculum1" class="course-tab-content">
+                    <div class="course-curriculum">
+                        <h3>Course Curriculum</h3>
+                        
+                        <div class="curriculum-section">
+                            <div class="section-header" onclick="toggleSection(event)">
+                                <h4>Section 1: JavaScript Fundamentals - Part 1</h4>
+                                <span>10 lectures • 2hr 15min</span>
+                            </div>
+                            <div class="section-content">
+                                <div class="lesson-item">
+                                    <div class="lesson-info">
+                                        <i class="fas fa-play-circle"></i>
+                                        <span>Welcome to the Course</span>
+                                    </div>
+                                    <span class="lesson-duration">12:34</span>
+                                </div>
+                                <div class="lesson-item">
+                                    <div class="lesson-info">
+                                        <i class="fas fa-play-circle"></i>
+                                        <span>Setting Up Our Environment</span>
+                                    </div>
+                                    <span class="lesson-duration">08:45</span>
+                                </div>
+                                <div class="lesson-item">
+                                    <div class="lesson-info">
+                                        <i class="fas fa-play-circle"></i>
+                                        <span>Hello World!</span>
+                                    </div>
+                                    <span class="lesson-duration">15:20</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="curriculum-section">
+                            <div class="section-header" onclick="toggleSection(event)">
+                                <h4>Section 2: JavaScript Fundamentals - Part 2</h4>
+                                <span>8 lectures • 1hr 45min</span>
+                            </div>
+                            <div class="section-content">
+                                <div class="lesson-item">
+                                    <div class="lesson-info">
+                                        <i class="fas fa-play-circle"></i>
+                                        <span>Functions</span>
+                                    </div>
+                                    <span class="lesson-duration">22:10</span>
+                                </div>
+                                <div class="lesson-item">
+                                    <div class="lesson-info">
+                                        <i class="fas fa-play-circle"></i>
+                                        <span>Arrays</span>
+                                    </div>
+                                    <span class="lesson-duration">18:30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="instructor1" class="course-tab-content">
+                    <div class="instructor-bio">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Smith" class="instructor-bio-avatar">
+                        <div class="instructor-bio-details">
+                            <h3>John Smith</h3>
+                            <p class="instructor-bio-title">Senior JavaScript Developer & Instructor</p>
+                            <p class="instructor-bio-text">John is a full-stack JavaScript developer with over 10 years of experience working with startups and Fortune 500 companies. He has taught over 500,000 students worldwide and is passionate about making complex concepts easy to understand.</p>
+                            <p class="instructor-bio-text">When not coding or teaching, John enjoys hiking in the mountains and playing guitar. His mission is to make quality coding education accessible to everyone.</p>
+                            
+                            <div class="instructor-stats">
+                                <div class="stat-item">
+                                    <div class="stat-number">500K+</div>
+                                    <div class="stat-label">Students</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">15</div>
+                                    <div class="stat-label">Courses</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">4.8</div>
+                                    <div class="stat-label">Avg Rating</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="reviews1" class="course-tab-content">
+                    <h3>Student Reviews</h3>
+                    <p>Coming soon...</p>
+                </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Course 2 Modal - Python Data Science -->
+<div id="course2" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2>Python for Data Science and Machine Learning</h2>
+        </div>
+        <div class="modal-body">
+            <div class="course-hero">
+                <div class="course-hero-image" style="background-image: url('https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-hero-details">
+                    <span class="course-hero-category">Data Science</span>
+                    <h1 class="course-hero-title">Python for Data Science and Machine Learning</h1>
+                    
+                    <div class="course-hero-instructor">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson" class="instructor-avatar">
+                        <div class="instructor-info">
+                            <h4>Sarah Johnson</h4>
+                            <p>Data Scientist at DataWorks</p>
+                        </div>
+                    </div>
+                    
+                    <div class="course-hero-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>10,987 students</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.7 rating (2,987 reviews)</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>28 hours total</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-signal"></i>
+                            <span>Intermediate</span>
+                        </div>
+                    </div>
+                    
+                    <div class="course-hero-price">₹3425</div>
+                    
+                    <div class="course-hero-actions">
+                        <a href="coursePayment.html?course=python-datascience&price=3425&title=Python+for+Data+Science+and+Machine+Learning" class="btn-hero btn-hero-primary">Enroll Now</a>
+                        <button class="btn-hero btn-hero-outline">Add to Wishlist</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rest of the modal content -->
+        <  <div class="course-tabs">
+                    <div class="course-tab active" onclick="openTab(event, 'overview2')">Overview</div>
+                    <div class="course-tab" onclick="openTab(event, 'curriculum2')">Curriculum</div>
+                    <div class="course-tab" onclick="openTab(event, 'instructor2')">Instructor</div>
+                    <div class="course-tab" onclick="openTab(event, 'reviews2')">Reviews</div>
+                </div>
+                
+                <div id="overview2" class="course-tab-content active">
+                    <div class="course-description">
+                        <h3>Course Description</h3>
+                        <p>This Python for Data Science and Machine Learning course covers all the Python you need for data science and machine learning, including NumPy, Pandas, Matplotlib, Scikit-Learn, and more!</p>
+                        <p>Are you ready to start your path to becoming a Data Scientist! This comprehensive course will be your guide to learning how to use the power of Python to analyze data, create beautiful visualizations, and use powerful machine learning algorithms!</p>
+                        
+                        <h3>What You'll Learn</h3>
+                        <ul>
+                            <li>Use Python for Data Science and Machine Learning</li>
+                            <li>Use Spark for Big Data Analysis</li>
+                            <li>Learn to use NumPy for Numerical Data</li>
+                            <li>Learn to use Pandas for Data Analysis</li>
+                            <li>Learn to use Matplotlib for Python Plotting</li>
+                            <li>Learn to use Seaborn for statistical plots</li>
+                        </ul>
+                        
+                        <h3>Requirements</h3>
+                        <ul>
+                            <li>Basic understanding of Python</li>
+                            <li>Basic math skills</li>
+                            <li>No prior experience with data science or machine learning required</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="instructor2" class="course-tab-content">
+                    <div class="instructor-bio">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson" class="instructor-bio-avatar">
+                        <div class="instructor-bio-details">
+                            <h3>Sarah Johnson</h3>
+                            <p class="instructor-bio-title">Data Scientist & AI Specialist</p>
+                            <p class="instructor-bio-text">Sarah is a professional Data Scientist with over 8 years of experience in the field. She has worked with companies like Google, Amazon, and IBM on various data science and machine learning projects.</p>
+                            <p class="instructor-bio-text">Sarah is passionate about teaching and making complex data science concepts accessible to everyone. She believes that with the right guidance, anyone can learn data science.</p>
+                            
+                            <div class="instructor-stats">
+                                <div class="stat-item">
+                                    <div class="stat-number">350K+</div>
+                                    <div class="stat-label">Students</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">12</div>
+                                    <div class="stat-label">Courses</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">4.7</div>
+                                    <div class="stat-label">Avg Rating</div>
+                                </div>
+                            </div>
+                        </div>
+
+
+<!-- Course 3 Modal - React with Redux -->
+<div id="course3" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2>Modern React with Redux</h2>
+        </div>
+        <div class="modal-body">
+            <!-- Hero Section -->
+            <div class="course-hero">
+                <div class="course-hero-image" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-hero-details">
+                    <span class="course-hero-category">Web Development</span>
+                    <h1 class="course-hero-title">Modern React with Redux</h1>
+                    
+                    <div class="course-hero-instructor">
+                        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Michael Brown" class="instructor-avatar">
+                        <div class="instructor-info">
+                            <h4>Michael Brown</h4>
+                            <p>Frontend Architect at ReactExperts</p>
+                        </div>
+                    </div>
+                    
+                    <div class="course-hero-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>15,432 students</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 rating (4,321 reviews)</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>25 hours total</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-signal"></i>
+                            <span>Intermediate</span>
+                        </div>
+                    </div>
+                    
+                    <div class="course-hero-price">₹2356</div>
+                    
+                    <div class="course-hero-actions">
+                        <a href="coursePayment.html?course=react-redux&price=2356&title=Modern+React+with+Redux" class="btn-hero btn-hero-primary">Enroll Now</a>
+                        <button class="btn-hero btn-hero-outline">Add to Wishlist</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="course-tabs">
+                <div class="course-tab active" onclick="openTab(event, 'overview3')">Overview</div>
+                <div class="course-tab" onclick="openTab(event, 'curriculum3')">Curriculum</div>
+                <div class="course-tab" onclick="openTab(event, 'instructor3')">Instructor</div>
+                <div class="course-tab" onclick="openTab(event, 'reviews3')">Reviews</div>
+            </div>
+            
+            <!-- Overview Tab -->
+            <div id="overview3" class="course-tab-content active">
+                <div class="course-description">
+                    <h3>Course Description</h3>
+                    <p>Master React and Redux with modern React hooks, context API, and Redux Toolkit. Build scalable frontend applications with the most popular frontend library.</p>
+                    <p>This course is fully up-to-date with the latest React 18 features and best practices. You'll learn professional workflows using modern tools like Vite, React Router 6, and advanced state management patterns.</p>
+                    
+                    <h3>What You'll Learn</h3>
+                    <ul>
+                        <li>Build single-page applications with React 18 and React Router 6</li>
+                        <li>Master modern state management with Redux Toolkit</li>
+                        <li>Use React hooks like useState, useEffect, useContext, and custom hooks</li>
+                        <li>Implement authentication and protected routes</li>
+                        <li>Optimize performance with code splitting and lazy loading</li>
+                        <li>Test React components with Jest and React Testing Library</li>
+                    </ul>
+                    
+                    <h3>Requirements</h3>
+                    <ul>
+                        <li>Basic JavaScript knowledge (ES6+)</li>
+                        <li>Basic understanding of HTML/CSS</li>
+                        <li>No prior React experience required</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Curriculum Tab -->
+            <div id="curriculum3" class="course-tab-content">
+                <div class="course-curriculum">
+                    <h3>Course Curriculum</h3>
+                    
+                    <div class="curriculum-section">
+                        <div class="section-header" onclick="toggleSection(event)">
+                            <h4>Section 1: React Fundamentals</h4>
+                            <span>12 lectures • 3hr 20min</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="lesson-item">
+                                <div class="lesson-info">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span>Introduction to React</span>
+                                </div>
+                                <span class="lesson-duration">18:45</span>
+                            </div>
+                            <div class="lesson-item">
+                                <div class="lesson-info">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span>JSX Deep Dive</span>
+                                </div>
+                                <span class="lesson-duration">22:10</span>
+                            </div>
+                            <!-- More lessons... -->
+                        </div>
+                    </div>
+                    
+                    <div class="curriculum-section">
+                        <div class="section-header" onclick="toggleSection(event)">
+                            <h4>Section 2: State Management with Redux</h4>
+                            <span>10 lectures • 4hr 15min</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="lesson-item">
+                                <div class="lesson-info">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span>Redux Fundamentals</span>
+                                </div>
+                                <span class="lesson-duration">25:30</span>
+                            </div>
+                            <!-- More lessons... -->
+                        </div>
+                    </div>
+                    <!-- More sections... -->
+                </div>
+            </div>
+            
+            <!-- Instructor Tab -->
+            <div id="instructor3" class="course-tab-content">
+                <div class="instructor-bio">
+                    <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Michael Brown" class="instructor-bio-avatar">
+                    <div class="instructor-bio-details">
+                        <h3>Michael Brown</h3>
+                        <p class="instructor-bio-title">Frontend Architect & React Specialist</p>
+                        <p class="instructor-bio-text">Michael has been building React applications since 2015 and has worked with companies like Facebook, Airbnb, and Netflix on their React codebases. He's a core contributor to several popular open-source React libraries.</p>
+                        <p class="instructor-bio-text">Michael specializes in teaching complex concepts in simple ways, focusing on practical applications rather than just theory.</p>
+                        
+                        <div class="instructor-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">420K+</div>
+                                <div class="stat-label">Students</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">9</div>
+                                <div class="stat-label">Courses</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">4.9</div>
+                                <div class="stat-label">Avg Rating</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reviews Tab -->
+            <div id="reviews3" class="course-tab-content">
+                <h3>Student Reviews</h3>
+                
+                <div class="review-item">
+                    <div class="review-header">
+                        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Student" class="review-avatar">
+                        <div class="review-info">
+                            <h4>Priya Sharma</h4>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span>1 month ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-text">This course took me from zero to React hero! The Redux section especially was incredibly well explained. I landed my first React job after completing this course.</p>
+                </div>
+                
+                <div class="review-item">
+                    <div class="review-header">
+                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Student" class="review-avatar">
+                        <div class="review-info">
+                            <h4>Raj Patel</h4>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span>3 weeks ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-text">Excellent course! The projects were challenging but exactly what I needed to build my portfolio. The instructor's explanations are crystal clear.</p>
+                </div>
+                <!-- More reviews... -->
+            </div>
+        </div>
+    </div>
+</div>
+<div id="course4" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2>Flutter & Dart - Complete Guide 2024</h2>
+        </div>
+        <div class="modal-body">
+            <!-- Hero Section -->
+            <div class="course-hero">
+                <div class="course-hero-image" style="background-image: url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-hero-details">
+                    <span class="course-hero-category">Mobile Development</span>
+                    <h1 class="course-hero-title">Flutter & Dart - Complete Guide 2024</h1>
+                    
+                    <div class="course-hero-instructor">
+                        <img src="https://randomuser.me/api/portraits/men/68.jpg" alt="David Lee" class="instructor-avatar">
+                        <div class="instructor-info">
+                            <h4>David Lee</h4>
+                            <p>Mobile Developer at AppWorks</p>
+                        </div>
+                    </div>
+                    
+                    <div class="course-hero-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>9,876 students</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.8 rating (2,345 reviews)</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>30 hours total</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-signal"></i>
+                            <span>Beginner</span>
+                        </div>
+                    </div>
+                    
+                    <div class="course-hero-price">₹3452</div>
+                    
+                    <div class="course-hero-actions">
+                        <a href="coursePayment.html?course=flutter-dart&price=3452&title=Flutter+Dart+Complete+Guide+2024" class="btn-hero btn-hero-primary">Enroll Now</a>
+                        <button class="btn-hero btn-hero-outline">Add to Wishlist</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="course-tabs">
+                <div class="course-tab active" onclick="openTab(event, 'overview4')">Overview</div>
+                <div class="course-tab" onclick="openTab(event, 'curriculum4')">Curriculum</div>
+                <div class="course-tab" onclick="openTab(event, 'instructor4')">Instructor</div>
+                <div class="course-tab" onclick="openTab(event, 'reviews4')">Reviews</div>
+            </div>
+            
+            <!-- Overview Tab -->
+            <div id="overview4" class="course-tab-content active">
+                <div class="course-description">
+                    <h3>Course Description</h3>
+                    <p>Learn Flutter and Dart to build beautiful native mobile apps for iOS and Android. This comprehensive course covers everything from Dart basics to advanced Flutter concepts.</p>
+                    <p>You'll build several complete apps including a full-stack social media app with Firebase backend. By the end, you'll be able to build and publish your own Flutter apps.</p>
+                    
+                    <h3>What You'll Learn</h3>
+                    <ul>
+                        <li>Build cross-platform apps for iOS and Android with a single codebase</li>
+                        <li>Master Dart programming language fundamentals</li>
+                        <li>Create beautiful UIs with Flutter widgets</li>
+                        <li>Implement state management with Provider and Riverpod</li>
+                        <li>Integrate with Firebase for authentication and databases</li>
+                        <li>Publish apps to Google Play Store and Apple App Store</li>
+                    </ul>
+                    
+                    <h3>Requirements</h3>
+                    <ul>
+                        <li>Basic programming knowledge helpful but not required</li>
+                        <li>Windows, macOS or Linux computer</li>
+                        <li>Android or iOS device for testing (optional)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Curriculum Tab -->
+            <div id="curriculum4" class="course-tab-content">
+                <div class="course-curriculum">
+                    <h3>Course Curriculum</h3>
+                    
+                    <div class="curriculum-section">
+                        <div class="section-header" onclick="toggleSection(event)">
+                            <h4>Section 1: Dart Programming Fundamentals</h4>
+                            <span>8 lectures • 2hr 45min</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="lesson-item">
+                                <div class="lesson-info">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span>Dart Basics</span>
+                                </div>
+                                <span class="lesson-duration">25:10</span>
+                            </div>
+                            <!-- More lessons... -->
+                        </div>
+                    </div>
+                    
+                    <div class="curriculum-section">
+                        <div class="section-header" onclick="toggleSection(event)">
+                            <h4>Section 2: Flutter UI Fundamentals</h4>
+                            <span>10 lectures • 3hr 30min</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="lesson-item">
+                                <div class="lesson-info">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span>Widgets Deep Dive</span>
+                                </div>
+                                <span class="lesson-duration">32:15</span>
+                            </div>
+                            <!-- More lessons... -->
+                        </div>
+                    </div>
+                    <!-- More sections... -->
+                </div>
+            </div>
+            
+            <!-- Instructor Tab -->
+            <div id="instructor4" class="course-tab-content">
+                <div class="instructor-bio">
+                    <img src="https://randomuser.me/api/portraits/men/68.jpg" alt="David Lee" class="instructor-bio-avatar">
+                    <div class="instructor-bio-details">
+                        <h3>David Lee</h3>
+                        <p class="instructor-bio-title">Mobile Developer & Flutter Expert</p>
+                        <p class="instructor-bio-text">David has been building mobile apps for over 8 years, with the last 4 years focused exclusively on Flutter. He has published over 15 apps to both app stores and consulted for major companies on their Flutter implementations.</p>
+                        <p class="instructor-bio-text">His teaching approach focuses on practical, real-world examples rather than abstract concepts.</p>
+                        
+                        <div class="instructor-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">380K+</div>
+                                <div class="stat-label">Students</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">7</div>
+                                <div class="stat-label">Courses</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">4.8</div>
+                                <div class="stat-label">Avg Rating</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reviews Tab -->
+            <div id="reviews4" class="course-tab-content">
+                <h3>Student Reviews</h3>
+                
+                <div class="review-item">
+                    <div class="review-header">
+                        <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Student" class="review-avatar">
+                        <div class="review-info">
+                            <h4>Ananya Gupta</h4>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span>2 months ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-text">I had zero mobile development experience before this course. Now I've published my first app to the Play Store! David explains everything so clearly.</p>
+                </div>
+                <!-- More reviews... -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="course6" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2>Digital Marketing Masterclass</h2>
+        </div>
+        <div class="modal-body">
+            <!-- Hero Section -->
+            <div class="course-hero">
+                <div class="course-hero-image" style="background-image: url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="course-hero-details">
+                    <span class="course-hero-category">Business</span>
+                    <h1 class="course-hero-title">Digital Marketing Masterclass</h1>
+                    
+                    <div class="course-hero-instructor">
+                        <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Jessica Chen" class="instructor-avatar">
+                        <div class="instructor-info">
+                            <h4>Jessica Chen</h4>
+                            <p>Marketing Director at BrandGrowth</p>
+                        </div>
+                    </div>
+                    
+                    <div class="course-hero-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>8,765 students</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.5 rating (2,123 reviews)</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>20 hours total</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-signal"></i>
+                            <span>Beginner</span>
+                        </div>
+                    </div>
+                    
+                    <div class="course-hero-price">₹3647</div>
+                    
+                    <div class="course-hero-actions">
+                        <a href="coursePayment.html?course=digital-marketing&price=3647&title=Digital+Marketing+Masterclass" class="btn-hero btn-hero-primary">Enroll Now</a>
+                        <button class="btn-hero btn-hero-outline">Add to Wishlist</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="course-tabs">
+                <div class="course-tab active" onclick="openTab(event, 'overview6')">Overview</div>
+                <div class="course-tab" onclick="openTab(event, 'curriculum6')">Curriculum</div>
+                <div class="course-tab" onclick="openTab(event, 'instructor6')">Instructor</div>
+                <div class="course-tab" onclick="openTab(event, 'reviews6')">Reviews</div>
+            </div>
+            
+            <!-- Overview Tab -->
+            <div id="overview6" class="course-tab-content active">
+                <div class="course-description">
+                    <h3>Course Description</h3>
+                    <p>Learn the complete digital marketing skillset - from SEO and social media to paid advertising and email marketing. This comprehensive course covers all aspects of modern digital marketing.</p>
+                    <p>You'll learn proven strategies from a marketing director with 15+ years of experience. Includes real-world case studies and practical exercises to build your portfolio.</p>
+                    
+                    <h3>What You'll Learn</h3>
+                    <ul>
+                        <li>Develop complete digital marketing strategies</li>
+                        <li>Master SEO to drive organic traffic</li>
+                        <li>Run effective social media campaigns</li>
+                        <li>Create high-converting Google and Facebook ads</li>
+                        <li>Build email marketing sequences that convert</li>
+                        <li>Analyze data with Google Analytics</li>
+                    </ul>
+                    
+                    <h3>Requirements</h3>
+                    <ul>
+                        <li>No prior marketing experience needed</li>
+                        <li>Basic computer skills</li>
+                        <li>Access to a computer with internet</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Curriculum Tab -->
+            <div id="curriculum6" class="course-tab-content">
+                <div class="course-curriculum">
+                    <h3>Course Curriculum</h3>
+                    
+                    <div class="curriculum-section">
+                        <div class="section-header" onclick="toggleSection(event)">
+                            <h4>Section 1: Digital Marketing Fundamentals</h4>
+                            <span>6 lectures • 2hr 15min</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="lesson-item">
+                                <div class="lesson-info">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span>Marketing Funnel Basics</span>
+                                </div>
+                                <span class="lesson-duration">18:20</span>
+                            </div>
+                            <!-- More lessons... -->
+                        </div>
+                    </div>
+                    
+                    <div class="curriculum-section">
+                        <div class="section-header" onclick="toggleSection(event)">
+                            <h4>Section 2: Search Engine Optimization (SEO)</h4>
+                            <span>8 lectures • 3hr 30min</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="lesson-item">
+                                <div class="lesson-info">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span>Keyword Research Mastery</span>
+                                </div>
+                                <span class="lesson-duration">25:45</span>
+                            </div>
+                            <!-- More lessons... -->
+                        </div>
+                    </div>
+                    <!-- More sections... -->
+                </div>
+            </div>
+            
+            <!-- Instructor Tab -->
+            <div id="instructor6" class="course-tab-content">
+                <div class="instructor-bio">
+                    <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Jessica Chen" class="instructor-bio-avatar">
+                    <div class="instructor-bio-details">
+                        <h3>Jessica Chen</h3>
+                        <p class="instructor-bio-title">Marketing Director & Growth Expert</p>
+                        <p class="instructor-bio-text">Jessica has helped over 200 businesses grow through digital marketing. She's worked with startups and Fortune 500 companies across multiple industries.</p>
+                        <p class="instructor-bio-text">Her practical approach focuses on measurable results and data-driven strategies rather than theory.</p>
+                        
+                        <div class="instructor-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">320K+</div>
+                                <div class="stat-label">Students</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">6</div>
+                                <div class="stat-label">Courses</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">4.7</div>
+                                <div class="stat-label">Avg Rating</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reviews Tab -->
+            <div id="reviews6" class="course-tab-content">
+                <h3>Student Reviews</h3>
+                
+                <div class="review-item">
+                    <div class="review-header">
+                        <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Student" class="review-avatar">
+                        <div class="review-info">
+                            <h4>Neha Kapoor</h4>
+                            <div class="review-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span>1 month ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-text">This course helped me triple my e-commerce store's traffic in just 3 months. The SEO and Facebook ads modules were game-changers!</p>
+                </div>
+                <!-- More reviews... -->
+            </div>
+        </div>
+    </div>
+</div>    <script>
+        // Function to open course modal
+        function openCourseModal(courseId) {
+            document.getElementById(courseId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Function to close modal
+        function closeModal() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                modal.style.display = 'none';
+            });
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+
+        // Tab functionality
+        function openTab(evt, tabName) {
+            const tabContents = document.querySelectorAll('.course-tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            const tabs = document.querySelectorAll('.course-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // Toggle curriculum sections
+        function toggleSection(evt) {
+            const sectionHeader = evt.currentTarget;
+            const sectionContent = sectionHeader.nextElementSibling;
+            
+            sectionContent.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

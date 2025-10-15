@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Courses | EduLearn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1D976C;
+            --secondary-color: #93F9B9;
+            --dark-color: #0F172A;
+            --light-color: #F8FAFC;
+            --accent-color: #3B82F6;
+            --text-color: #334155;
+            --text-light: #64748B;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #F8FAFC;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        /* Modern Navigation */
+        header {
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0 5%;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 2rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            position: relative;
+            margin: 0 15px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+        
+        nav ul li a i {
+            margin-left: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 10px 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 1;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .dropdown-content a {
+            padding: 10px 20px;
+            display: block;
+            color: var(--text-color);
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #F1F5F9;
+            color: var(--primary-color);
+            padding-left: 25px;
+        }
+        
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 12px 20px 12px 40px;
+            border: 1px solid #E2E8F0;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s;
+            background-color: #F8FAFC;
+        }
+        
+        .search-bar input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(29, 151, 108, 0.2);
+        }
+        
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .btn-outline {
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(29, 151, 108, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #17805a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(29, 151, 108, 0.3);
+        }
+        
+        /* Page Header */
+        .page-header {
+            padding: 80px 5% 60px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .page-header p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+        
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(29, 151, 108, 0.2);
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .filter-options select {
+            padding: 12px 15px;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-options select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(29, 151, 108, 0.2);
+        }
+        
+        /* Courses Grid */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+        
+        .course-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .course-img {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .course-info {
+            padding: 20px;
+        }
+        
+        .course-category {
+            display: inline-block;
+            background-color: #EFF6FF;
+            color: var(--accent-color);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .course-title {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .course-instructor {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+        
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .course-price {
+            font-size: 1.1rem;
+        }
+        
+        .course-rating {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .course-rating i {
+            color: #F59E0B;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .header-container {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 15px 0;
+            }
+            
+            .logo {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 15px;
+            }
+            
+            nav {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            nav ul {
+                justify-content: center;
+            }
+            
+            .search-bar {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .filter-bar {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                width: 100%;
+                min-width: auto;
+            }
+            
+            .filter-options {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+            
+            .filter-options select {
+                flex: 1;
+                min-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="homepage.html" class="logo">
+                <i class="fas fa-graduation-cap"></i> EduLearn
+            </a>
+            
+            <nav>
+                <ul>
+                    <li><a href="homepage.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#">Courses <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="allCourses.html">All Courses</a>
+                        <a href="popular.html">Popular Courses</a>
+                        <a href="newReleases.html">New Releases</a>
+                        <a href="freeCourses.html">Free Courses</a>
+
+                        </div>
+                    </li>
+                    <li><a href="instructors.html">Instructors</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search courses, instructors...">
+            </div>
+            
+            <div class="user-actions">
+                <a href="login.html" class="btn btn-outline">Log In</a>
+                <a href="studentSignUp.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-header" style="background: linear-gradient(135deg, #1D976C 0%, #93F9B9 100%);">
+        <h1>Free Courses</h1>
+        <p>Start learning today with our selection of high-quality free courses</p>
+    </div>
+
+    <div class="container">
+        <div class="filter-bar">
+            <div class="search-box">
+                <input type="text" placeholder="Search free courses...">
+            </div>
+            <div class="filter-options">
+                <select>
+                    <option>All Categories</option>
+                    <option>Web Development</option>
+                    <option>Data Science</option>
+                    <option>Mobile Development</option>
+                    <option>Business</option>
+                    <option>Design</option>
+                </select>
+                <select>
+                    <option>All Levels</option>
+                    <option>Beginner</option>
+                    <option>Intermediate</option>
+                    <option>Advanced</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="courses-grid">
+            <!-- Free Course 1 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                <div class="course-info">
+                    <span class="course-category">Web Development</span>
+                    <h3 class="course-title">HTML & CSS for Beginners</h3>
+                    <p class="course-instructor">By John Smith</p>
+                    <div class="course-meta">
+                        <span class="course-price" style="color: #1D976C; font-weight: bold;">FREE</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.6 (5,432)
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Free Course 2 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                <div class="course-info">
+                    <span class="course-category">Data Science</span>
+                    <h3 class="course-title">Python Basics for Data Analysis</h3>
+                    <p class="course-instructor">By Sarah Johnson</p>
+                    <div class="course-meta">
+                        <span class="course-price" style="color: #1D976C; font-weight: bold;">FREE</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.5 (4,321)
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Free Course 3 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                <div class="course-info">
+                    <span class="course-category">Web Development</span>
+                    <h3 class="course-title">JavaScript Fundamentals</h3>
+                    <p class="course-instructor">By Michael Brown</p>
+                    <div class="course-meta">
+                        <span class="course-price" style="color: #1D976C; font-weight: bold;">FREE</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.7 (6,789)
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Free Course 4 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                <div class="course-info">
+                    <span class="course-category">Mobile Development</span>
+                    <h3 class="course-title">Introduction to Flutter</h3>
+                    <p class="course-instructor">By David Lee</p>
+                    <div class="course-meta">
+                        <span class="course-price" style="color: #1D976C; font-weight: bold;">FREE</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.4 (3,456)
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Free Course 5 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                <div class="course-info">
+                    <span class="course-category">Business</span>
+                    <h3 class="course-title">Digital Marketing Basics</h3>
+                    <p class="course-instructor">By Jessica Chen</p>
+                    <div class="course-meta">
+                        <span class="course-price" style="color: #1D976C; font-weight: bold;">FREE</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.3 (2,345)
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Free Course 6 -->
+            <div class="course-card">
+                <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                <div class="course-info">
+                    <span class="course-category">Design</span>
+                    <h3 class="course-title">UI/UX Design Principles</h3>
+                    <p class="course-instructor">By Emily Wilson</p>
+                    <div class="course-meta">
+                        <span class="course-price" style="color: #1D976C; font-weight: bold;">FREE</span>
+                        <span class="course-rating">
+                            <i class="fas fa-star"></i> 4.8 (7,890)
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

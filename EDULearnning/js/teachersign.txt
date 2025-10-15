@@ -1,0 +1,292 @@
+<script type="module" src="js/api.js">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Current step tracking
+            let currentStep = 1;
+            const totalSteps = 4;
+            
+            // Form elements
+            const steps = document.querySelectorAll('.step');
+            const formSteps = document.querySelectorAll('.form-step');
+            
+            // Navigation buttons
+            const nextBtn1 = document.getElementById('nextBtn1');
+            const nextBtn2 = document.getElementById('nextBtn2');
+            const backBtn2 = document.getElementById('backBtn2');
+            const backBtn3 = document.getElementById('backBtn3');
+            const submitBtn = document.getElementById('submitBtn');
+            const finishBtn = document.getElementById('finishBtn');
+            
+            // Subject tags functionality
+            const subjectInput = document.getElementById('subjectInput');
+            const subjectsContainer = document.getElementById('subjectsContainer');
+            const subjects = [];
+            
+            subjectInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && this.value.trim() !== '') {
+                    e.preventDefault();
+                    const subject = this.value.trim();
+                    if (!subjects.includes(subject)) {
+                        subjects.push(subject);
+                        renderSubjects();
+                    }
+                    this.value = '';
+                }
+            });
+            
+            function renderSubjects() {
+                subjectsContainer.innerHTML = '';
+                subjects.forEach((subject, index) => {
+                    const tag = document.createElement('div');
+                    tag.className = 'subject-tag';
+                    tag.innerHTML = `
+                        <span>${subject}</span>
+                        <span class="remove-subject" data-index="${index}">&times;</span>
+                    `;
+                    subjectsContainer.appendChild(tag);
+                });
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('.remove-subject').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        subjects.splice(index, 1);
+                        renderSubjects();
+                    });
+                });
+            }
+            
+            // File upload functionality
+            function setupFileUpload(dropZone, filesContainer, maxFiles = 5) {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.multiple = true;
+                fileInput.style.display = 'none';
+                
+                dropZone.addEventListener('click', () => fileInput.click());
+                
+                fileInput.addEventListener('change', function() {
+                    if (this.files.length > 0) {
+                        handleFiles(this.files, filesContainer, maxFiles);
+                    }
+                });
+                
+                dropZone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.style.borderColor = 'var(--primary)';
+                    this.style.backgroundColor = 'rgba(74, 0, 224, 0.05)';
+                });
+                
+                dropZone.addEventListener('dragleave', function() {
+                    this.style.borderColor = '#e9ecef';
+                    this.style.backgroundColor = 'transparent';
+                });
+                
+                dropZone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.style.borderColor = '#e9ecef';
+                    this.style.backgroundColor = 'transparent';
+                    
+                    if (e.dataTransfer.files.length > 0) {
+                        handleFiles(e.dataTransfer.files, filesContainer, maxFiles);
+                    }
+                });
+            }
+            
+            function handleFiles(files, container, maxFiles) {
+                const currentFiles = container.querySelectorAll('.uploaded-file').length;
+                const remainingSlots = maxFiles - currentFiles;
+                
+                if (remainingSlots <= 0) {
+                    alert(`Maximum ${maxFiles} files allowed`);
+                    return;
+                }
+                
+                const filesToAdd = Array.from(files).slice(0, remainingSlots);
+                
+                filesToAdd.forEach(file => {
+                    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                        alert(`File ${file.name} is too large (max 5MB)`);
+                        return;
+                    }
+                    
+                    const fileElement = document.createElement('div');
+                    fileElement.className = 'uploaded-file';
+                    fileElement.innerHTML = `
+                        <i class="fas fa-file"></i>
+                        <span class="file-name">${file.name}</span>
+                        <span class="file-remove">&times;</span>
+                    `;
+                    
+                    container.appendChild(fileElement);
+                    
+                    // Add remove functionality
+                    fileElement.querySelector('.file-remove').addEventListener('click', function() {
+                        fileElement.remove();
+                    });
+                });
+            }
+            
+            // Initialize file uploads
+            setupFileUpload(document.getElementById('idUpload'), document.getElementById('idFiles'), 2);
+            setupFileUpload(document.getElementById('certificateUpload'), document.getElementById('certificateFiles'), 5);
+            setupFileUpload(document.getElementById('supportingUpload'), document.getElementById('supportingFiles'), 10);
+            
+            // Form validation functions
+            function validateStep1() {
+                let isValid = true;
+                const firstName = document.getElementById('firstName');
+                const lastName = document.getElementById('lastName');
+                const email = document.getElementById('email');
+                const phone = document.getElementById('phone');
+                const country = document.getElementById('country');
+                
+                // Simple validation
+                if (firstName.value.trim() === '') {
+                    firstName.parentElement.classList.add('error');
+                    isValid = false;
+                }
+                
+                if (lastName.value.trim() === '') {
+                    lastName.parentElement.classList.add('error');
+                    isValid = false;
+                }
+                
+                if (!/^\S+@\S+\.\S+$/.test(email.value)) {
+                    email.parentElement.classList.add('error');
+                    isValid = false;
+                }
+                
+                if (phone.value.trim() === '' || phone.value.trim().length < 8) {
+                    phone.parentElement.classList.add('error');
+                    isValid = false;
+                }
+                
+                if (country.value === '') {
+                    country.parentElement.classList.add('error');
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            function validateStep2() {
+                let isValid = true;
+                const education = document.getElementById('education');
+                const experience = document.getElementById('experience');
+                
+                if (education.value === '') {
+                    education.parentElement.classList.add('error');
+                    isValid = false;
+                }
+                
+                if (experience.value === '') {
+                    experience.parentElement.classList.add('error');
+                    isValid = false;
+                }
+                
+                if (subjects.length === 0) {
+                    alert('Please add at least one subject you teach');
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            function validateStep3() {
+                const idFiles = document.getElementById('idFiles').querySelectorAll('.uploaded-file');
+                const certificateFiles = document.getElementById('certificateFiles').querySelectorAll('.uploaded-file');
+                
+                if (idFiles.length === 0) {
+                    alert('Please upload at least one identification document');
+                    return false;
+                }
+                
+                if (certificateFiles.length === 0) {
+                    alert('Please upload at least one educational certificate');
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            // Navigation functions
+            function goToStep(step) {
+                // Hide current step
+                document.querySelector(`.form-step.active`).classList.remove('active');
+                document.querySelector(`#step${currentStep}`).classList.remove('active');
+                
+                // Show new step
+                currentStep = step;
+                document.querySelector(`#formStep${step}`).classList.add('active');
+                document.querySelector(`#step${step}`).classList.add('active');
+                
+                // Update progress steps
+                for (let i = 1; i <= totalSteps; i++) {
+                    const stepElement = document.querySelector(`#step${i}`);
+                    if (i < step) {
+                        stepElement.classList.add('completed');
+                    } else {
+                        stepElement.classList.remove('completed');
+                    }
+                }
+            }
+            
+            // Event listeners for navigation
+            nextBtn1.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (validateStep1()) {
+                    goToStep(2);
+                }
+            });
+            
+            nextBtn2.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (validateStep2()) {
+                    goToStep(3);
+                }
+            });
+            
+            backBtn2.addEventListener('click', function(e) {
+                e.preventDefault();
+                goToStep(1);
+            });
+            
+            backBtn3.addEventListener('click', function(e) {
+                e.preventDefault();
+                goToStep(2);
+            });
+            
+            submitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (validateStep3()) {
+                    // In a real app, you would submit the form to your backend here
+                    // For demo, we'll just show the confirmation step
+                    goToStep(4);
+                    
+                    // Simulate verification process
+                    console.log('Form data would be submitted to backend for verification');
+                    console.log('After verification, teacher account would be created and credentials emailed');
+                }
+            });
+            
+            finishBtn.addEventListener('click', function() {
+                // In a real app, redirect to home or login page
+                alert('Redirecting to home page...');
+                // window.location.href = 'index.html';
+            });
+            
+            // Real-time validation for step 1
+            document.querySelectorAll('#formStep1 input, #formStep1 select').forEach(element => {
+                element.addEventListener('input', function() {
+                    this.parentElement.classList.remove('error');
+                });
+            });
+            
+            // Real-time validation for step 2
+            document.querySelectorAll('#formStep2 select').forEach(element => {
+                element.addEventListener('change', function() {
+                    this.parentElement.classList.remove('error');
+                });
+            });
+        });
+    </script>

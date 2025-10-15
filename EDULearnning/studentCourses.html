@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDULearn - Student Dashboard</title>
+    <style>
+        :root {
+            --primary: #4a6bdf;
+            --primary-light: rgba(74, 107, 223, 0.1);
+            --secondary: #f8f9fa;
+            --accent: #ff7e5f;
+            --text: #333;
+            --light-text: #6c757d;
+            --sidebar-width: 240px;
+            --header-height: 70px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            background-color: #f5f7fa;
+            overflow-x: hidden;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .logo {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            height: var(--header-height);
+        }
+        
+        .logo img {
+            height: 30px;
+            margin-right: 10px;
+        }
+        
+        .logo-text {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--primary);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu li {
+            margin: 5px 0;
+        }
+        
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--light-text);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-menu li a:hover {
+            background-color: var(--secondary);
+            color: var(--primary);
+        }
+        
+        .sidebar-menu li.active a {
+            color: var(--primary);
+            background-color: var(--primary-light);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .sidebar-menu li a i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-menu li a .menu-text {
+            flex-grow: 1;
+        }
+        
+        .sidebar-menu li a .badge {
+            background-color: var(--accent);
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: all 0.3s;
+        }
+        
+        .header {
+            height: var(--header-height);
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+        
+        .header-title {
+            font-size: 22px;
+            font-weight: 600;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .user-profile .dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 10px 0;
+            width: 200px;
+            display: none;
+        }
+        
+        .user-profile:hover .dropdown {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 10px 20px;
+            color: var(--text);
+            text-decoration: none;
+            display: block;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--secondary);
+        }
+        
+        .dropdown-divider {
+            border-top: 1px solid #eee;
+            margin: 5px 0;
+        }
+        
+        /* Page Content Styles */
+        .page-content {
+            padding: 30px;
+        }
+        
+        /* Courses Page Styles */
+        .courses-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 30px;
+            padding: 8px 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            width: 300px;
+        }
+        
+        .search-bar input {
+            border: none;
+            outline: none;
+            flex: 1;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            padding: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .filter-tab {
+            padding: 8px 20px;
+            cursor: pointer;
+            color: var(--light-text);
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .filter-tab.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .course-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        
+        .course-thumbnail {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+        
+        .course-content {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .course-category {
+            font-size: 12px;
+            color: var(--primary);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        .course-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+        
+        .course-description {
+            color: var(--light-text);
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.5;
+        }
+        
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--light-text);
+            margin-bottom: 15px;
+        }
+        
+        .course-instructor {
+            display: flex;
+            align-items: center;
+        }
+        
+        .course-instructor img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 5px;
+            object-fit: cover;
+        }
+        
+        .progress-container {
+            margin-top: auto;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            transition: width 0.5s ease;
+        }
+        
+        .course-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .btn i {
+            margin-right: 5px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5bd9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #ddd;
+            color: var(--light-text);
+        }
+        
+        .btn-outline:hover {
+            background-color: #f8f9fa;
+            border-color: #ccc;
+        }
+        
+        /* Course Card Menu */
+        .course-menu {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1;
+        }
+        
+        .course-menu-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        
+        .course-menu-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+        
+        .course-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 200px;
+            display: none;
+            z-index: 10;
+        }
+        
+        .course-menu:hover .course-dropdown {
+            display: block;
+        }
+        
+        .course-dropdown a {
+            display: block;
+            padding: 10px 15px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .course-dropdown a:hover {
+            background-color: var(--secondary);
+            color: var(--primary);
+        }
+        
+        .course-dropdown i {
+            width: 20px;
+            text-align: center;
+            margin-right: 8px;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .header {
+                padding-left: 20px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .courses-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .filter-tabs {
+                overflow-x: auto;
+                padding: 5px 0;
+            }
+            
+            .filter-tab {
+                white-space: nowrap;
+            }
+        }
+        
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text);
+            margin-right: 15px;
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .course-card {
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+        }
+        
+        .course-card:nth-child(1) { animation-delay: 0.1s; }
+        .course-card:nth-child(2) { animation-delay: 0.2s; }
+        .course-card:nth-child(3) { animation-delay: 0.3s; }
+        .course-card:nth-child(4) { animation-delay: 0.4s; }
+        .course-card:nth-child(5) { animation-delay: 0.5s; }
+        .course-card:nth-child(6) { animation-delay: 0.6s; }
+        
+        /* Course Navigation Dropdown */
+        .sidebar-menu .dropdown {
+            position: relative;
+        }
+        
+        .sidebar-menu .dropdown > a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            justify-content: space-between;
+        }
+        
+        .sidebar-menu .dropdown > a .fa-chevron-down {
+            transition: transform 0.3s ease;
+            margin-left: auto;
+        }
+        
+        .sidebar-menu .dropdown.active > a .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-content {
+            background-color: rgba(74, 107, 223, 0.05);
+            padding-left: 1rem;
+            border-left: 3px solid var(--primary);
+            margin-left: 1rem;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease;
+        }
+        
+        .sidebar-menu .dropdown.active .dropdown-content {
+            display: block !important;
+            max-height: 500px;
+        }
+        
+        .dropdown-content a {
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--light-text);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: rgba(74, 107, 223, 0.1);
+            color: var(--primary);
+        }
+        
+        .dropdown-content i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="https://via.placeholder.com/30x30?text=EL" alt="EDULearn Logo">
+                <span class="logo-text">EDULearn</span>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="student.html">
+                        <i class="fas fa-home"></i>
+                        <span class="menu-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="studentCourses.html">
+                        <i class="fas fa-book-open"></i>
+                        <span class="menu-text">My Courses</span>
+                    </a>
+                </li>
+                <li class="dropdown" id="coursesDropdown">
+                    <a href="#" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                        <div style="display: flex; align-items: center;">
+                            <i class="fas fa-graduation-cap" style="margin-right: 12px; width: 20px; text-align: center;"></i>
+                            <span class="menu-text">Courses</span>
+                        </div>
+                        <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                    </a>
+                    <div class="dropdown-content" style="display: none;">
+                        <a href="allCourses.html"><i class="fas fa-book"></i> All Courses</a>
+                        <a href="popular.html"><i class="fas fa-fire"></i> Popular Courses</a>
+                        <a href="newReleases.html"><i class="fas fa-star"></i> New Releases</a>
+                        <a href="freeCourses.html"><i class="fas fa-gift"></i> Free Courses</a>
+                    </div>
+                </li>
+                <li>
+                    <a href="studentCertificates.html">
+                        <i class="fas fa-certificate"></i>
+                        <span class="menu-text">Certificates</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="studentMessages.html">
+                        <i class="fas fa-comments"></i>
+                        <span class="menu-text">Messages</span>
+                        <span class="badge">3</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="studentSchedule.html">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span class="menu-text">Schedule</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="studentProgress.html">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="menu-text">Progress</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="studentSettings.html">
+                        <i class="fas fa-cog"></i>
+                        <span class="menu-text">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <button class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="header-title">My Courses</h1>
+                <div class="user-profile">
+                    <div class="user-avatar" id="userAvatar" style="width: 40px; height: 40px; border-radius: 50%; background-color: #4a6bdf; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem;">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                    <span id="userName">Loading...</span>
+                    <div class="dropdown">
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user"></i> My Profile
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="logout.html" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="courses-header">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search courses..." id="courseSearch">
+                    </div>
+                    <div class="filter-tabs">
+                        <div class="filter-tab active" data-filter="all">All Courses</div>
+                        <div class="filter-tab" data-filter="progress">In Progress</div>
+                        <div class="filter-tab" data-filter="completed">Completed</div>
+                        <div class="filter-tab" data-filter="saved">Saved</div>
+                    </div>
+                </div>
+                
+                <div class="courses-grid" id="coursesContainer">
+                    <!-- Course Card 1 -->
+                    <div class="course-card" data-course-id="101" data-progress="85" data-status="progress">
+                        <div class="course-menu">
+                            <button class="course-menu-btn">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="course-dropdown">
+                                <a href="course.html?id=101">
+                                    <i class="fas fa-play"></i> Continue Learning
+                                </a>
+                                <a href="course-syllabus.html?id=101">
+                                    <i class="fas fa-list"></i> View Syllabus
+                                </a>
+                                <a href="#" class="save-course" data-course-id="101">
+                                    <i class="far fa-bookmark"></i> Save for Later
+                                </a>
+                                <a href="course-resources.html?id=101">
+                                    <i class="fas fa-file-download"></i> Download Resources
+                                </a>
+                            </div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Web Development" class="course-thumbnail">
+                        <div class="course-content">
+                            <div class="course-category">Web Development</div>
+                            <h3 class="course-title">Advanced JavaScript and React</h3>
+                            <p class="course-description">Master modern JavaScript frameworks and build interactive web applications with React and Redux.</p>
+                            
+                            <div class="course-meta">
+                                <div class="course-instructor">
+                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Instructor">
+                                    <span>Dr. Sarah Johnson</span>
+                                </div>
+                                <div class="course-duration">
+                                    <i class="far fa-clock"></i> 12 weeks
+                                </div>
+                            </div>
+                            
+                            <div class="progress-container">
+                                <div class="progress-info">
+                                    <span>Progress</span>
+                                    <span>85%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="course-actions">
+                                <a href="courser-integrated.html?id=python101" class="btn btn-primary">
+    <i class="fas fa-play"></i> Continue
+</a>
+                                <button class="btn btn-outline toggle-save" data-course-id="101">
+                                    <i class="far fa-bookmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Course Card 2 -->
+                    <div class="course-card" data-course-id="102" data-progress="65" data-status="progress">
+                        <div class="course-menu">
+                            <button class="course-menu-btn">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="course-dropdown">
+                                <a href="courser-integrated.html?id=102">
+                                    <i class="fas fa-play"></i> Continue Learning
+                                </a>
+                                <a href="course-syllabus.html?id=102">
+                                    <i class="fas fa-list"></i> View Syllabus
+                                </a>
+                                <a href="#" class="save-course" data-course-id="102">
+                                    <i class="far fa-bookmark"></i> Save for Later
+                                </a>
+                                <a href="course-resources.html?id=102">
+                                    <i class="fas fa-file-download"></i> Download Resources
+                                </a>
+                            </div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Data Science" class="course-thumbnail">
+                        <div class="course-content">
+                            <div class="course-category">Data Science</div>
+                            <h3 class="course-title">Machine Learning Fundamentals</h3>
+                            <p class="course-description">Learn the core concepts of machine learning and build your first predictive models using Python.</p>
+                            
+                            <div class="course-meta">
+                                <div class="course-instructor">
+                                    <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Instructor">
+                                    <span>Prof. Michael Chen</span>
+                                </div>
+                                <div class="course-duration">
+                                    <i class="far fa-clock"></i> 8 weeks
+                                </div>
+                            </div>
+                            
+                            <div class="progress-container">
+                                <div class="progress-info">
+                                    <span>Progress</span>
+                                    <span>65%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 65%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="course-actions">
+                                <a href="courser-integrated.html?id=javascript101" class="btn btn-primary">
+    <i class="fas fa-play"></i> Continue
+</a>>
+                                <button class="btn btn-outline toggle-save" data-course-id="102">
+                                    <i class="far fa-bookmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Course Card 3 -->
+                    <div class="course-card" data-course-id="103" data-progress="42" data-status="progress">
+                        <div class="course-menu">
+                            <button class="course-menu-btn">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="course-dropdown">
+                                <a href="courser-integrated.html?id=103">
+                                    <i class="fas fa-play"></i> Continue Learning
+                                </a>
+                                <a href="course-syllabus.html?id=103">
+                                    <i class="fas fa-list"></i> View Syllabus
+                                </a>
+                                <a href="#" class="save-course" data-course-id="103">
+                                    <i class="far fa-bookmark"></i> Save for Later
+                                </a>
+                                <a href="course-resources.html?id=103">
+                                    <i class="fas fa-file-download"></i> Download Resources
+                                </a>
+                            </div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1541462608143-67571c6738dd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="UX Design" class="course-thumbnail">
+                        <div class="course-content">
+                            <div class="course-category">Design</div>
+                            <h3 class="course-title">UX/UI Design Principles</h3>
+                            <p class="course-description">Learn user-centered design principles and create intuitive interfaces that delight users.</p>
+                            
+                            <div class="course-meta">
+                                <div class="course-instructor">
+                                    <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Instructor">
+                                    <span>Lisa Rodriguez</span>
+                                </div>
+                                <div class="course-duration">
+                                    <i class="far fa-clock"></i> 6 weeks
+                                </div>
+                            </div>
+                            
+                            <div class="progress-container">
+                                <div class="progress-info">
+                                    <span>Progress</span>
+                                    <span>42%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 42%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="course-actions">
+                                <a href="courser-integrated.html?id=python101" class="btn btn-primary">
+    <i class="fas fa-play"></i> Continue
+</a>
+                                <button class="btn btn-outline toggle-save" data-course-id="103">
+                                    <i class="far fa-bookmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Course Card 4 -->
+                    <div class="course-card" data-course-id="104" data-progress="28" data-status="progress">
+                        <div class="course-menu">
+                            <button class="course-menu-btn">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="course-dropdown">
+                                <a href="course.html?id=104">
+                                    <i class="fas fa-play"></i> Continue Learning
+                                </a>
+                                <a href="course-syllabus.html?id=104">
+                                    <i class="fas fa-list"></i> View Syllabus
+                                </a>
+                                <a href="#" class="save-course" data-course-id="104">
+                                    <i class="far fa-bookmark"></i> Save for Later
+                                </a>
+                                <a href="course-resources.html?id=104">
+                                    <i class="fas fa-file-download"></i> Download Resources
+                                </a>
+                            </div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Mobile App" class="course-thumbnail">
+                        <div class="course-content">
+                            <div class="course-category">Mobile Development</div>
+                            <h3 class="course-title">Flutter App Development</h3>
+                            <p class="course-description">Build cross-platform mobile applications with Flutter and Dart framework.</p>
+                            
+                            <div class="course-meta">
+                                <div class="course-instructor">
+                                    <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Instructor">
+                                    <span>David Wilson</span>
+                                </div>
+                                <div class="course-duration">
+                                    <i class="far fa-clock"></i> 10 weeks
+                                </div>
+                            </div>
+                            
+                            <div class="progress-container">
+                                <div class="progress-info">
+                                    <span>Progress</span>
+                                    <span>28%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 28%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="course-actions">
+                                <a href="courser-integrated.html?id=python101" class="btn btn-primary">
+    <i class="fas fa-play"></i> Continue
+</a>
+                                <button class="btn btn-outline toggle-save" data-course-id="104">
+                                    <i class="far fa-bookmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Course Card 5 -->
+                    <div class="course-card" data-course-id="105" data-progress="15" data-status="progress">
+                        <div class="course-menu">
+                            <button class="course-menu-btn">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="course-dropdown">
+                                <a href="course.html?id=105">
+                                    <i class="fas fa-play"></i> Continue Learning
+                                </a>
+                                <a href="course-syllabus.html?id=105">
+                                    <i class="fas fa-list"></i> View Syllabus
+                                </a>
+                                <a href="#" class="save-course" data-course-id="105">
+                                    <i class="far fa-bookmark"></i> Save for Later
+                                </a>
+                                <a href="course-resources.html?id=105">
+                                    <i class="fas fa-file-download"></i> Download Resources
+                                </a>
+                            </div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Cloud" class="course-thumbnail">
+                        <div class="course-content">
+                            <div class="course-category">Cloud Computing</div>
+                            <h3 class="course-title">AWS Certified Solutions Architect</h3>
+                            <p class="course-description">Prepare for the AWS certification with hands-on labs and real-world scenarios.</p>
+                            
+                            <div class="course-meta">
+                                <div class="course-instructor">
+                                    <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Instructor">
+                                    <span>Emma Thompson</span>
+                                </div>
+                                <div class="course-duration">
+                                    <i class="far fa-clock"></i> 14 weeks
+                                </div>
+                            </div>
+                            
+                            <div class="progress-container">
+                                <div class="progress-info">
+                                    <span>Progress</span>
+                                    <span>15%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 15%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="course-actions">
+                                <a href="courser-integrated.html?id=python101" class="btn btn-primary">
+    <i class="fas fa-play"></i> Continue
+</a>
+                                <button class="btn btn-outline toggle-save" data-course-id="105">
+                                    <i class="far fa-bookmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Course Card 6 -->
+                    <div class="course-card" data-course-id="106" data-progress="0" data-status="new">
+                        <div class="course-menu">
+                            <button class="course-menu-btn">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="course-dropdown">
+                                <a href="course.html?id=106">
+                                    <i class="fas fa-play"></i> Start Learning
+                                </a>
+                                <a href="course-syllabus.html?id=106">
+                                    <i class="fas fa-list"></i> View Syllabus
+                                </a>
+                                <a href="#" class="save-course" data-course-id="106">
+                                    <i class="far fa-bookmark"></i> Save for Later
+                                </a>
+                                <a href="course-resources.html?id=106">
+                                    <i class="fas fa-file-download"></i> Download Resources
+                                </a>
+                            </div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Cybersecurity" class="course-thumbnail">
+                        <div class="course-content">
+                            <div class="course-category">Security</div>
+                            <h3 class="course-title">Cybersecurity Essentials</h3>
+                            <p class="course-description">Learn how to protect systems and networks from digital attacks and security breaches.</p>
+                            
+                            <div class="course-meta">
+                                <div class="course-instructor">
+                                    <img src="https://randomuser.me/api/portraits/men/60.jpg" alt="Instructor">
+                                    <span>Robert Smith</span>
+                                </div>
+                                <div class="course-duration">
+                                    <i class="far fa-clock"></i> 8 weeks
+                                </div>
+                            </div>
+                            
+                            <div class="progress-container">
+                                <div class="progress-info">
+                                    <span>Progress</span>
+                                    <span>0%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="course-actions">
+                                <a href="courser-integrated.html?id=python101" class="btn btn-primary">
+                                    <i class="fas fa-play"></i> Continue
+                                </a>
+                                <button class="btn btn-outline toggle-save" data-course-id="106">
+                                    <i class="far fa-bookmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+   <script>
+    // Mobile menu toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuToggle = document.querySelector('.menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        
+        if (menuToggle) {
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+        }
+        
+        // Load user profile
+        loadUserProfile();
+        
+        // Load enrolled courses when page loads
+        loadEnrolledCourses();
+        
+        // Setup course dropdown toggle
+        const coursesDropdown = document.getElementById('coursesDropdown');
+        if (coursesDropdown) {
+            coursesDropdown.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.toggle('active');
+            });
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (coursesDropdown && !coursesDropdown.contains(e.target)) {
+                coursesDropdown.classList.remove('active');
+            }
+        });
+        
+        // Simulate progress animation
+        const progressBars = document.querySelectorAll('.progress-fill');
+        progressBars.forEach(bar => {
+            const targetWidth = bar.style.width;
+            bar.style.width = '0';
+            setTimeout(() => {
+                bar.style.width = targetWidth;
+            }, 300);
+        });
+        
+        // Filter tab functionality
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const coursesContainer = document.getElementById('coursesContainer');
+        const courseCards = document.querySelectorAll('.course-card');
+        
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                filterTabs.forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                filterCourses(filter);
+            });
+        });
+        
+        // Function to filter courses
+        function filterCourses(filter) {
+            courseCards.forEach(card => {
+                const status = card.getAttribute('data-status');
+                const progress = parseInt(card.getAttribute('data-progress'));
+                
+                if (filter === 'all' || 
+                    (filter === 'progress' && progress > 0 && progress < 100) ||
+                    (filter === 'completed' && progress === 100) ||
+                    (filter === 'saved' && card.classList.contains('saved'))) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // Search functionality
+        const searchInput = document.getElementById('courseSearch');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            courseCards.forEach(card => {
+                const title = card.querySelector('.course-title').textContent.toLowerCase();
+                const description = card.querySelector('.course-description').textContent.toLowerCase();
+                const category = card.querySelector('.course-category').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm) || category.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+        
+        // Toggle save course functionality
+        const saveButtons = document.querySelectorAll('.toggle-save');
+        saveButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const courseId = this.getAttribute('data-course-id');
+                const courseCard = this.closest('.course-card');
+                const icon = this.querySelector('i');
+                
+                // Toggle saved state
+                if (courseCard.classList.contains('saved')) {
+                    courseCard.classList.remove('saved');
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    
+                    // API call to remove from saved courses
+                    removeFromSavedCourses(courseId);
+                } else {
+                    courseCard.classList.add('saved');
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    
+                    // API call to add to saved courses
+                    addToSavedCourses(courseId);
+                }
+            });
+        });
+        
+        // Course menu dropdown functionality
+        const courseMenus = document.querySelectorAll('.course-menu');
+        courseMenus.forEach(menu => {
+            menu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+        
+        // Close all dropdowns when clicking elsewhere
+        document.addEventListener('click', function() {
+            document.querySelectorAll('.course-dropdown').forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+        });
+        
+        // Simulated API functions (replace with actual API calls in your implementation)
+        function addToSavedCourses(courseId) {
+            console.log(`Adding course ${courseId} to saved courses`);
+            // Example API call:
+            // fetch(`/api/save-course/${courseId}`, { method: 'POST' })
+            //     .then(response => response.json())
+            //     .then(data => console.log('Course saved:', data))
+            //     .catch(error => console.error('Error:', error));
+        }
+        
+        function removeFromSavedCourses(courseId) {
+            console.log(`Removing course ${courseId} from saved courses`);
+            // Example API call:
+            // fetch(`/api/unsave-course/${courseId}`, { method: 'DELETE' })
+            //     .then(response => response.json())
+            //     .then(data => console.log('Course unsaved:', data))
+            //     .catch(error => console.error('Error:', error));
+        }
+        
+        // Load saved courses from backend (simulated)
+        function loadSavedCourses() {
+            // Example: fetch saved courses from backend
+            // fetch('/api/saved-courses')
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         data.forEach(courseId => {
+            //             const button = document.querySelector(`.toggle-save[data-course-id="${courseId}"]`);
+            //             if (button) {
+            //                 const icon = button.querySelector('i');
+            //                 button.closest('.course-card').classList.add('saved');
+            //                 icon.classList.remove('far');
+            //                 icon.classList.add('fas');
+            //             }
+            //         });
+            //     });
+            
+            // Simulating saved courses for demo
+            setTimeout(() => {
+                const savedCourses = ['101', '103'];
+                savedCourses.forEach(courseId => {
+                    const button = document.querySelector(`.toggle-save[data-course-id="${courseId}"]`);
+                    if (button) {
+                        const icon = button.querySelector('i');
+                        button.closest('.course-card').classList.add('saved');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                    }
+                });
+            }, 500);
+        }
+        
+        // Initialize saved courses
+        loadSavedCourses();
+    });
+    
+    // Function to load user profile
+    function loadUserProfile() {
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        
+        // Try to load from localStorage first
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                updateUserDisplay(user, userAvatar, userName);
+            } catch (error) {
+                console.error('Error parsing stored user:', error);
+                setDefaultUser(userAvatar, userName);
+            }
+        } else {
+            // If no stored user, try to fetch from API
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                fetch('http://localhost:5000/api/users/me', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Failed to fetch user');
+                })
+                .then(user => {
+                    localStorage.setItem('user', JSON.stringify(user));
+                    updateUserDisplay(user, userAvatar, userName);
+                })
+                .catch(error => {
+                    console.log('API not available, using default');
+                    setDefaultUser(userAvatar, userName);
+                });
+            } else {
+                setDefaultUser(userAvatar, userName);
+            }
+        }
+    }
+    
+    function updateUserDisplay(user, avatarElement, nameElement) {
+        // Update user name
+        nameElement.textContent = user.fullName || user.email || 'Student';
+        
+        // Update avatar
+        if (user.avatarUrl) {
+            avatarElement.style.backgroundImage = `url('${user.avatarUrl}')`;
+            avatarElement.innerHTML = '';
+        } else {
+            const fullName = user.fullName || user.email || 'Student';
+            const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            avatarElement.style.backgroundImage = '';
+            avatarElement.innerHTML = initials;
+        }
+    }
+    
+    function setDefaultUser(avatarElement, nameElement) {
+        nameElement.textContent = 'Student';
+        avatarElement.innerHTML = 'ST';
+    }
+
+    // Function to load enrolled courses from localStorage
+    function loadEnrolledCourses() {
+        // Get student data from localStorage
+        const studentData = JSON.parse(localStorage.getItem('studentData'));
+        
+        if (!studentData || !studentData.enrolledCourses || studentData.enrolledCourses.length === 0) {
+            console.log('No enrolled courses found');
+            return;
+        }
+        
+        const coursesContainer = document.getElementById('coursesContainer');
+        
+        // Add enrolled courses to the page
+        studentData.enrolledCourses.forEach(course => {
+            // Check if course card already exists
+            if (!document.querySelector(`[data-course-id="${course.id}"]`)) {
+                const courseCard = createEnrolledCourseCard(course);
+                coursesContainer.appendChild(courseCard);
+            }
+        });
+        
+        console.log(`Loaded ${studentData.enrolledCourses.length} enrolled courses`);
+    }
+
+    // Function to create a course card for enrolled courses
+    function createEnrolledCourseCard(course) {
+        const courseCard = document.createElement('div');
+        courseCard.className = 'course-card';
+        courseCard.setAttribute('data-course-id', course.id);
+        courseCard.setAttribute('data-progress', course.progress || 0);
+        courseCard.setAttribute('data-status', course.status || 'progress');
+        
+        // Format progress percentage
+        const progressPercent = course.progress || 0;
+        
+        courseCard.innerHTML = `
+            <div class="course-menu">
+                <button class="course-menu-btn">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div class="course-dropdown">
+                    <a href="courser-integrated.html?id=${course.id}">
+                        <i class="fas fa-play"></i> Continue Learning
+                    </a>
+                    <a href="course-syllabus.html?id=${course.id}">
+                        <i class="fas fa-list"></i> View Syllabus
+                    </a>
+                    <a href="#" class="save-course" data-course-id="${course.id}">
+                        <i class="far fa-bookmark"></i> Save for Later
+                    </a>
+                    <a href="course-resources.html?id=${course.id}">
+                        <i class="fas fa-file-download"></i> Download Resources
+                    </a>
+                </div>
+            </div>
+            <img src="${course.thumbnail}" alt="${course.title}" class="course-thumbnail">
+            <div class="course-content">
+                <div class="course-category">${course.category}</div>
+                <h3 class="course-title">${course.title}</h3>
+                <p class="course-description">You enrolled on ${new Date(course.enrolledDate).toLocaleDateString()}</p>
+                
+                <div class="course-meta">
+                    <div class="course-instructor">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Instructor">
+                        <span>${course.instructor}</span>
+                    </div>
+                    <div class="course-duration">
+                        <i class="far fa-clock"></i> Self-paced
+                    </div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span>Progress</span>
+                        <span>${progressPercent}%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                    </div>
+                </div>
+                
+                <div class="course-actions">
+                    <a href="courser-integrated.html?id=${course.id}" class="btn btn-primary">
+                        <i class="fas fa-play"></i> ${progressPercent > 0 ? 'Continue' : 'Start'}
+                    </a>
+                    <button class="btn btn-outline toggle-save" data-course-id="${course.id}">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        return courseCard;
+    }
+</script>
+</body>
+</html>

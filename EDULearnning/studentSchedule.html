@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDULearn - Student Portal</title>
+    <style>
+        :root {
+            --primary: #4a6bdf;
+            --secondary: #f8f9fa;
+            --accent: #ff7e5f;
+            --text: #333;
+            --light-text: #6c757d;
+            --sidebar-width: 240px;
+            --sidebar-collapsed-width: 80px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 30px;
+            transition: all 0.3s;
+        }
+        
+        .logo-text {
+            margin-left: 10px;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.3s;
+            opacity: 1;
+        }
+        
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--light-text);
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu li {
+            position: relative;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--light-text);
+            text-decoration: none;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .sidebar-menu li a:hover {
+            background-color: rgba(74, 107, 223, 0.1);
+            color: var(--primary);
+        }
+        
+        .sidebar-menu li.active a {
+            color: var(--primary);
+            background-color: rgba(74, 107, 223, 0.1);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .sidebar-menu li i {
+            font-size: 18px;
+            width: 24px;
+            margin-right: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu li span {
+            transition: all 0.3s;
+            opacity: 1;
+        }
+        
+        .badge {
+            background-color: var(--accent);
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-left: auto;
+        }
+        
+        /* Course Navigation Dropdown */
+        .sidebar-menu .dropdown {
+            position: relative;
+        }
+        
+        .sidebar-menu .dropdown > a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            justify-content: space-between;
+            width: 100%;
+        }
+        
+        .sidebar-menu .dropdown > a .fa-chevron-down {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            margin-left: auto;
+        }
+        
+        .sidebar-menu .dropdown.active > a .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-content {
+            display: none;
+            background-color: rgba(74, 107, 223, 0.05);
+            padding-left: 1rem;
+            border-left: 3px solid var(--primary);
+            margin-left: 1rem;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease;
+        }
+        
+        .sidebar-menu .dropdown.active .dropdown-content {
+            display: block !important;
+            max-height: 500px;
+        }
+        
+        .dropdown-content a {
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--light-text);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: rgba(74, 107, 223, 0.1);
+            color: var(--primary);
+        }
+        
+        .dropdown-content i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: all 0.3s;
+            padding: 30px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .user-profile .name {
+            font-weight: 500;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 10px 0;
+            width: 200px;
+            z-index: 10;
+            display: none;
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 8px 15px;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .user-dropdown a:hover {
+            background-color: var(--secondary);
+            color: var(--primary);
+        }
+        
+        .user-dropdown.show {
+            display: block;
+        }
+        
+        /* Collapsed sidebar styles */
+        body.sidebar-collapsed .sidebar {
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        body.sidebar-collapsed .logo-text,
+        body.sidebar-collapsed .sidebar-menu li span {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        body.sidebar-collapsed .sidebar-menu li i {
+            margin-right: 0;
+            font-size: 20px;
+        }
+        
+        body.sidebar-collapsed .sidebar-menu li a {
+            justify-content: center;
+            padding: 15px 0;
+        }
+        
+        body.sidebar-collapsed .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+        
+        body.sidebar-collapsed .badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            margin: 0;
+            padding: 2px 5px;
+            font-size: 10px;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: var(--sidebar-width);
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 20px;
+                color: var(--light-text);
+                margin-right: 15px;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="https://via.placeholder.com/150x40?text=EDULearn" alt="EDULearn Logo">
+                <span class="logo-text">EDULearn</span>
+            </div>
+            <button class="toggle-btn" id="toggleSidebar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="active">
+                <a href="student.html">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="studentCourses.html">
+                    <i class="fas fa-book-open"></i>
+                    <span>My Courses</span>
+                </a>
+            </li>
+            <li class="dropdown" id="coursesDropdown">
+                <a href="#" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                    <div style="display: flex; align-items: center;">
+                        <i class="fas fa-graduation-cap" style="font-size: 18px; width: 24px; margin-right: 15px; text-align: center;"></i>
+                        <span>Courses</span>
+                    </div>
+                    <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                </a>
+                <div class="dropdown-content" style="display: none;">
+                    <a href="allCourses.html"><i class="fas fa-book"></i> All Courses</a>
+                    <a href="popular.html"><i class="fas fa-fire"></i> Popular Courses</a>
+                    <a href="newReleases.html"><i class="fas fa-star"></i> New Releases</a>
+                    <a href="freeCourses.html"><i class="fas fa-gift"></i> Free Courses</a>
+                </div>
+            </li>
+            <li>
+                <a href="studentCertificates.html">
+                    <i class="fas fa-certificate"></i>
+                    <span>Certificates</span>
+                </a>
+            </li>
+            <li>
+                <a href="studentMessages.html">
+                    <i class="fas fa-comments"></i>
+                    <span>Messages</span>
+                    <span class="badge">3</span>
+                </a>
+            </li>
+            <li>
+                <a href="studentSchedule.html">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Schedule</span>
+                </a>
+            </li>
+            <li>
+                <a href="studentProgress.html">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Progress</span>
+                </a>
+            </li>
+            <li>
+                <a href="studentSettings.html">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div class="header">
+            <div class="page-title">
+                <h1>Dashboard</h1>
+            </div>
+            <div class="user-actions">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="user-profile" id="userProfile">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User Profile">
+                    <span class="name">John Doe</span>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                        <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a>
+                        <a href="logout.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page content would go here -->
+        <div class="content">
+            <div class="welcome-message">
+                <h2>Welcome back, John!</h2>
+                <p>Here's what's happening with your courses today.</p>
+            </div>
+            
+            <!-- Additional dashboard content would be added here -->
+        </div>
+    </main>
+
+    <script type="module" src="js/api.js">
+        // Toggle sidebar collapse/expand
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.body.classList.toggle('sidebar-collapsed');
+            
+            // Rotate the chevron icon
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('sidebar-collapsed')) {
+                icon.classList.remove('fa-chevron-left');
+                icon.classList.add('fa-chevron-right');
+            } else {
+                icon.classList.remove('fa-chevron-right');
+                icon.classList.add('fa-chevron-left');
+            }
+        });
+        
+        // Toggle mobile sidebar
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('show');
+        });
+        
+        // Toggle user dropdown
+        document.getElementById('userProfile').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('userDropdown').classList.toggle('show');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            document.getElementById('userDropdown').classList.remove('show');
+        });
+        
+        // Prevent dropdown from closing when clicking inside it
+        document.getElementById('userDropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    </script>
+</body>
+</html>
